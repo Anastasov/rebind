@@ -1,0 +1,7 @@
+target
+.env
+.idea/
+*.iml
+frontend/node_modules/
+frontend/build
+

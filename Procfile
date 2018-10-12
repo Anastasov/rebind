@@ -1,0 +1,1 @@
+web: java -jar target/rebind-1.0.jar
