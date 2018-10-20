@@ -1,6 +1,6 @@
 package student.manchester.service.auth;
 
-import student.manchester.model.auth.User;
+import student.manchester.model.auth.bean.UserDTO;
 
 /**
  * @author Anastas Anastasov
@@ -8,5 +8,11 @@ import student.manchester.model.auth.User;
  */
 public interface UserService {
 
-    User findByUsername(String username);
+    UserDTO createUser(String email, String password);
+
+    UserDTO findByUsername(String username);
+
+    UserDTO findById(Object userId);
+
+    UserDTO getUserByCredentials(String username, String password);
 }

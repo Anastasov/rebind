@@ -1,10 +1,13 @@
 package student.manchester.model.auth;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
@@ -15,17 +18,22 @@ import javax.validation.constraints.Size;
  * on 10/10/2018.
  */
 @Entity
-@Table(name="REBIND_USER", uniqueConstraints={@UniqueConstraint(columnNames={"username", "email"})})
+@Table(name="REBIND_USER",
+   uniqueConstraints={@UniqueConstraint(columnNames={"username", "email"})}
+)
 public class User {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name="username")
     private String username;
 
+    @Column(name="password")
     private String password;
 
+    @Column(name="email")
     private String email;
 
     @ManyToOne(fetch = FetchType.EAGER)

@@ -7,11 +7,16 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.proxy.HibernateProxy;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
 
 /**
  * Hibernate implementation of {@link GenericDao}.
  */
-public abstract class GenericDaoHibernate<T, ID extends Serializable> implements GenericDao<T, ID> {
+public abstract class GenericDaoHibernate<T, ID extends Serializable>
+		implements GenericDao<T, ID> {
 
 	@Autowired
 	private SessionFactory sessionFactory;
@@ -29,6 +34,12 @@ public abstract class GenericDaoHibernate<T, ID extends Serializable> implements
 	 */
 	protected Session getSession() {
 		return sessionFactory.getCurrentSession();
+	}
+
+	protected CriteriaBuilder getCriteriaBuilder() { return getSession().getCriteriaBuilder(); }
+
+	protected CriteriaQuery<T> createQuery() {
+		return getCriteriaBuilder().createQuery(entityClass);
 	}
 	
 	@Override

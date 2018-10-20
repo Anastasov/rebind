@@ -1,5 +1,6 @@
 const path = require('path');
 const webpack = require('webpack');
+const GoogleFontsPlugin = require('google-fonts-webpack-plugin');
 
 module.exports = {
   entry: {
@@ -67,12 +68,15 @@ module.exports = {
         }
       },
       {
-        test: /\.(png|woff|woff2|eot|ttf|svg)$/,
+        test: /\.(png|jpg|woff|woff2|eot|ttf|svg)$/,
         loader: 'url-loader?limit=100000'
       }
     ]
   },
-  plugins: [new webpack.HotModuleReplacementPlugin(), new webpack.NamedModulesPlugin()],
+  plugins: [
+    new webpack.HotModuleReplacementPlugin(),
+    new webpack.NamedModulesPlugin()
+  ],
   devServer: {
     port: 3000,
     proxy: {
