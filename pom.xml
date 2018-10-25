@@ -120,21 +120,6 @@
       <artifactId>jjwt</artifactId>
       <version>0.7.0</version>
     </dependency>
-    <dependency>
-      <groupId>com.github.panchitoboy</groupId>
-      <artifactId>shiro-jwt</artifactId>
-      <version>1.0</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.shiro</groupId>
-      <artifactId>shiro-core</artifactId>
-      <version>1.4.0</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.shiro</groupId>
-      <artifactId>shiro-web</artifactId>
-      <version>1.4.0</version>
-    </dependency>
     <!-- AUTHENTICATION LIBS -->
     <dependency>
       <groupId>com.zaxxer</groupId>

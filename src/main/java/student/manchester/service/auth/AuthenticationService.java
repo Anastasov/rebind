@@ -1,11 +1,14 @@
 package student.manchester.service.auth;
 
-import student.manchester.api.auth.bean.AuthenticatedResponse;
-import student.manchester.model.auth.bean.UserDTO; /**
+import java.util.Optional;
+
+/**
  * @author Anastas Anastasov
  * on 10/20/2018.
  */
-public interface AuthenthicationService {
+public interface AuthenticationService {
 
-    AuthenticatedResponse createResponse(UserDTO user);
+    Optional<String> generateTokenForUser(Long user);
+
+    Optional<String> regenerateTokenForCurrentUser();
 }

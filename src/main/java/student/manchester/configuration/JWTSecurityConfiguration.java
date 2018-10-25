@@ -12,10 +12,9 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.AuthenticationEntryPoint;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import student.manchester.configuration.security.JWTAuthenthicationSuccessHandler;
-import student.manchester.configuration.security.JWTAuthenticationProvider;
+import student.manchester.configuration.security.JWTAuthenticationSuccessHandler;
 import student.manchester.configuration.security.JWTAuthenticationTokenFilter;
+import student.manchester.model.auth.Roles;
 
 import javax.servlet.Filter;
 import java.util.Collections;
@@ -44,7 +43,7 @@ public class JWTSecurityConfiguration extends WebSecurityConfigurerAdapter {
     public Filter authenticationTokenFilter() {
         final JWTAuthenticationTokenFilter jwtFilter = new JWTAuthenticationTokenFilter();
         jwtFilter.setAuthenticationManager(authenticationManager());
-        jwtFilter.setAuthenthicationSuccessHandler(new JWTAuthenthicationSuccessHandler());
+        jwtFilter.setAuthenticationSuccessHandler(new JWTAuthenticationSuccessHandler());
         return jwtFilter;
     }
 
@@ -52,13 +51,17 @@ public class JWTSecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(final HttpSecurity http) throws Exception {
         http
           .csrf().disable()
+          .formLogin().disable()
           .authorizeRequests()
-                .antMatchers("**/api/**").authenticated().and()
+                .antMatchers("/", "/home","/signUp", "/login", "/resources/**")
+                    .permitAll()
+                .antMatchers("**/api/**")
+                    .authenticated()
+                .antMatchers("/swagger**", "/v2**", "/actuator**")
+                    .hasRole(Roles.ADMIN.toString()).and()
           .exceptionHandling()
                 .authenticationEntryPoint(authEntryPoint).and()
-          .formLogin().and()
-          .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-        http.addFilterBefore(authenticationTokenFilter(), UsernamePasswordAuthenticationFilter.class);
-        http.headers().cacheControl();
+          .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS).and();
     }
 }

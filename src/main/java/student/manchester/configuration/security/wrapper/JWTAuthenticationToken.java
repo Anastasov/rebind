@@ -11,7 +11,7 @@ public class JWTAuthenticationToken extends UsernamePasswordAuthenticationToken 
     private final String token;
 
     public JWTAuthenticationToken(final String token) {
-        super(null, null);
+        super(token, null);
         this.token = token;
     }
 

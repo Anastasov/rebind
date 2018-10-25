@@ -1,10 +1,8 @@
 package student.manchester.configuration.security;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import student.manchester.configuration.security.exception.InvalidTokenException;
 import student.manchester.configuration.security.wrapper.JWTAuthenticationToken;
 
@@ -24,9 +22,6 @@ public class JWTAuthenticationTokenFilter extends AbstractAuthenticationProcessi
     private static final String TOKEN_PREFIX = "Bearer";
     private static final String TOKEN_SEPARATOR = " ";
     private static final String TOKEN_HEADER = "Authorization";
-
-    @Autowired
-    private AuthenticationSuccessHandler successHandler;
 
     public JWTAuthenticationTokenFilter() {
         super("/api/**");
@@ -63,9 +58,5 @@ public class JWTAuthenticationTokenFilter extends AbstractAuthenticationProcessi
             throws IOException, ServletException {
         super.successfulAuthentication(request, response, chain, authResult);
         chain.doFilter(request, response);
-    }
-
-    public void setAuthenthicationSuccessHandler(final AuthenticationSuccessHandler successHandler) {
-        this.successHandler = successHandler;
     }
 }

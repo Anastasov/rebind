@@ -59,4 +59,16 @@ public class JWTUserDetails implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public List<GrantedAuthority> getGrantedAuthorities() {
+        return grantedAuthorities;
+    }
 }

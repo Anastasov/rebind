@@ -2,9 +2,9 @@ package student.manchester.service.auth.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import student.manchester.annotation.TransactionalService;
+import student.manchester.api.exception.ApiInputException;
 import student.manchester.dao.auth.RoleDao;
 import student.manchester.dao.auth.UserDao;
-import student.manchester.model.auth.Role;
 import student.manchester.model.auth.Roles;
 import student.manchester.model.auth.User;
 import student.manchester.model.auth.bean.RoleDTO;
@@ -12,7 +12,6 @@ import student.manchester.model.auth.bean.UserDTO;
 import student.manchester.service.auth.UserService;
 import student.manchester.service.auth.exception.LogicException;
 
-import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import java.util.regex.Pattern;
 
@@ -30,13 +29,9 @@ public class UserServiceImpl implements UserService {
     private RoleDao roleDao;
 
     @Override
-    public UserDTO findByUsername(final String username) {
-        return null;
-    }
-
-    @Override
-    public UserDTO findById(final Object userId) {
-        return null;
+    public UserDTO findById(final Long userId) {
+        final User entity = userDao.load(userId);
+        return  entity == null ? new UserDTO() : new UserDTO(entity);
     }
 
     @Override
@@ -80,14 +75,23 @@ public class UserServiceImpl implements UserService {
     }
 
     private void validateNewUser(final UserDTO user) {
-        Validator.isValid(user);
-        isEmailUnique(user.getEmail());
+        try {
+            Validator.isValid(user);
+            isEmailUnique(user.getEmail());
+        } catch (ApiInputException ex) {
+            throw new ApiInputException.Builder(ex)
+                    .setMessage("Sign Up was unsuccessful.")
+                    .build();
+        }
     }
 
     private void isEmailUnique(final String email) {
         if(userDao.existsUserWithEmail(email)) {
-            throw new LogicException("User with e-mail '" + email + "' already exists."
-                    + "Do you want to restore password.");
+            final String message = "User with e-mail '" + email + "' already exists.";
+            throw new ApiInputException.Builder()
+                    .setMessage("Register failed.")
+                    .addError("email", message)
+                    .build();
         }
     }
 
@@ -111,7 +115,8 @@ public class UserServiceImpl implements UserService {
          *  $                 # end-of-string
          */
         private static final String PASSWORD_HINT =
-                new StringBuilder("Has to include a ")
+                new StringBuilder("At least 8 symbols.")
+                    .append("Has to include a ")
                     .append("digit, ")
                     .append("lower case letter, ")
                     .append("upper case letter, and a ")
@@ -132,7 +137,9 @@ public class UserServiceImpl implements UserService {
 
         private static void isValidPassword(final String password) {
             if(!pattern.matcher(password).find()) {
-                throw new LogicException(PASSWORD_HINT);
+                throw new ApiInputException.Builder()
+                        .addError("password", PASSWORD_HINT)
+                        .build();
             }
         }
 
@@ -140,7 +147,9 @@ public class UserServiceImpl implements UserService {
             try {
                 new InternetAddress(email).validate();
             } catch (final Exception ex) {
-                throw new LogicException("Invalid email: " + ex.getMessage());
+                throw new ApiInputException.Builder()
+                        .addError("email", "Invalid email")
+                        .build();
             }
 
         }

@@ -14,7 +14,7 @@ import java.io.IOException;
  * on 10/19/2018.
  */
 @Component
-public class JWTAuthenthicationSuccessHandler implements AuthenticationSuccessHandler {
+public class JWTAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
 
     @Override
     public void onAuthenticationSuccess(final HttpServletRequest request,
@@ -22,6 +22,6 @@ public class JWTAuthenthicationSuccessHandler implements AuthenticationSuccessHa
                                         final Authentication authentication)
             throws IOException, ServletException {
         // redirect to home page or just return requested resource
-
+        int x=5;
     }
 }

@@ -3,13 +3,17 @@ package student.manchester.service.auth.impl;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Component;
 import student.manchester.configuration.security.exception.InvalidTokenException;
 import student.manchester.configuration.security.exception.RejectedTokenException;
+import student.manchester.configuration.security.exception.TokenSecretNotConfiguredException;
 import student.manchester.model.auth.bean.RoleDTO;
 import student.manchester.model.auth.bean.UserDTO;
+import student.manchester.util.TimeUtil;
 
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * @author Anastas Anastasov
@@ -18,7 +22,21 @@ import java.util.Map;
 @Component
 public class JWTTokenizer {
 
-    private static final String SECRET = System.getenv("UI_DESERIALIZAER");
+    public static final String JWT_SECRET_VAR_NAME = "UI_DESERIALIZAER";
+
+    public Long getIdFromToken(final String token) {
+        UserDTO userDTO = new UserDTO();
+        try {
+            final Claims tokenBody = Jwts.parser()
+                    .setSigningKey(getSecret())
+                    .parseClaimsJws(token)
+                    .getBody();
+            userDTO = mapTokenToDTO(tokenBody);
+        } catch (final Exception ex) {
+            // return empty
+        }
+        return userDTO.getId();
+    }
 
     public UserDTO validate(final String token) {
         final UserDTO userDTO;
@@ -60,10 +78,19 @@ public class JWTTokenizer {
         return Jwts.builder()
                 .setClaims(authInfo)
                 .signWith(SignatureAlgorithm.HS256, getSecret())
+                .setExpiration(TimeUtil.next(getTokenExpirationTime()))
                 .compact();
     }
 
     private String getSecret(){
-        return System.getenv("UI_DESERIALIZAER");
+        final Optional<String> authDuration = Optional.of(System.getenv(JWT_SECRET_VAR_NAME));
+        return  authDuration.orElseThrow(() ->
+                new TokenSecretNotConfiguredException("Environment variable [" + JWT_SECRET_VAR_NAME + "] is not set.")
+        );
+    }
+
+    public String getTokenExpirationTime() {
+        final Optional<String> authDuration = Optional.of(System.getenv("AUTH_DURATION"));
+        return  authDuration.orElse("0s");
     }
 }

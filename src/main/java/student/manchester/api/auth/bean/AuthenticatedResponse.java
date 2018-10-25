@@ -1,21 +1,22 @@
-package student.manchester.controller.bean;
+package student.manchester.api.auth.bean;
+
+import student.manchester.api.bean.RebindResponse;
 
 /**
  * @author Anastas Anastasov
  * on 10/18/2018.
  */
-public class AuthenticatedResponse {
+public class AuthenticatedResponse extends RebindResponse {
 
-    private boolean isOk;
-    private String errorMessage;
     private String token;
 
-    public String getErrorMessage() {
-        return errorMessage;
+    public AuthenticatedResponse(){
+
     }
 
-    public void setErrorMessage(final String errorMessage) {
-        this.errorMessage = errorMessage;
+    public AuthenticatedResponse(final AuthenticatedResponse authenticatedResponse) {
+        super(authenticatedResponse);
+        this.token = authenticatedResponse.getToken();
     }
 
     public String getToken() {
@@ -24,13 +25,5 @@ public class AuthenticatedResponse {
 
     public void setToken(final String token) {
         this.token = token;
-    }
-
-    public boolean isOk() {
-        return isOk;
-    }
-
-    public void setOk(final boolean ok) {
-        this.isOk = ok;
     }
 }

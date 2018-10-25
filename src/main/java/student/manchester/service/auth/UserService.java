@@ -10,9 +10,7 @@ public interface UserService {
 
     UserDTO createUser(String email, String password);
 
-    UserDTO findByUsername(String username);
-
-    UserDTO findById(Object userId);
+    UserDTO findById(Long userId);
 
     UserDTO getUserByCredentials(String username, String password);
 }
