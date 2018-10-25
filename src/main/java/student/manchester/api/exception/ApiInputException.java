@@ -1,6 +1,5 @@
 package student.manchester.api.exception;
 
-import javafx.util.Builder;
 import student.manchester.service.auth.exception.LogicException;
 
 import java.util.LinkedHashMap;
