@@ -64,9 +64,9 @@ export const handleResponse = (
   errorMessage,
   tokenHandler = () => {}
 ) => {
-  devLog(response, "Server Response:");
+  console.log(response, "Server Response:");
   return response.json().then(serverData => {
-    devLog(serverData, "Server Data:");
+    console.log(serverData, "Server Data:");
     validateIsOk(dispatch, response, serverData, errorMessage);
     const data = getData(dispatch, serverData, tokenHandler);
     return data;
