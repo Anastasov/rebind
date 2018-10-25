@@ -2,7 +2,7 @@ import { SubmissionError } from "redux-form";
 import { setCookie } from "redux-cookie";
 import COOKIES from "../config/COOKIES";
 import { showSnackBarActionCreator } from "../reducers/snackbar/snackbarActionCreators";
-import { devLog, hasOwnProps, afterMinutes } from "./ObjectUtils";
+import { hasOwnProps, afterMinutes } from "./ObjectUtils";
 
 export const validateIsOk = (dispatch, response, serverData, message) => {
   if (serverData && hasOwnProps(serverData.errors)) {
