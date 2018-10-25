@@ -18,6 +18,7 @@ import student.manchester.service.auth.exception.LogicException;
 class GlobalRestControllerExceptionHandler {
     public static final String UNSPECIFIED_EXCEPTION_MESSAGE =
             "Something is wrong.";
+    public static final String AUTHENTICATION_EXCEPTION_MESSAGE = "Incorrect credentials.";
 
     /*
      * Configure exception handling
@@ -33,29 +34,26 @@ class GlobalRestControllerExceptionHandler {
         return new ResponseEntity<>(response, status);
     }
 
-    private HttpStatus setMessage(final Exception e, final RebindResponse response) {
+    private HttpStatus setMessage(final Exception ex, final RebindResponse response) {
         final HttpStatus status;
-        if(e instanceof ApiInputException) {
-            response.setMessage(e.getMessage());
-            response.getErrors().putAll(((ApiInputException) e).getErrors());
+        if(ex instanceof ApiInputException) {
+            response.setMessage(ex.getMessage());
+            response.getErrors().putAll(((ApiInputException) ex).getErrors());
             status = HttpStatus.OK;
-        } else if(e instanceof LogicException) {
-            response.setMessage(e.getMessage());
+        } else if(ex instanceof LogicException) {
+            response.setMessage(ex.getMessage());
             status = HttpStatus.OK;
-        } else if (e instanceof AuthenticationException) {
-            response.setMessage(AUTHENTICATION_EXCEPTION_MESSAGE());
+        } else if (ex instanceof AuthenticationException) {
+            response.setMessage(AUTHENTICATION_EXCEPTION_MESSAGE);
             response.addError("email", "");
             response.addError("password", "");
             status = HttpStatus.UNAUTHORIZED;
         } else {
-            response.setMessage(UNSPECIFIED_EXCEPTION_MESSAGE);
+            ex.printStackTrace();
+            response.setMessage(UNSPECIFIED_EXCEPTION_MESSAGE + ":" + ex.getMessage());
             status = HttpStatus.INTERNAL_SERVER_ERROR;
         }
         return status;
-    }
-
-    private String AUTHENTICATION_EXCEPTION_MESSAGE() {
-        return "Incorrect credentials.";
     }
 
     //    /* Configure auto generating token on each successful response */
