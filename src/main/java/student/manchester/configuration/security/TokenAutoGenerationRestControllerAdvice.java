@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 import student.manchester.api.auth.bean.AuthenticatedResponse;
 import student.manchester.service.auth.AuthenticationService;
+import sun.reflect.generics.reflectiveObjects.ParameterizedTypeImpl;
 
 import java.util.Optional;
 
@@ -31,7 +32,18 @@ public class TokenAutoGenerationRestControllerAdvice implements ResponseBodyAdvi
     @Override
     public boolean supports(final MethodParameter returnType,
                             final Class<? extends HttpMessageConverter<?>> converterType) {
-        return SUPPORTED_RESPONSE.equals(returnType.getGenericParameterType().getTypeName()) ;
+        final String genericTypeName = returnType.getGenericParameterType().getTypeName();
+        final String typeName = genericTypeName.contains("<") ?
+                genericTypeName.split("<")[1].split(">")[0] :
+                genericTypeName;
+        Class responseType = Object.class;
+        try {
+            responseType = Class.forName(typeName);
+        } catch (ClassNotFoundException ex) {
+            System.err.println("Couldn't auto generate token.");
+        }
+
+        return AuthenticatedResponse.class.isAssignableFrom(responseType);
     }
 
     @Nullable
@@ -48,6 +60,9 @@ public class TokenAutoGenerationRestControllerAdvice implements ResponseBodyAdvi
             final Optional<String> token = authenticationService
                     .regenerateTokenForCurrentUser();
             token.ifPresent(authResponse::setToken);
+            if(token.isPresent()) {
+                authResponse.setOk(true);
+            }
         }
         return authResponse;
     }

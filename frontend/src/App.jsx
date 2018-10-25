@@ -21,20 +21,18 @@ import "typeface-roboto";
 
 const App = () => (
   <Provider store={configuredStore}>
-    <div className="App">
-      <MuiThemeProvider theme={createMuiTheme(ReBind.THEME)}>
-        <CssBaseline />
-        <Router history={history}>
-          <Navigation />
-          <ColoredSnackbar />
-          <ModalContainer />
-          <Switch>
-            <Route path="/home" component={HomePage} />
-            <Route path="/login" component={MyProfilePage} />
-          </Switch>
-        </Router>
-      </MuiThemeProvider>
-    </div>
+    <MuiThemeProvider theme={createMuiTheme(ReBind.THEME)}>
+      <CssBaseline />
+      <Router history={history}>
+        <Navigation />
+        <ColoredSnackbar />
+        <ModalContainer />
+        <Switch>
+          <Route path="/home" component={HomePage} />
+          <Route path="/profile" component={MyProfilePage} />
+        </Switch>
+      </Router>
+    </MuiThemeProvider>
   </Provider>
 );
 

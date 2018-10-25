@@ -1,5 +1,6 @@
 const path = require("path");
 const webpack = require("webpack");
+// const ExtractTextPlugin = require("extract-text-webpack-plugin");
 
 module.exports = {
   entry: {
@@ -8,11 +9,10 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, "../src/main/webapp/resources/js/"),
     filename: "[name].js",
-    publicPath: path.resolve(__dirname, "../src/main/webapp/resources/js/")
+    publicPath: "/resources/js/"
   },
   // Generate source maps also in production build
   devtool: "source-map",
-  watch: true,
   module: {
     rules: [
       {
@@ -36,37 +36,12 @@ module.exports = {
         loader: "style-loader!css-loader"
       },
       {
-        test: /\.gif$/,
-        loader: "url-loader",
-        options: {
-          mimetype: "image/png"
-        }
-      },
-      {
-        test: /\.(gif|png|jpe?g|svg)$/i,
-        use: [
-          "file-loader",
-          {
-            loader: "image-webpack-loader",
-            options: {
-              bypassOnDebug: true, // webpack@1.x
-              disable: true // webpack@2.x and newer
-            }
-          }
-        ]
-      },
-      {
-        test: /\.woff(2)?(\?v=[0-9].[0-9].[0-9])?$/,
-        loader: "url-loader",
-        options: {
-          mimetype: "application/font-woff"
-        }
-      },
-      {
         test: /\.(ttf|eot|svg|png)(\?v=[0-9].[0-9].[0-9])?$/,
         loader: "file-loader",
         options: {
-          name: "[name].[ext]"
+          name: "[name].[ext]",
+          outputPath: "../",
+          publicPath: "/"
         }
       },
       {

@@ -5,6 +5,7 @@ import authInfo from "./auth/authReducer";
 import modal from "./modal/modalReducer";
 import snackbar from "./snackbar/snackbarReducer";
 import navbar from "./nav/navReducer";
+import profile from "./profile/profileReducer";
 
 const rootReducer = combineReducers({
   authInfo,
@@ -12,6 +13,7 @@ const rootReducer = combineReducers({
   snackbar,
   navbar,
   routing,
+  profile,
   form
 });
 
@@ -22,3 +24,4 @@ export const modalSelector = state => state.modal;
 export const snackbarSelector = state => state.snackbar;
 export const routerSelector = state => state.routing;
 export const navbarSelector = state => state.navbar;
+export const profileSelector = state => state.profile;

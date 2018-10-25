@@ -1,12 +1,17 @@
 package student.manchester.service.auth.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import student.manchester.annotation.TransactionalService;
 import student.manchester.api.auth.bean.AuthenticatedResponse;
+import student.manchester.configuration.security.wrapper.JWTAuthenticationToken;
 import student.manchester.configuration.security.wrapper.JWTUserDetails;
 import student.manchester.model.auth.bean.UserDTO;
 import student.manchester.service.auth.AuthenticationService;
 import student.manchester.service.auth.UserService;
+import student.manchester.service.auth.exception.LogicException;
 import student.manchester.util.AuthUtil;
 
 import java.util.Optional;
@@ -23,6 +28,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private AuthenticationManager authenticationManager;
 
     @Override
     public Optional<String> generateTokenForUser(final Long userId) {
@@ -41,5 +49,16 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                         currentUser.get().getId() :
                         null);
         return id.isPresent() ? generateTokenForUser(id.get()) : Optional.empty();
+    }
+
+    @Override
+    public void authenticateUserById(final Long id) {
+        final Optional<String> token = generateTokenForUser(id);
+        if(!token.isPresent()) {
+            throw new LogicException("Server couldn't create token for user[" + id + "]");
+        }
+        final JWTAuthenticationToken auth = new JWTAuthenticationToken(token.get());
+        Authentication authenticatedUser = authenticationManager.authenticate(auth);
+        SecurityContextHolder.getContext().setAuthentication(authenticatedUser);
     }
 }

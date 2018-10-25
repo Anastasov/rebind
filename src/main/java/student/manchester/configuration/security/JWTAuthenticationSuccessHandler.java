@@ -3,6 +3,7 @@ package student.manchester.configuration.security;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
+import student.manchester.service.auth.exception.LogicException;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -22,6 +23,8 @@ public class JWTAuthenticationSuccessHandler implements AuthenticationSuccessHan
                                         final Authentication authentication)
             throws IOException, ServletException {
         // redirect to home page or just return requested resource
-        int x=5;
+        if("/login".equals(request.getRequestURL()) || "/signUp".equals(request.getRequestURL())) {
+            response.sendRedirect("/api/user/profile");
+        }
     }
 }

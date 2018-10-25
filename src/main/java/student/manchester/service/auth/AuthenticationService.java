@@ -11,4 +11,6 @@ public interface AuthenticationService {
     Optional<String> generateTokenForUser(Long user);
 
     Optional<String> regenerateTokenForCurrentUser();
+
+    void authenticateUserById(Long id);
 }

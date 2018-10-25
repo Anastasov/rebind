@@ -2,6 +2,7 @@ package student.manchester.util;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.TimeZone;
 
 /**
  * @author Anastas Anastasov
@@ -16,7 +17,7 @@ public final class TimeUtil {
     public final static Date next(final String time) {
         final String normalized = normalize(time);
         final String[] dimensions = getDimensions(normalized);
-        final Calendar after = Calendar.getInstance();
+        final Calendar after = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
         for(final String dimension : dimensions) {
             addTime(after, dimension);
         }

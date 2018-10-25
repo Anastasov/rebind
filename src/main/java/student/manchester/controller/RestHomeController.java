@@ -1,22 +1,31 @@
 package student.manchester.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import student.manchester.api.auth.bean.AuthenticatedResponse;
 import student.manchester.api.exception.ApiInputException;
+import student.manchester.configuration.security.wrapper.JWTAuthenticationToken;
 import student.manchester.controller.bean.AuthenticationForm;
 import student.manchester.controller.bean.LoginResponse;
 import student.manchester.model.auth.bean.UserDTO;
 import student.manchester.service.auth.AuthenticationService;
 import student.manchester.service.auth.UserService;
 import student.manchester.service.auth.exception.LogicException;
-import student.manchester.service.auth.impl.JWTTokenizer;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.net.URI;
 import java.util.Optional;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -39,12 +48,12 @@ public class RestHomeController {
     public ResponseEntity signUp(@RequestBody final AuthenticationForm authenticationForm) {
         final UserDTO userData = userService
                 .createUser(authenticationForm.getUsername(), authenticationForm.getPassword());
-        final Optional<String> token = authenticationService
-                .generateTokenForUser(userData.getId());
-        final LoginResponse response = new LoginResponse(
-                createAuthResponse(token, "SignUp Successful", userData));
-        response.setEmail(userData.getEmail());
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        final Optional<String> token = authenticationService.generateTokenForUser(userData.getId());
+        final LoginResponse authResponse = new LoginResponse(
+                createAuthResponse(token, "Sign Up Successful", userData));
+        authResponse.setEmail(userData.getEmail());
+        authResponse.setId(userData.getId());
+        return new ResponseEntity<>(authResponse, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.POST, consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
@@ -53,10 +62,11 @@ public class RestHomeController {
                 .getUserByCredentials(authenticationForm.getUsername(), authenticationForm.getPassword());
         validateUserExists(userData);
         final Optional<String> token = authenticationService.generateTokenForUser(userData.getId());
-        final LoginResponse response = new LoginResponse(
+        final LoginResponse authResponse = new LoginResponse(
                 createAuthResponse(token, "Login Successful", userData));
-        response.setEmail(userData.getEmail());
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        authResponse.setEmail(userData.getEmail());
+        authResponse.setId(userData.getId());
+        return new ResponseEntity<>(authResponse, HttpStatus.OK);
     }
 
     private void validateUserExists(final UserDTO userData) {

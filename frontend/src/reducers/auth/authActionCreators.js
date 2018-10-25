@@ -1,6 +1,5 @@
 import { push } from "react-router-redux";
 import UserApi from "../../api/user-api";
-import { authenticationSelector as getToken } from "./authSelectors";
 import {
   showProgressBarActionCreator,
   hideProgressBarActionCreator,
@@ -8,7 +7,6 @@ import {
   closeAuthenticationModalActionCreator
 } from "../modal/modalActionCreators";
 import { showSnackBarActionCreator } from "../snackbar/snackbarActionCreators";
-import { showNavActionCreator } from "../nav/navActionCreators";
 import { promiseToReturn } from "../../util/PromiseUtils";
 import { handleResponse as handle } from "../../util/ResponseUtils";
 
@@ -79,17 +77,17 @@ const showSuccessAndCloseModal = (dispatch, message) => data => {
       message
     })
   );
-  dispatch(setUserDataActionCreator({ email: data.email }));
-  dispatch(showNavActionCreator());
+
+  dispatch(setUserDataActionCreator({ id: data.id }));
   dispatch(closeAuthenticationModalActionCreator());
-  dispatch(push("/login"));
+  dispatch(push("/profile"));
   return promiseToReturn(data);
 };
 
 export const handleRegisterActionCreator = user => (dispatch, getState) => {
   dispatch(hideHeaderErrorActionCreator());
   dispatch(showProgressBarActionCreator());
-  return UserApi.auth(getToken(getState()))
+  return UserApi.auth(getState())
     .registerNewUser(user)
     .then(handleResponse(dispatch, "Sign Up failed"))
     .then(showSuccessAndCloseModal(dispatch, "Sign Up successful"))
@@ -99,7 +97,7 @@ export const handleRegisterActionCreator = user => (dispatch, getState) => {
 export const handleLoginActionCreator = user => (dispatch, getState) => {
   dispatch(hideHeaderErrorActionCreator());
   dispatch(showProgressBarActionCreator());
-  return UserApi.auth(getToken(getState()))
+  return UserApi.auth(getState())
     .login(user)
     .then(handleResponse(dispatch, "Login failed"))
     .then(showSuccessAndCloseModal(dispatch, "Login successful"))

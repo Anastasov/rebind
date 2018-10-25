@@ -1,33 +1,40 @@
 import { SubmissionError } from "redux-form";
-import { setCookie, getCookie } from "redux-cookie";
+import { setCookie } from "redux-cookie";
+import COOKIES from "../config/COOKIES";
 import { showSnackBarActionCreator } from "../reducers/snackbar/snackbarActionCreators";
 import { devLog, hasOwnProps, afterMinutes } from "./ObjectUtils";
 
 export const validateIsOk = (dispatch, response, serverData, message) => {
   if (serverData && hasOwnProps(serverData.errors)) {
-    dispatch(
-      showSnackBarActionCreator({
-        variant: "error",
-        message: `Ooops... ${message}`
-      })
-    );
+    if (message) {
+      dispatch(
+        showSnackBarActionCreator({
+          variant: "error",
+          message: `Ooops... ${message}`
+        })
+      );
+    }
     throw new SubmissionError(serverData.errors);
   } else if (!serverData.ok) {
-    dispatch(
-      showSnackBarActionCreator({
-        variant: "error",
-        message: `Ooops... ${message}`
-      })
-    );
+    if (message) {
+      dispatch(
+        showSnackBarActionCreator({
+          variant: "error",
+          message: `Ooops... ${message}`
+        })
+      );
+    }
     throw new Error(message);
   } else if (!response.ok) {
-    dispatch(
-      showSnackBarActionCreator({
-        variant: "error",
-        message: `Ooops... Something went wrong.`
-      })
-    );
-    throw new Error(message);
+    if (message) {
+      dispatch(
+        showSnackBarActionCreator({
+          variant: "error",
+          message: `Ooops... Something went wrong.`
+        })
+      );
+    }
+    throw new Error(response);
   }
 };
 
@@ -40,11 +47,10 @@ export const getData = (dispatch, serverData, tokenHandler) => {
       let now = new Date();
       now.setMinutes(now.getMinutes() + 30);
       dispatch(
-        setCookie("jwToken", JSON.stringify(token), {
+        setCookie(COOKIES.TOKEN, token, {
           expires: afterMinutes(29)
         })
       );
-      console.log("cookie[jwToken]: ", dispatch(getCookie("jwToken")));
     }
     return rest;
   }

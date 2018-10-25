@@ -1,29 +1,36 @@
 // import { devLog } from "../util/ObjectUtils";
 import * as authApi from "./auth-api";
 
+const defaultHeaderProps = {
+  mode: "cors",
+  cache: "no-cache",
+  credentials: "same-origin",
+  referrer: "no-referrer" // no-referrer, *client
+};
+
 const UserApi = {
   ...authApi.api,
   login(userCredentials) {
     return fetch("/login", {
+      ...defaultHeaderProps,
       method: "POST",
-      mode: "cors",
-      cache: "no-cache",
-      credentials: "same-origin",
       headers: authApi.authHeaders(this.authInfo),
-      referrer: "no-referrer", // no-referrer, *client
-      body: JSON.stringify(userCredentials) // body data type must match "Content-Type" header
+      body: JSON.stringify(userCredentials)
     });
   },
   registerNewUser(userCredentials) {
     return fetch("/signUp", {
+      ...defaultHeaderProps,
       method: "POST",
-      mode: "cors",
-      cache: "no-cache",
-      credentials: "same-origin",
       headers: authApi.authHeaders(this.authInfo),
-      redirect: "follow", // manual, *follow, error
-      referrer: "no-referrer", // no-referrer, *client
-      body: JSON.stringify(userCredentials) // body data type must match "Content-Type" header
+      body: JSON.stringify(userCredentials)
+    });
+  },
+  fetchProfileData(id) {
+    console.log("headers", authApi.authHeaders(this.authInfo));
+    return fetch(`/api/user/${id}/profile`, {
+      method: "GET",
+      headers: authApi.authHeaders(this.authInfo)
     });
   }
 };

@@ -9,6 +9,7 @@ import student.manchester.api.auth.bean.AuthenticatedResponse;
 public class LoginResponse extends AuthenticatedResponse {
 
     private String email;
+    private Long id;
 
     public LoginResponse() {
 
@@ -24,5 +25,13 @@ public class LoginResponse extends AuthenticatedResponse {
 
     public void setEmail(final String email) {
         this.email = email;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(final Long id) {
+        this.id = id;
     }
 }

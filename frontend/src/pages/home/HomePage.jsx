@@ -32,55 +32,57 @@ const MEDIA_SCALE = {
 };
 
 const ScalableLandingView = ({ classes, scale, register }) => (
-  <Paper className={classes.root_body}>
-    <Typography
-      style={{ fontSize: scale(styles.display1.fontSize) }}
-      variant="display1"
-      color="primary"
-      component="h1"
-    >
-      Rebind
-    </Typography>
-    <Typography
-      style={{ fontSize: scale(styles.display2.fontSize) }}
-      variant="display2"
-      color="primary"
-      component="p"
-    >
-      is a project that brings the world closer together by making it simple to
-      connect with anyone.
-      <br />
-      This is achieved by empowering the users to present themselves to everyone
-      with just one word.
-      <br />
-      It is a cloud electronic contact book that is tailored to the natural way
-      of human networking.
-    </Typography>
-    <Button
-      style={{
-        fontSize: scale(styles.button.fontSize),
-        height: scale(styles.button.height),
-        width: scale(styles.button.width)
-      }}
-      size="medium"
-      variant="contained"
-      color="secondary"
-      className={classes.button}
-      onClick={event => {
-        event.preventDefault();
-        register();
-      }}
-    >
-      <GroupAddIcon
+  <div className={classes.root}>
+    <div className={classes.root_overlay}>
+      <Typography
+        style={{ fontSize: scale(styles.display1.fontSize) }}
+        variant="display1"
         color="primary"
-        className={classes.icon}
+        component="h1"
+      >
+        Rebind
+      </Typography>
+      <Typography
+        style={{ fontSize: scale(styles.display2.fontSize) }}
+        variant="display2"
+        color="primary"
+        component="p"
+      >
+        is a project that brings the world closer together by making it simple
+        to connect with anyone.
+        <br />
+        This is achieved by empowering the users to present themselves to
+        everyone with just one word.
+        <br />
+        It is a cloud electronic contact book that is tailored to the natural
+        way of human networking.
+      </Typography>
+      <Button
         style={{
-          fontSize: scale(styles.icon.fontSize)
+          fontSize: scale(styles.button.fontSize),
+          height: scale(styles.button.height),
+          width: scale(styles.button.width)
         }}
-      />
-      Sign up
-    </Button>
-  </Paper>
+        size="medium"
+        variant="contained"
+        color="primary"
+        className={classes.button}
+        onClick={event => {
+          event.preventDefault();
+          register();
+        }}
+      >
+        <GroupAddIcon
+          color="secondary"
+          className={classes.icon}
+          style={{
+            fontSize: scale(styles.icon.fontSize)
+          }}
+        />
+        Sign up
+      </Button>
+    </div>
+  </div>
 );
 
 ScalableLandingView.propTypes = {

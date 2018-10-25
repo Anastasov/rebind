@@ -1,6 +1,7 @@
 /* eslint-disable */
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import { push } from "react-router-redux";
 import ReBind from "../../config/ReBind";
 import PropTypes from "prop-types";
 import { Link, withRouter } from "react-router-dom";
@@ -33,6 +34,8 @@ class Navigation extends Component {
     classes: PropTypes.object.isRequired,
     navbar: PropTypes.object.isRequired,
     authInfo: PropTypes.object.isRequired,
+    openHomePage: PropTypes.func.isRequired,
+    openProfilePage: PropTypes.func.isRequired,
     onShowUserMenu: PropTypes.func.isRequired,
     onHideUserMenu: PropTypes.func.isRequired
   };
@@ -60,7 +63,9 @@ class Navigation extends Component {
       classes,
       navbar,
       onShowUserMenu,
-      onHideUserMenu
+      onHideUserMenu,
+      openHomePage,
+      openProfilePage
     } = this.props;
     const { auth, anchorEl } = this.state;
     const open = Boolean(anchorEl);
@@ -73,6 +78,7 @@ class Navigation extends Component {
               className={classes.menuButton}
               color="inherit"
               aria-label="Menu"
+              onClick={openHomePage}
             >
               <MenuIcon />
             </IconButton>
@@ -80,6 +86,7 @@ class Navigation extends Component {
               variant="title"
               color="inherit"
               className={classes.grow}
+              onClick={openHomePage}
             >
               {title}
             </Typography>
@@ -110,20 +117,18 @@ class Navigation extends Component {
                   open={open}
                   onClose={this.handleClose}
                 >
-                  <MenuItem color="inherit" onClick={this.handleClose}>
+                  <MenuItem color="inherit" onClick={openProfilePage}>
                     Profile
                   </MenuItem>
-                  <Link to="/">
-                    <MenuItem
-                      color="inherit"
-                      onClick={event => {
-                        onHideUserMenu();
-                        this.handleClose(event);
-                      }}
-                    >
-                      My account
-                    </MenuItem>
-                  </Link>
+                  <MenuItem
+                    color="inherit"
+                    onClick={event => {
+                      onHideUserMenu();
+                      this.handleClose(event);
+                    }}
+                  >
+                    My account
+                  </MenuItem>
                 </Menu>
               </div>
             )}
@@ -143,7 +148,9 @@ const mapStateToProps = state => ({
 });
 const mapDispatchToProps = dispatch => ({
   onShowUserMenu: () => dispatch(showUserMenuActionCreator()),
-  onHideUserMenu: () => dispatch(hideUserMenuActionCreator())
+  onHideUserMenu: () => dispatch(hideUserMenuActionCreator()),
+  openHomePage: () => dispatch(push("/home")),
+  openProfilePage: () => dispatch(push("/profile"))
 });
 const ReduxNavigation = connect(
   mapStateToProps,
