@@ -1,25 +1,31 @@
-export const registerNewUser = userCredentials => fetch('/signUp', {
-  method: 'POST',
-  mode: 'cors',
-  cache: 'no-cache',
-  credentials: 'same-origin',
-  headers: {
-    'Content-Type': 'application/json; charset=utf-8'
-  },
-  redirect: 'follow', // manual, *follow, error
-  referrer: 'no-referrer', // no-referrer, *client
-  body: JSON.stringify(userCredentials), // body data type must match "Content-Type" header
-}).then((response) => { console.log(response); return response.json(); });
+// import { devLog } from "../util/ObjectUtils";
+import * as authApi from "./auth-api";
 
-export const login = userCredentials => fetch('/login', {
-  method: 'POST',
-  mode: 'cors',
-  cache: 'no-cache',
-  credentials: 'same-origin',
-  headers: {
-    'Content-Type': 'application/json; charset=utf-8'
+const UserApi = {
+  ...authApi.api,
+  login(userCredentials) {
+    return fetch("/login", {
+      method: "POST",
+      mode: "cors",
+      cache: "no-cache",
+      credentials: "same-origin",
+      headers: authApi.authHeaders(this.authInfo),
+      referrer: "no-referrer", // no-referrer, *client
+      body: JSON.stringify(userCredentials) // body data type must match "Content-Type" header
+    });
   },
-  redirect: 'follow', // manual, *follow, error
-  referrer: 'no-referrer', // no-referrer, *client
-  body: JSON.stringify(userCredentials), // body data type must match "Content-Type" header
-}).then((response) => { console.log(response); return response.json(); });
+  registerNewUser(userCredentials) {
+    return fetch("/signUp", {
+      method: "POST",
+      mode: "cors",
+      cache: "no-cache",
+      credentials: "same-origin",
+      headers: authApi.authHeaders(this.authInfo),
+      redirect: "follow", // manual, *follow, error
+      referrer: "no-referrer", // no-referrer, *client
+      body: JSON.stringify(userCredentials) // body data type must match "Content-Type" header
+    });
+  }
+};
+
+export default UserApi;

@@ -1,7 +1,7 @@
 const styles = {
-//   auth: {
-//     textAlign: 'center'
-//   }
+  root: {
+    flexGrow: 1
+  }
 };
 
 export default styles;

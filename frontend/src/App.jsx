@@ -1,27 +1,37 @@
 /* eslint-disable */
-import React from 'react';
-import { Provider } from 'react-redux';
-import { BrowserRouter as Router, Route } from "react-router-dom";
-import { configuredStore } from './configureStore';
-import HomePage from './pages/home/HomePage';
-import AuthModalContainer from './components/auth/AuthModalContainer';
-import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
-import { createMuiTheme } from '@material-ui/core/styles';
-import ReBind from './assets/ReBind';
-import 'font-awesome/css/font-awesome.min.css';
-import 'bootstrap-css-only/css/bootstrap.min.css';
-import 'mdbreact/dist/css/mdb.css';
-import './App.css';
-import 'typeface-roboto';
+import React from "react";
+import { Provider } from "react-redux";
+import { Route, Switch, Router } from "react-router-dom";
+import { configuredStore, history } from "./config/configureStore";
+import MuiThemeProvider from "@material-ui/core/styles/MuiThemeProvider";
+import CssBaseline from "@material-ui/core/CssBaseline";
+import { createMuiTheme } from "@material-ui/core/styles";
+import ReBind from "./config/ReBind";
+import Navigation from "./components/nav/Navigation";
+import ColoredSnackbar from "./components/snackbar/ColoredSnackbar";
+import ModalContainer from "./components/modal/ModalContainer";
+import HomePage from "./pages/home/HomePage";
+import MyProfilePage from "./pages/profile/MyProfilePage";
+import "font-awesome/css/font-awesome.min.css";
+import "bootstrap-css-only/css/bootstrap.min.css";
+import "mdbreact/dist/css/mdb.css";
+import "./App.css";
+import "typeface-roboto";
 /* eslint-enable */
 
 const App = () => (
   <Provider store={configuredStore}>
     <div className="App">
       <MuiThemeProvider theme={createMuiTheme(ReBind.THEME)}>
-        <Router>
-          <Route path="/" component={HomePage} />
-          <Route path="/test" component={HomePage} />
+        <CssBaseline />
+        <Router history={history}>
+          <Navigation />
+          <ColoredSnackbar />
+          <ModalContainer />
+          <Switch>
+            <Route path="/home" component={HomePage} />
+            <Route path="/login" component={MyProfilePage} />
+          </Switch>
         </Router>
       </MuiThemeProvider>
     </div>

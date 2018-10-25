@@ -1,10 +1,11 @@
-import { assign } from '../../util/ObjectUtils';
+import { assign } from "../../util/ObjectUtils";
 import {
   SEND_LOGIN_DATA,
   SET_PASSWORD_VISIBILITY,
   USER_AUTHENTHICATED_SUCC,
-  SEND_REGISTER_DATA
-} from './authActionCreators';
+  SEND_REGISTER_DATA,
+  SET_USER_DATA
+} from "./authActionCreators";
 
 const authReducer = (state, action) => {
   const { type, payload } = action;
@@ -13,8 +14,9 @@ const authReducer = (state, action) => {
     case SEND_LOGIN_DATA:
     case SET_PASSWORD_VISIBILITY:
     case USER_AUTHENTHICATED_SUCC:
-    case 'SHOW_USER_MENU':
-    case 'HIDE_USER_MENU':
+    case SET_USER_DATA:
+    case "SHOW_USER_MENU":
+    case "HIDE_USER_MENU":
       return assign(state, { ...payload });
     default:
       return assign(state);
@@ -22,10 +24,3 @@ const authReducer = (state, action) => {
 };
 
 export default authReducer;
-
-export const getAuthInfoSelector = (stateAuthInfo) => {
-  // do some filtering of state and
-  // return new state
-  console.log(stateAuthInfo);
-  return stateAuthInfo;
-};

@@ -5,4 +5,4 @@ import './index.css';
 import App from './App';
 /* eslint-enable */
 
-ReactDOM.render(<App />, document.getElementById('rebind-app'));
+ReactDOM.render(<App />, document.getElementById("rebind-app"));
