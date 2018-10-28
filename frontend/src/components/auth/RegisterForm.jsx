@@ -12,39 +12,24 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import IconButton from "@material-ui/core/IconButton";
 import Button from "@material-ui/core/Button";
-import TextField from "@material-ui/core/TextField";
 import { withStyles } from "@material-ui/core/styles";
 import { authInfoSelector } from "../../reducers/rootReducer";
 import {
   setPasswordVisibilityActionCreator,
   handleRegisterActionCreator
 } from "../../reducers/auth/authActionCreators";
+import withMobileDialog from "@material-ui/core/withMobileDialog";
 import { openLoginModalActionCreator } from "../../reducers/modal/modalActionCreators";
 import isEmailValid from "sane-email-validation";
 import { formatRequiredThing, formatWrongThing } from "../../config/ux";
-import styles from "./RegisterFormStyles";
+import styles from "./AuthModalContainerStyles";
 import { devLog } from "../../util/ObjectUtils";
+import TextField from "../form/TextField";
+import * as PasswordUtils from "../../util/PasswordUtils";
 /* eslint-enable */
 
 export const PAGE_NAME = "Sign up";
 
-const showError = meta => meta.touched && meta.error;
-const FieldRenderer = ({
-  input,
-  meta,
-  label,
-  orError = () => false,
-  ...rest
-}) => (
-  <TextField
-    fullWidth
-    color="inherit"
-    error={showError(meta) || orError(meta)}
-    label={showError(meta) ? meta.error : label}
-    {...input}
-    {...rest}
-  />
-);
 const passAdornment = (showPassword, toggleShowPassword) => (
   <InputAdornment position="end">
     <IconButton
@@ -64,13 +49,17 @@ const validate = values => {
     errors.email = formatWrongThing("email", false);
   }
 
+  let passwordValidationError = null;
   if (!values.password) {
     errors.password = formatRequiredThing("password");
+  } else {
+    passwordValidationError = PasswordUtils.validate(values.password);
+    errors.password = passwordValidationError;
   }
 
-  if (!values.re_password) {
+  if (values.password && !passwordValidationError && !values.re_password) {
     errors.re_password = formatRequiredThing("re-password");
-  } else if (!values.password || values.re_password !== values.password) {
+  } else if (values.re_password !== values.password) {
     errors.re_password = "Passwords don't match";
   }
   return errors;
@@ -78,6 +67,7 @@ const validate = values => {
 
 const RegisterFormComponent = ({
   classes,
+  fullScreen,
   authInfo,
   togglePasswordVisibility,
   handleRegister,
@@ -103,7 +93,6 @@ const RegisterFormComponent = ({
         type="email"
         label="Email"
         placeholder="my-email@mail.com"
-        className={classes.textField}
         onFocus={() => {}}
         props={{
           disabled: submitting
@@ -117,7 +106,7 @@ const RegisterFormComponent = ({
             </InputAdornment>
           )
         }}
-        component={FieldRenderer}
+        component={TextField}
       />
       <br />
       <Field
@@ -125,7 +114,9 @@ const RegisterFormComponent = ({
         type={authInfo.isPasswordVisible ? "text" : "password"}
         label="Password"
         placeholder="mySecretPassowrd"
-        className={classes.textField}
+        helperText={{ text: "Use 8 or more letters and numbers" }}
+        orError={meta => meta.dirty && meta.error}
+        component={TextField}
         props={{
           disabled: submitting
         }}
@@ -135,7 +126,6 @@ const RegisterFormComponent = ({
             togglePasswordVisibility
           )
         }}
-        component={FieldRenderer}
       />
       <br />
       <Field
@@ -143,34 +133,38 @@ const RegisterFormComponent = ({
         type={authInfo.isPasswordVisible ? "text" : "password"}
         label="Re-password"
         placeholder="mySecretPassowrd"
-        className={classes.textField}
         props={{
           disabled: submitting
         }}
         orError={meta => meta.invalid}
-        component={FieldRenderer}
+        component={TextField}
       />
       <br />
     </DialogContent>
     <DialogActions>
       <Button
         disableRipple
-        onClick={() => openLoginModal()}
+        onClick={openLoginModal}
         label="Go to Sign In"
-        style={styles}
         variant="text"
         color="primary"
+        size="large"
         className={classes.button_alternative}
         disabled={submitting}
+        style={
+          fullScreen
+            ? styles.button_alternative_full
+            : styles.button_alternative_normal
+        }
       >
-        Or, Sign In
+        Login
       </Button>
       <Button
         type="submit"
         label="Sign Up"
-        style={styles}
         variant="contained"
         color="primary"
+        size="large"
         className={classes.button}
         disabled={!valid || submitting}
       >
@@ -188,6 +182,7 @@ RegisterFormComponent.propTypes = {
   openLoginModal: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired,
   submitting: PropTypes.bool.isRequired,
+  fullScreen: PropTypes.bool.isRequired,
   valid: PropTypes.bool.isRequired
 };
 
@@ -196,6 +191,7 @@ const ReduxFormRegisterForm = reduxForm({
   validate
 })(RegisterFormComponent);
 const StyledRegisterForm = withStyles(styles)(ReduxFormRegisterForm);
+const ResponsiveRegisterForm = withMobileDialog()(StyledRegisterForm);
 
 const mapStateToContentProps = state => ({
   authInfo: authInfoSelector(state)
@@ -209,6 +205,6 @@ const mapDispatchToContentProps = dispatch => ({
 const ReduxRegisterForm = connect(
   mapStateToContentProps,
   mapDispatchToContentProps
-)(StyledRegisterForm);
+)(ResponsiveRegisterForm);
 
 export default ReduxRegisterForm;

@@ -52,7 +52,7 @@ class AuthModalContainer extends Component {
         color="inherit"
       >
         {modal.showProgressBar && (
-          <div className={classes.root}>
+          <div className={classes.progress}>
             <LinearProgress />
           </div>
         )}

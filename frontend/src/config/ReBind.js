@@ -1,5 +1,6 @@
-const LIGHT_GREY = "#484848";
-const GREY = "#212121";
+const LIGHT_GREY = "#E0E0E0";
+const GREY = "#484848";
+const BLACK = "#212121";
 const DARK_GREY = "#000000";
 const LIGHT_YELLOW = "#ffff6b";
 const YELLOW = "#fcd734";
@@ -8,43 +9,36 @@ const DARK_YELLOW = "#c5a600";
 const THEME = {
   palette: {
     type: "dark",
-    secondary: {
-      light: LIGHT_GREY,
-      main: GREY,
-      dark: DARK_GREY,
-      contrastText: YELLOW
-    },
     primary: {
       light: LIGHT_YELLOW,
       main: YELLOW,
       dark: DARK_YELLOW,
-      contrastText: GREY
+      contrastText: BLACK
+    },
+    secondary: {
+      light: GREY,
+      main: BLACK,
+      dark: DARK_GREY,
+      contrastText: YELLOW,
+      altText: LIGHT_GREY
     }
   },
   typography: {
     useNextVariants: true,
     // Use the system font instead of the default Roboto font.
-    fontFamily: [
-      "-apple-system",
-      "BlinkMacSystemFont",
-      '"Segoe UI"',
-      "Roboto",
-      '"Helvetica Neue"',
-      "Arial",
-      "sans-serif",
-      '"Apple Color Emoji"',
-      '"Segoe UI Emoji"',
-      '"Segoe UI Symbol"'
-    ].join(","),
+    fontFamily: "'Montserrat', sans-serif",
+    fontWeightLight: 300,
+    fontWeightRegular: 400,
     fontWeightMedium: 500,
+    // fontSize: 21,
     body1: {
       fontWeight: 500
     },
     subtitle1: {
-      fontSize: 12
+      fontSize: 48
     },
     button: {
-      fontStyle: "italic"
+      // fontStyle: "italic"
     }
   }
 };

@@ -2,7 +2,8 @@ const styles = {
   root: {
     flexGrow: 1
   },
-  grow: {
+  logo_font: {
+    fontFamily: "'Bungee', cursive",
     flexGrow: 1
   },
   menuButton: {

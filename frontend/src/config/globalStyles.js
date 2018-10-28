@@ -1,7 +1,5 @@
 const styles = {
   root: {
-    // fontFamily:
-    //   '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,"Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji","Segoe UI Symbol"',
     textAlign: "center"
   },
   root_body: {
@@ -20,6 +18,10 @@ const styles = {
     justifyContent: "center",
     fontSize: "calc(10px + 2vmin)",
     color: "#212121"
+  },
+  formControl: {
+    fontFamily: "'Roboto', sans-serif",
+    fontSize: 16
   }
 };
 export default styles;

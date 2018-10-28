@@ -7,21 +7,35 @@ const styles = {
   display1: {
     fontSize: 75
   },
-  display2: {
-    fontSize: 16
+  slogan: {
+    fontSize: 110
   },
-  button: {
-    marginTop: "5%",
-    fontSize: 30,
-    height: 60,
-    width: 250,
-    fontFamily: '"Google Sans",arial,sans-serif',
-    fontStyle: "normal",
-    letterSpacing: "0.25px"
+  description: {
+    color: ReBind.THEME.palette.secondary.altText,
+    fontSize: 22,
+    textAlign: "justify",
+    paddingLeft: "20%"
+  },
+  sign_up_button: {
+    // fontFamily: "'Nunito', cursive",
+    maxHeight: "85px",
+    fontWeight: 500,
+    textAlign: "center",
+    fontSize: "3vw"
+  },
+  login_button: {
+    // fontFamily: "'Nunito', cursive",
+    maxHeight: "85px",
+    fontWeight: 500,
+    textAlign: "center",
+    fontSize: "2vw"
+  },
+  buttons: {
+    marginTop: "10vw",
+    marginRight: "1vw"
   },
   icon: {
-    fontSize: 45,
-    margin: "15px"
+    paddingLeft: "2%"
   },
   card: {
     color: ReBind.THEME.palette.primary.contrastText,
@@ -39,7 +53,7 @@ const styles = {
     position: "relative",
     top: 0,
     bottom: 0,
-    height: "100vh",
+    height: "900px",
     zIndex: 100
   },
   root_overlay: {
@@ -50,8 +64,11 @@ const styles = {
     height: "100%",
     width: "100%",
     zIndex: 97,
-    background: "rgba(0, 0, 0, 0.7)",
+    background: "rgba(0, 0, 0, 0.8)",
     display: "block"
+  },
+  logo_font: {
+    fontFamily: "'Bungee', cursive"
   }
 };
 

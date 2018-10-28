@@ -6,6 +6,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
     <title>ReBind</title>
+    <link href="https://fonts.googleapis.com/css?family=Bungee|Maven+Pro:600|Montserrat:500,900|Nunito:700" rel="stylesheet">
 </head>
 <body>
 <div id="rebind-app" ></div>

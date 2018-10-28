@@ -2,7 +2,7 @@ import { SubmissionError } from "redux-form";
 import { setCookie } from "redux-cookie";
 import COOKIES from "../config/COOKIES";
 import { showSnackBarActionCreator } from "../reducers/snackbar/snackbarActionCreators";
-import { hasOwnProps, afterMinutes } from "./ObjectUtils";
+import { devLog, hasOwnProps, afterMinutes } from "./ObjectUtils";
 
 export const validateIsOk = (dispatch, response, serverData, message) => {
   if (serverData && hasOwnProps(serverData.errors)) {
@@ -64,9 +64,9 @@ export const handleResponse = (
   errorMessage,
   tokenHandler = () => {}
 ) => {
-  console.log(response, "Server Response:");
+  devLog(response, "Server Response:");
   return response.json().then(serverData => {
-    console.log(serverData, "Server Data:");
+    devLog(serverData, "Server Data:");
     validateIsOk(dispatch, response, serverData, errorMessage);
     const data = getData(dispatch, serverData, tokenHandler);
     return data;

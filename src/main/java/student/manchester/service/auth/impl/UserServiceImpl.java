@@ -109,7 +109,6 @@ public class UserServiceImpl implements UserService {
          *  (?=.*[0-9])       # a digit must occur at least once
          *  (?=.*[a-z])       # a lower case letter must occur at least once
          *  (?=.*[A-Z])       # an upper case letter must occur at least once
-         *  (?=.*[@#$%^&+=])  # a special character must occur at least once
          *  (?=\S+$)          # no whitespace allowed in the entire string
          *  .{8,}             # anything, at least eight places though
          *  $                 # end-of-string
@@ -120,12 +119,11 @@ public class UserServiceImpl implements UserService {
                     .append("digit, ")
                     .append("lower case letter, ")
                     .append("upper case letter, and a ")
-                    .append("special character[@#$%^&+=].")
                     .append("White-space not allowed.")
                     .toString();
 
         private static final Pattern pattern =
-                Pattern.compile("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}$");
+                Pattern.compile("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\\S+$).{8,}$");
 
         private static void isValid(final UserDTO user) {
             final String email = user.getEmail() == null ? "" : user.getEmail();

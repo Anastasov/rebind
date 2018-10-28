@@ -85,7 +85,7 @@ class Navigation extends Component {
             <Typography
               variant="title"
               color="inherit"
-              className={classes.grow}
+              className={classes.logo_font}
               onClick={openHomePage}
             >
               {title}
