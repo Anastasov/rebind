@@ -66,6 +66,14 @@ export const setUserDataActionCreator = user => ({
   }
 });
 
+export const MOUSE_ON_REGISTER_BUTTON = "MOUSE_ON_REGISTER_BUTTON";
+export const mouseOnRegisterButtonActionCreator = visible => ({
+  type: MOUSE_ON_REGISTER_BUTTON,
+  payload: {
+    mouseOnRegisterButton: visible
+  }
+});
+
 /** AUTHENTICATED ACTION CREATORS */
 export const handleResponse = (dispatch, errorMessage) => response =>
   handle(dispatch, response, errorMessage, loginUser);

@@ -4,6 +4,7 @@ import {
   SET_PASSWORD_VISIBILITY,
   USER_AUTHENTHICATED_SUCC,
   SEND_REGISTER_DATA,
+  MOUSE_ON_REGISTER_BUTTON,
   SET_USER_DATA
 } from "./authActionCreators";
 
@@ -15,6 +16,7 @@ const authReducer = (state, action) => {
     case SET_PASSWORD_VISIBILITY:
     case USER_AUTHENTHICATED_SUCC:
     case SET_USER_DATA:
+    case MOUSE_ON_REGISTER_BUTTON:
     case "SHOW_USER_MENU":
     case "HIDE_USER_MENU":
       return assign(state, { ...payload });
