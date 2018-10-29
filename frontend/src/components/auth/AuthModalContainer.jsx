@@ -4,7 +4,6 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { withStyles } from "@material-ui/core/styles";
 import styles from "./AuthModalContainerStyles";
-import { isMobileOnly } from "react-device-detect";
 import RegisterForm, * as RegisterPageDetails from "./RegisterForm";
 import LoginForm, * as LoginFormDetails from "./LoginForm";
 import LinearProgress from "@material-ui/core/LinearProgress";
@@ -41,12 +40,11 @@ class AuthModalContainer extends Component {
       fullScreen,
       closeAuthenticationWindow
     } = this.props;
-    const showOnFullScreen = isMobileOnly || fullScreen;
     return (
       <Dialog
         disableBackdropClick={modal.showProgressBar}
         disableEscapeKeyDown={modal.showProgressBar}
-        fullScreen={showOnFullScreen}
+        fullScreen={fullScreen}
         open={open}
         onBackdropClick={() => closeAuthenticationWindow()}
         onEscapeKeyDown={() => closeAuthenticationWindow()}

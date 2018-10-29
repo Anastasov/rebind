@@ -85,7 +85,6 @@ const showSuccessAndCloseModal = (dispatch, message) => data => {
       message
     })
   );
-
   dispatch(setUserDataActionCreator({ id: data.id }));
   dispatch(closeAuthenticationModalActionCreator());
   dispatch(push("/profile"));
