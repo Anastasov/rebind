@@ -43,6 +43,11 @@ public class HomeController {
         return "index";
     }
 
+    @RequestMapping(value = "/contacts", method = RequestMethod.GET)
+    public String contactsPage() {
+        return "index";
+    }
+
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public String loginPage() {
         return "index";

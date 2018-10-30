@@ -11,6 +11,7 @@ import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
+import SignOutIcon from "@material-ui/icons/KeyboardTab";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import MenuItem from "@material-ui/core/MenuItem";
 import Menu from "@material-ui/core/Menu";
@@ -18,6 +19,7 @@ import {
   showUserMenuActionCreator,
   hideUserMenuActionCreator
 } from "../../reducers/nav/navActionCreators";
+import { signoutUser } from "../../reducers/auth/authActionCreators";
 import { authInfoSelector, navbarSelector } from "../../reducers/rootReducer";
 import ModalContainer from "../modal/ModalContainer";
 import styles from "./NavigationStyles";
@@ -36,6 +38,7 @@ class Navigation extends Component {
     authInfo: PropTypes.object.isRequired,
     openHomePage: PropTypes.func.isRequired,
     openProfilePage: PropTypes.func.isRequired,
+    signOutUser: PropTypes.func.isRequired,
     onShowUserMenu: PropTypes.func.isRequired,
     onHideUserMenu: PropTypes.func.isRequired
   };
@@ -62,16 +65,18 @@ class Navigation extends Component {
       title,
       classes,
       navbar,
+      authInfo,
       onShowUserMenu,
       onHideUserMenu,
       openHomePage,
-      openProfilePage
+      openProfilePage,
+      signOutUser
     } = this.props;
-    const { auth, anchorEl } = this.state;
+    const { anchorEl } = this.state;
     const open = Boolean(anchorEl);
 
     return navbar.show ? (
-      <div className={classes.root}>
+      <div style={this.props.style} className={classes.root}>
         <AppBar color="secondary" position="fixed">
           <Toolbar>
             <IconButton
@@ -90,48 +95,59 @@ class Navigation extends Component {
             >
               {title}
             </Typography>
-            {auth && (
-              <div>
-                <IconButton
-                  aria-owns={open ? "menu-appbar" : null}
-                  aria-haspopup="true"
-                  onClick={event => {
-                    onShowUserMenu();
-                    this.handleMenu(event);
-                  }}
-                  color="inherit"
-                >
-                  <AccountCircle />
-                </IconButton>
-                <Menu
-                  id="menu-appbar"
-                  anchorEl={anchorEl}
-                  anchorOrigin={{
-                    vertical: "top",
-                    horizontal: "right"
-                  }}
-                  transformOrigin={{
-                    vertical: "top",
-                    horizontal: "right"
-                  }}
-                  open={open}
-                  onClose={this.handleClose}
-                >
-                  <MenuItem color="inherit" onClick={openProfilePage}>
-                    Profile
-                  </MenuItem>
-                  <MenuItem
-                    color="inherit"
+            {authInfo &&
+              authInfo.jwToken && (
+                <div>
+                  <IconButton
+                    aria-owns={open ? "menu-appbar" : null}
+                    aria-haspopup="true"
                     onClick={event => {
-                      onHideUserMenu();
-                      this.handleClose(event);
+                      onShowUserMenu();
+                      this.handleMenu(event);
                     }}
+                    color="inherit"
                   >
-                    My account
-                  </MenuItem>
-                </Menu>
-              </div>
-            )}
+                    <AccountCircle />
+                  </IconButton>
+                  <Menu
+                    id="menu-appbar"
+                    anchorEl={anchorEl}
+                    anchorOrigin={{
+                      vertical: "top",
+                      horizontal: "right"
+                    }}
+                    transformOrigin={{
+                      vertical: "top",
+                      horizontal: "right"
+                    }}
+                    open={open}
+                    onClose={this.handleClose}
+                  >
+                    <MenuItem color="inherit" onClick={openProfilePage}>
+                      Profile
+                    </MenuItem>
+                    <MenuItem
+                      color="inherit"
+                      onClick={event => {
+                        onHideUserMenu();
+                        this.handleClose(event);
+                      }}
+                    >
+                      My account
+                    </MenuItem>
+                    <MenuItem
+                      color="inherit"
+                      onClick={event => {
+                        signOutUser();
+                        this.handleClose(event);
+                      }}
+                    >
+                      Sign Out
+                      <SignOutIcon className={classes.sign_out_icon} />
+                    </MenuItem>
+                  </Menu>
+                </div>
+              )}
           </Toolbar>
         </AppBar>
         <ModalContainer />
@@ -150,7 +166,8 @@ const mapDispatchToProps = dispatch => ({
   onShowUserMenu: () => dispatch(showUserMenuActionCreator()),
   onHideUserMenu: () => dispatch(hideUserMenuActionCreator()),
   openHomePage: () => dispatch(push("/home")),
-  openProfilePage: () => dispatch(push("/profile"))
+  openProfilePage: () => dispatch(push("/profile")),
+  signOutUser: () => dispatch(signoutUser())
 });
 const ReduxNavigation = connect(
   mapStateToProps,

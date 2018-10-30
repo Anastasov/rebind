@@ -9,18 +9,27 @@ import {
   openLoginModalActionCreator
 } from "../../reducers/modal/modalActionCreators";
 import withMobileDialog from "@material-ui/core/withMobileDialog";
+import withCookies from "../../components/withCookies";
 import HomePageResponsiveUI from "./HomePageResponsiveUI";
 import verticalStyles from "./HomePageVerticalStyles";
 import horizontalStyles from "./HomePageHorizontalStyles";
+import { showNavActionCreator } from "../../reducers/nav/navActionCreators";
 const VerticalUI = withStyles(verticalStyles)(HomePageResponsiveUI);
 const HorizontalUI = withStyles(horizontalStyles)(HomePageResponsiveUI);
 /* eslint-enable */
 
 class HomePage extends Component {
   static propTypes = {
+    showNav: PropTypes.func.isRequired,
     fullScreen: PropTypes.bool.isRequired,
     openSignUpPage: PropTypes.func.isRequired
   };
+
+  componentDidMount() {
+    const { showNav } = this.props;
+    const SECOND = 1000;
+    setTimeout(showNav, 1 * SECOND);
+  }
 
   render() {
     /* eslint-disable */
@@ -39,12 +48,13 @@ class HomePage extends Component {
   }
 }
 
-const ResponsiveHomePage = withMobileDialog()(HomePage);
+const ResponsiveHomePage = withMobileDialog()(withCookies(HomePage));
 
 const mapStateToProps = () => ({});
 const mapDispatchToProps = dispatch => ({
   openSignUpPage: () => dispatch(openSignUpModalActionCreator()),
-  openLoginPage: () => dispatch(openLoginModalActionCreator())
+  openLoginPage: () => dispatch(openLoginModalActionCreator()),
+  showNav: () => dispatch(showNavActionCreator())
 });
 const ReduxHomePage = connect(
   mapStateToProps,

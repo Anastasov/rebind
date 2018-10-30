@@ -12,6 +12,7 @@ import ColoredSnackbar from "./components/snackbar/ColoredSnackbar";
 import ModalContainer from "./components/modal/ModalContainer";
 import HomePage from "./pages/home/HomePage";
 import MyProfilePage from "./pages/profile/MyProfilePage";
+import ContactsPage from "./pages/ContactsPage";
 import "font-awesome/css/font-awesome.min.css";
 import "bootstrap-css-only/css/bootstrap.min.css";
 import "mdbreact/dist/css/mdb.css";
@@ -30,6 +31,7 @@ const App = () => (
         <Switch>
           <Route path="/home" component={HomePage} />
           <Route path="/profile" component={MyProfilePage} />
+          <Route path="/contacts" component={ContactsPage} />
         </Switch>
       </Router>
     </MuiThemeProvider>

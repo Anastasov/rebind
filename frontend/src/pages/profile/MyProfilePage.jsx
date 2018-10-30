@@ -2,16 +2,14 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { getCookie } from "redux-cookie";
 import Typography from "@material-ui/core/Typography";
 import jwtDecode from "jwt-decode";
-import COOKIES from "../../config/COOKIES";
 import { withStyles } from "@material-ui/core/styles";
 import styles from "./MyProfilePageStyles";
 import { authInfoSelector, profileSelector } from "../../reducers/rootReducer";
-import { loginUser } from "../../reducers/auth/authActionCreators";
 import { showNavActionCreator } from "../../reducers/nav/navActionCreators";
 import { fetchProfileData } from "../../reducers/profile/profileActionCreators";
+import authComponent from "../../components/auth/authComponent";
 import { devLog } from "../../util/ObjectUtils";
 /* eslint-enable */
 
@@ -31,22 +29,11 @@ class MyProfilePage extends Component {
   };
 
   componentDidMount() {
-    const {
-      authInfo,
-      fetchProfile,
-      getJWTFromCookie,
-      logUser,
-      showNav
-    } = this.props;
+    const { authInfo, fetchProfile, showNav } = this.props;
 
-    const token =
-      authInfo && authInfo.jwToken ? authInfo.jwToken : getJWTFromCookie();
+    const token = authInfo.jwToken;
     devLog(token, "token");
     if (token) {
-      if (!authInfo.jwToken) {
-        logUser(token);
-      }
-
       const decodedToken = jwtDecode(token);
       devLog(decodedToken, "jwt-decode");
       if (decodedToken) {
@@ -70,15 +57,14 @@ class MyProfilePage extends Component {
     );
   }
 }
-const StyledMyProfilePage = withStyles(styles)(MyProfilePage);
+const AuthMyProfilePage = authComponent(MyProfilePage, "/profile");
+const StyledMyProfilePage = withStyles(styles)(AuthMyProfilePage);
 
 const mapStateToProps = state => ({
   authInfo: authInfoSelector(state),
   profile: profileSelector(state)
 });
 const mapDispatchToProps = dispatch => ({
-  getJWTFromCookie: () => dispatch(getCookie(COOKIES.TOKEN)),
-  logUser: jwToken => dispatch(loginUser(jwToken)),
   showNav: () => dispatch(showNavActionCreator()),
   fetchProfile: id => dispatch(fetchProfileData(id))
 });

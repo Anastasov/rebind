@@ -8,23 +8,6 @@ import rootReducer from "../reducers/rootReducer";
 import INITIAL_STATE from "./initial-state";
 import ReBind from "./ReBind";
 
-const addLoggingToDispatch = store => {
-  const rawDispatch = store.dispatch;
-  /* eslint-disable */
-  if (!console.group) {
-    return rawDispatch;
-  }
-  return action => {
-    console.group(action.type);
-    console.log("%c prev_state:", "color: red", store.getState());
-    console.log("%c action_type:", "color: orange", action.type);
-    const result = rawDispatch(action);
-    console.log("%c next_state:", "color: green", store.getState());
-    console.groupEnd(action.type);
-    return result;
-  };
-  /* eslint-enable */
-};
 /* eslint-disable no-underscore-dangle */
 const useReduxDevTools =
   ReBind.IS_ENV_DEV && window.__REDUX_DEVTOOLS_EXTENSION__;
@@ -40,10 +23,6 @@ export const configureStore = () => {
       useReduxDevTools ? window.__REDUX_DEVTOOLS_EXTENSION__() : f => f
     )
   );
-
-  if (ReBind.IS_ENV_DEV) {
-    store.dispatch = addLoggingToDispatch(store);
-  }
 
   // set subscribtions to store changes.
   return store;

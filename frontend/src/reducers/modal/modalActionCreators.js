@@ -9,10 +9,11 @@ export const openSignUpModalActionCreator = () => ({
 
 export const SHOW_LOGIN_MODAL = "SHOW_LOGIN_MODAL";
 export const LOGIN_MODAL_NAME = "login";
-export const openLoginModalActionCreator = () => ({
+export const openLoginModalActionCreator = (redirect = "") => ({
   type: SHOW_LOGIN_MODAL,
   payload: {
-    show: LOGIN_MODAL_NAME
+    show: LOGIN_MODAL_NAME,
+    redirect
   }
 });
 

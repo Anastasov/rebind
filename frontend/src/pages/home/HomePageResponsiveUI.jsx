@@ -153,37 +153,55 @@ Buttons = connect(
  * Page Body: --------------------------------------------------
  *          |_> Sign Up / Login Buttons
  */
-const SloganAndAuthButtons = ({
+let SloganAndAuthButtons = ({
   isVerticalView,
+  authInfo,
   classes,
   actions,
   ...containerProps
-}) => (
-  <Grid container justify="center" {...containerProps}>
-    <Grid item xs={isVerticalView ? 10 : 6}>
-      <Typography
-        className={classes.description}
-        color="primary"
-        component="p"
-        style={stylesForGridMember(0)}
-      >
-        ReBind brings the world closer together by making it easy to connect
-        with anyone. It makes possible for people to reach out to others with a
-        single word, but also link with new aquantances in a matter of seconds.
-        You can create an electronic business card as well as keep existing
-        connections in a contact book.
-      </Typography>
+}) =>
+  authInfo.jwToken ? (
+    <Typography
+      className={classes.description}
+      color="primary"
+      component="p"
+      style={{
+        ...stylesForGridMember(0),
+        paddingLeft: "20%",
+        paddingRight: "20%"
+      }}
+    >
+      ReBind brings the world closer together by making it easy to connect with
+      anyone. It makes possible for people to reach out to others with a single
+      word, but also link with new aquantances in a matter of seconds. You can
+      create an electronic business card as well as keep existing connections in
+      a contact book.
+    </Typography>
+  ) : (
+    <Grid container justify="center" {...containerProps}>
+      <Grid item xs={isVerticalView ? 10 : 6}>
+        <Typography
+          className={classes.description}
+          color="primary"
+          component="p"
+          style={stylesForGridMember(0)}
+        >
+          ReBind brings the world closer together by making it easy to connect
+          with anyone. It makes possible for people to reach out to others with
+          a single word, but also link with new aquantances in a matter of
+          seconds. You can create an electronic business card as well as keep
+          existing connections in a contact book.
+        </Typography>
+      </Grid>
+      <Grid item xs>
+        <Buttons
+          isVerticalView={isVerticalView}
+          classes={classes}
+          actions={actions}
+        />
+      </Grid>
     </Grid>
-    <Grid item xs>
-      <Buttons
-        isVerticalView={isVerticalView}
-        classes={classes}
-        actions={actions}
-      />
-    </Grid>
-  </Grid>
-);
-
+  );
 SloganAndAuthButtons.propTypes = {
   isVerticalView: PropTypes.bool,
   classes: PropTypes.object.isRequired,
@@ -192,6 +210,14 @@ SloganAndAuthButtons.propTypes = {
 SloganAndAuthButtons.defaultProps = {
   isVerticalView: false
 };
+const mapStateToButtonsProps = state => ({
+  authInfo: authInfoSelector(state)
+});
+const mapDispatchToDescriptionProps = () => ({});
+SloganAndAuthButtons = connect(
+  mapStateToButtonsProps,
+  mapDispatchToDescriptionProps
+)(SloganAndAuthButtons);
 /**
  * Page Body: --------------------------------------------------
  */

@@ -40,14 +40,14 @@ class AuthModalContainer extends Component {
       fullScreen,
       closeAuthenticationWindow
     } = this.props;
+    const disableClose = modal.showProgressBar || !!modal.redirect;
+    const closeAuthModal = () => !disableClose && closeAuthenticationWindow();
     return (
       <Dialog
-        disableBackdropClick={modal.showProgressBar}
-        disableEscapeKeyDown={modal.showProgressBar}
         fullScreen={fullScreen}
         open={open}
-        onBackdropClick={() => closeAuthenticationWindow()}
-        onEscapeKeyDown={() => closeAuthenticationWindow()}
+        onBackdropClick={closeAuthModal}
+        onEscapeKeyDown={closeAuthModal}
         aria-labelledby="authentication-title"
         color="inherit"
       >

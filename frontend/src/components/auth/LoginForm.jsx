@@ -15,7 +15,7 @@ import Button from "@material-ui/core/Button";
 import TextField from "../form/TextField";
 import { withStyles } from "@material-ui/core/styles";
 import withMobileDialog from "@material-ui/core/withMobileDialog";
-import { authInfoSelector } from "../../reducers/rootReducer";
+import { authInfoSelector, modalSelector } from "../../reducers/rootReducer";
 import {
   setPasswordVisibilityActionCreator,
   handleLoginActionCreator
@@ -58,6 +58,7 @@ const LoginFormComponent = ({
   classes,
   fullScreen,
   authInfo,
+  modal,
   togglePasswordVisibility,
   handleLogin,
   openSignUpModal,
@@ -67,10 +68,13 @@ const LoginFormComponent = ({
 }) => (
   <Form
     onSubmit={handleSubmit(values =>
-      handleLogin({
-        username: values.email,
-        password: values.password
-      })
+      handleLogin(
+        {
+          username: values.email,
+          password: values.password
+        },
+        modal.redirect
+      )
     )}
   >
     <DialogContent>
@@ -149,6 +153,7 @@ const LoginFormComponent = ({
 
 LoginFormComponent.propTypes = {
   classes: PropTypes.object.isRequired,
+  modal: PropTypes.object.isRequired,
   authInfo: PropTypes.object.isRequired,
   openSignUpModal: PropTypes.func.isRequired,
   togglePasswordVisibility: PropTypes.func.isRequired,
@@ -161,18 +166,20 @@ LoginFormComponent.propTypes = {
 
 const LoginForm = reduxForm({
   form: "login",
-  validate
+  validate,
+  destroyOnUnmount: false
 })(LoginFormComponent);
 const ResponsiveLoginForm = withMobileDialog()(LoginForm);
 const StyledLoginForm = withStyles(styles)(ResponsiveLoginForm);
 const mapStateToContentProps = state => ({
-  authInfo: authInfoSelector(state)
+  authInfo: authInfoSelector(state),
+  modal: modalSelector(state)
 });
 const mapDispatchToContentProps = dispatch => ({
   togglePasswordVisibility: isVisible =>
     dispatch(setPasswordVisibilityActionCreator(isVisible)),
-  handleLogin: userCredentials =>
-    dispatch(handleLoginActionCreator(userCredentials)),
+  handleLogin: (userCredentials, redirect) =>
+    dispatch(handleLoginActionCreator(userCredentials, redirect)),
   openSignUpModal: () => dispatch(openSignUpModalActionCreator())
 });
 const ReduxLoginForm = connect(

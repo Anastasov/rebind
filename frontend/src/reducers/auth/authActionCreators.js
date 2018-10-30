@@ -1,4 +1,5 @@
 import { push } from "react-router-redux";
+import { setCookie } from "redux-cookie";
 import UserApi from "../../api/user-api";
 import {
   showProgressBarActionCreator,
@@ -6,6 +7,7 @@ import {
   hideHeaderErrorActionCreator,
   closeAuthenticationModalActionCreator
 } from "../modal/modalActionCreators";
+import COOKIES from "../../config/COOKIES";
 import { showSnackBarActionCreator } from "../snackbar/snackbarActionCreators";
 import { promiseToReturn } from "../../util/PromiseUtils";
 import { handleResponse as handle } from "../../util/ResponseUtils";
@@ -86,7 +88,7 @@ export const mouseOnLoginButtonActionCreator = visible => ({
 export const handleResponse = (dispatch, errorMessage) => response =>
   handle(dispatch, response, errorMessage, loginUser);
 
-const showSuccessAndCloseModal = (dispatch, message) => data => {
+const showSuccessAndCloseModal = (dispatch, redirect, message) => data => {
   dispatch(
     showSnackBarActionCreator({
       variant: "success",
@@ -95,7 +97,10 @@ const showSuccessAndCloseModal = (dispatch, message) => data => {
   );
   dispatch(setUserDataActionCreator({ id: data.id }));
   dispatch(closeAuthenticationModalActionCreator());
-  dispatch(push("/profile"));
+  if (!redirect) {
+    dispatch(push("/profile"));
+  }
+
   return promiseToReturn(data);
 };
 
@@ -109,12 +114,21 @@ export const handleRegisterActionCreator = user => (dispatch, getState) => {
     .finally(() => dispatch(hideProgressBarActionCreator()));
 };
 
-export const handleLoginActionCreator = user => (dispatch, getState) => {
+export const handleLoginActionCreator = (user, redirect) => (
+  dispatch,
+  getState
+) => {
   dispatch(hideHeaderErrorActionCreator());
   dispatch(showProgressBarActionCreator());
   return UserApi.auth(getState())
     .login(user)
     .then(handleResponse(dispatch, "credentials are incorrect"))
-    .then(showSuccessAndCloseModal(dispatch, "Login successful"))
+    .then(showSuccessAndCloseModal(dispatch, redirect, "Login successful"))
     .finally(() => dispatch(hideProgressBarActionCreator()));
+};
+
+export const signoutUser = () => dispatch => {
+  dispatch(setCookie(COOKIES.TOKEN, ""));
+  dispatch(loginUser(""));
+  dispatch(push("/home"));
 };

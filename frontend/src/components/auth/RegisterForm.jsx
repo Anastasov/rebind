@@ -86,7 +86,7 @@ const RegisterFormComponent = ({
     )}
   >
     <DialogContent>
-      <DialogContentText>to continue with ReBind.</DialogContentText>
+      <DialogContentText>to make your life easier.</DialogContentText>
       <br />
       <Field
         name="email"
