@@ -74,6 +74,14 @@ export const mouseOnRegisterButtonActionCreator = visible => ({
   }
 });
 
+export const MOUSE_ON_LOGIN_BUTTON = "MOUSE_ON_LOGIN_BUTTON";
+export const mouseOnLoginButtonActionCreator = visible => ({
+  type: MOUSE_ON_LOGIN_BUTTON,
+  payload: {
+    mouseOnLoginButton: visible
+  }
+});
+
 /** AUTHENTICATED ACTION CREATORS */
 export const handleResponse = (dispatch, errorMessage) => response =>
   handle(dispatch, response, errorMessage, loginUser);
@@ -96,7 +104,7 @@ export const handleRegisterActionCreator = user => (dispatch, getState) => {
   dispatch(showProgressBarActionCreator());
   return UserApi.auth(getState())
     .registerNewUser(user)
-    .then(handleResponse(dispatch, "Sign Up failed"))
+    .then(handleResponse(dispatch, "sign Up failed"))
     .then(showSuccessAndCloseModal(dispatch, "Sign Up successful"))
     .finally(() => dispatch(hideProgressBarActionCreator()));
 };
@@ -106,7 +114,7 @@ export const handleLoginActionCreator = user => (dispatch, getState) => {
   dispatch(showProgressBarActionCreator());
   return UserApi.auth(getState())
     .login(user)
-    .then(handleResponse(dispatch, "Login failed"))
+    .then(handleResponse(dispatch, "credentials are incorrect"))
     .then(showSuccessAndCloseModal(dispatch, "Login successful"))
     .finally(() => dispatch(hideProgressBarActionCreator()));
 };

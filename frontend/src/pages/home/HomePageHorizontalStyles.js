@@ -22,7 +22,7 @@ const styles = {
     textAlign: "center",
     fontSize: "4vw",
     marginTop: "2vw",
-    paddingLeft: 0
+    paddingLeft: 30
   },
   login_button: {
     maxHeight: "85px",

@@ -27,7 +27,6 @@ const UserApi = {
     });
   },
   fetchProfileData(id) {
-    console.log("headers", authApi.authHeaders(this.authInfo));
     return fetch(`/api/user/${id}/profile`, {
       method: "GET",
       headers: authApi.authHeaders(this.authInfo)

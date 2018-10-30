@@ -18,7 +18,7 @@ const ModalContainer = ({ modal }) => {
       currentlyOppenedModal = <AuthModalContainer open />;
       break;
     default:
-      currentlyOppenedModal = null;
+      currentlyOppenedModal = <React.Fragment />;
   }
   return currentlyOppenedModal;
 };

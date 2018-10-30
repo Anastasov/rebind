@@ -6,9 +6,11 @@ import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import SignUpIcon from "@material-ui/icons/KeyboardArrowRight";
 import Grid from "@material-ui/core/Grid";
-import Zoom from "@material-ui/core/Zoom";
 import Slide from "@material-ui/core/Slide";
-import { mouseOnRegisterButtonActionCreator } from "../../reducers/auth/authActionCreators";
+import {
+  mouseOnRegisterButtonActionCreator,
+  mouseOnLoginButtonActionCreator
+} from "../../reducers/auth/authActionCreators";
 import { authInfoSelector } from "../../reducers/rootReducer";
 /* eslint-enable */
 
@@ -20,7 +22,14 @@ const stylesForGridMember = index => ({
 /**
  * Sign Up / Login Buttons -------------------------------------
  */
-let Buttons = ({ classes, actions, authInfo, mouseOnRegister }) => (
+let Buttons = ({
+  classes,
+  actions,
+  isVerticalView,
+  authInfo,
+  mouseOnRegister,
+  mouseOnLogin
+}) => (
   <Grid
     className={classes.buttons}
     container
@@ -28,45 +37,98 @@ let Buttons = ({ classes, actions, authInfo, mouseOnRegister }) => (
     justify="space-evenly"
   >
     <Grid item>
-      <Button
-        size="large"
-        variant="contained"
-        color="primary"
-        className={classes.sign_up_button}
-        onMouseEnter={() => mouseOnRegister(true)}
-        onMouseLeave={() => mouseOnRegister(false)}
-        onClick={event => {
-          event.preventDefault();
-          actions.openSignUpPage();
-        }}
-      >
-        <Zoom in={authInfo.mouseOnRegisterButton}>
-          <SignUpIcon color="secondary" className={classes.icon} />
-        </Zoom>
-        Get Started
-      </Button>
+      {!isVerticalView && authInfo.mouseOnRegisterButton ? (
+        <Slide
+          direction="left"
+          in={authInfo.mouseOnRegisterButton}
+          timeout={500}
+        >
+          <Button
+            size="large"
+            variant="contained"
+            color="primary"
+            className={classes.sign_up_button}
+            onMouseEnter={() => mouseOnRegister(true)}
+            onMouseLeave={() => mouseOnRegister(false)}
+            onClick={event => {
+              event.preventDefault();
+              actions.openSignUpPage();
+            }}
+          >
+            Get Started
+            <SignUpIcon color="secondary" className={classes.icon} />
+          </Button>
+        </Slide>
+      ) : (
+        <Button
+          size="large"
+          variant="contained"
+          color="primary"
+          className={classes.sign_up_button}
+          onMouseEnter={() => mouseOnRegister(true)}
+          onMouseLeave={() => mouseOnRegister(false)}
+          onClick={event => {
+            event.preventDefault();
+            actions.openSignUpPage();
+          }}
+        >
+          Get Started
+        </Button>
+      )}
     </Grid>
     <Grid item xs>
-      <Button
-        size="large"
-        variant="outlined"
-        color="primary"
-        className={classes.login_button}
-        onClick={event => {
-          event.preventDefault();
-          actions.openLoginPage();
-        }}
-      >
-        Login
-      </Button>
+      {!isVerticalView && authInfo.mouseOnLoginButton ? (
+        <Slide
+          direction="left"
+          mountOnEnter
+          unmountOnExit
+          in={authInfo.mouseOnLoginButton}
+        >
+          <Button
+            size="large"
+            variant="outlined"
+            color="primary"
+            className={classes.login_button}
+            onMouseEnter={() => mouseOnLogin(true)}
+            onMouseLeave={() => mouseOnLogin(false)}
+            onClick={event => {
+              event.preventDefault();
+              actions.openLoginPage();
+            }}
+          >
+            Login
+            <SignUpIcon
+              style={{ color: "transparent" }}
+              className={classes.icon}
+            />
+          </Button>
+        </Slide>
+      ) : (
+        <Button
+          size="large"
+          variant="outlined"
+          color="primary"
+          className={classes.login_button}
+          onMouseEnter={() => mouseOnLogin(true)}
+          onMouseLeave={() => mouseOnLogin(false)}
+          onClick={event => {
+            event.preventDefault();
+            actions.openLoginPage();
+          }}
+        >
+          Login
+        </Button>
+      )}
     </Grid>
   </Grid>
 );
 
 Buttons.propTypes = {
+  isVerticalView: PropTypes.bool.isRequired,
   classes: PropTypes.object.isRequired,
   actions: PropTypes.object.isRequired,
   mouseOnRegister: PropTypes.func.isRequired,
+  mouseOnLogin: PropTypes.func.isRequired,
   authInfo: PropTypes.object.isRequired
 };
 
@@ -75,7 +137,9 @@ const mapStateToProps = state => ({
 });
 const mapDispatchToProps = dispatch => ({
   mouseOnRegister: isOnMouse =>
-    dispatch(mouseOnRegisterButtonActionCreator(isOnMouse))
+    dispatch(mouseOnRegisterButtonActionCreator(isOnMouse)),
+  mouseOnLogin: isOnMouse =>
+    dispatch(mouseOnLoginButtonActionCreator(isOnMouse))
 });
 Buttons = connect(
   mapStateToProps,
@@ -111,7 +175,11 @@ const SloganAndAuthButtons = ({
       </Typography>
     </Grid>
     <Grid item xs>
-      <Buttons classes={classes} actions={actions} />
+      <Buttons
+        isVerticalView={isVerticalView}
+        classes={classes}
+        actions={actions}
+      />
     </Grid>
   </Grid>
 );

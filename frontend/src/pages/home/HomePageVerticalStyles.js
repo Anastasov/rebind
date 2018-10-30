@@ -8,7 +8,8 @@ const styles = {
   },
   sign_up_button: {
     ...horizontalStyles.sign_up_button,
-    fontSize: "7vw"
+    fontSize: "7vw",
+    paddingLeft: 24
   },
   login_button: {
     ...horizontalStyles.login_button,
