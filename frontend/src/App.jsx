@@ -13,11 +13,9 @@ import ModalContainer from "./components/modal/ModalContainer";
 import HomePage from "./pages/home/HomePage";
 import MyProfilePage from "./pages/profile/MyProfilePage";
 import ContactsPage from "./pages/ContactsPage";
-import "font-awesome/css/font-awesome.min.css";
-import "bootstrap-css-only/css/bootstrap.min.css";
-import "mdbreact/dist/css/mdb.css";
-import "./App.css";
 import "typeface-roboto";
+import "typeface-bungee";
+import "typeface-montserrat";
 /* eslint-enable */
 
 const App = () => (

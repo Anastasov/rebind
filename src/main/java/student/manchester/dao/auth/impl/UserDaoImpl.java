@@ -1,6 +1,5 @@
 package student.manchester.dao.auth.impl;
 
-import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 import student.manchester.dao.GenericDaoHibernate;
 import student.manchester.dao.auth.UserDao;
@@ -25,7 +24,7 @@ public class UserDaoImpl extends GenericDaoHibernate<User, Long> implements User
         final Root<User> table = criteria.from(User.class);
         criteria.select(table)
                 .where(builder.equal(table.get("email"), email));
-        return !getSession().createQuery(criteria).getResultList().isEmpty();
+        return !getList(criteria).isEmpty();
     }
 
     @Override
@@ -41,8 +40,23 @@ public class UserDaoImpl extends GenericDaoHibernate<User, Long> implements User
         return getUser(criteria);
     }
 
+    @Override
+    public List<User> findByUsernameStarting(final String prefix) {
+        final CriteriaBuilder builder = getCriteriaBuilder();
+        final CriteriaQuery<User> criteria = createQuery();
+        final Root<User> table = criteria.from(User.class);
+        criteria.select(table)
+                .where(builder.like(table.get("username"), prefix + "%"))
+                .orderBy(builder.desc(table.get("username")));
+        return getList(criteria);
+    }
+
+    private List<User> getList(final CriteriaQuery<User> criteria) {
+        return getSession().createQuery(criteria).list();
+    }
+
     private User getUser(final CriteriaQuery<User> criteria) {
-        final List<User> matchingUsers = getSession().createQuery(criteria).getResultList();
+        final List<User> matchingUsers = getList(criteria);
         return hasExactlyOneElement(matchingUsers) ? matchingUsers.get(0) : null;
     }
 

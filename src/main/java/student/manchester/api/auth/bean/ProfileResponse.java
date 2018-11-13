@@ -1,18 +1,20 @@
 package student.manchester.api.auth.bean;
 
+import student.manchester.model.auth.bean.UserDTO;
+
 /**
  * @author Anastas Anastasov
  * on 10/25/2018.
  */
 public class ProfileResponse extends AuthenticatedResponse {
 
-    private String email;
+    private UserDTO user;
 
-    public String getEmail() {
-        return email;
+    public UserDTO getUser() {
+        return user;
     }
 
-    public void setEmail(final String email) {
-        this.email = email;
+    public void setUser(final UserDTO user) {
+        this.user = user;
     }
 }

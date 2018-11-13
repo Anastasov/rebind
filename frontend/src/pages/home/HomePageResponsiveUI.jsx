@@ -55,7 +55,7 @@ let Buttons = ({
               actions.openSignUpPage();
             }}
           >
-            Get Started
+            Sign up
             <SignUpIcon color="secondary" className={classes.icon} />
           </Button>
         </Slide>
@@ -72,7 +72,7 @@ let Buttons = ({
             actions.openSignUpPage();
           }}
         >
-          Get Started
+          Sign up
         </Button>
       )}
     </Grid>

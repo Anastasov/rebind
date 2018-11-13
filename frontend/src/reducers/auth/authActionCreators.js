@@ -1,5 +1,6 @@
 import { push } from "react-router-redux";
 import { setCookie } from "redux-cookie";
+import jwtDecode from "jwt-decode";
 import UserApi from "../../api/user-api";
 import {
   showProgressBarActionCreator,
@@ -37,12 +38,17 @@ export const setPasswordVisibilityActionCreator = isPasswordVisible => ({
 });
 
 export const USER_AUTHENTHICATED_SUCC = "USER_AUTHENTHICATED_SUCC";
-export const loginUser = jwToken => ({
-  type: USER_AUTHENTHICATED_SUCC,
-  payload: {
-    jwToken
-  }
-});
+export const loginUser = jwToken => {
+  const decodedToken = jwtDecode(jwToken);
+  let id = decodedToken ? decodedToken.jti : null;
+  return {
+    type: USER_AUTHENTHICATED_SUCC,
+    payload: {
+      jwToken,
+      id
+    }
+  };
+};
 
 export const SEND_REGISTER_DATA = "SEND_REGISTER_DATA";
 export const sendRegisterDataActionCreator = () => ({
@@ -109,8 +115,8 @@ export const handleRegisterActionCreator = user => (dispatch, getState) => {
   dispatch(showProgressBarActionCreator());
   return UserApi.auth(getState())
     .registerNewUser(user)
-    .then(handleResponse(dispatch, "sign Up failed"))
-    .then(showSuccessAndCloseModal(dispatch, "Sign Up successful"))
+    .then(handleResponse(dispatch, "sign up failed!"))
+    .then(showSuccessAndCloseModal(dispatch, null, "Sign up successful."))
     .finally(() => dispatch(hideProgressBarActionCreator()));
 };
 

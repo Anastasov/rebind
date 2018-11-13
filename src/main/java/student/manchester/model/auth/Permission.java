@@ -1,5 +1,6 @@
 package student.manchester.model.auth;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -30,7 +31,7 @@ public class Permission {
 	@JoinTable(name = "ROLES_PERMISSIONS",
 			inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"),
 			joinColumns = @JoinColumn(name = "permission_id", referencedColumnName = "id"))
-	private Set<Role> roles;
+	private Set<Role> roles = new HashSet<>();
 
 	public Long getId() {
 		return id;

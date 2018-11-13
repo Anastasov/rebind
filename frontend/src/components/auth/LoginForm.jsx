@@ -44,7 +44,7 @@ const validate = values => {
   if (!values.email) {
     errors.email = formatRequiredThing("email");
   } else if (!isEmailValid(values.email)) {
-    errors.email = formatWrongThing("email", false);
+    errors.email = formatWrongThing("email");
   }
 
   if (!values.password) {

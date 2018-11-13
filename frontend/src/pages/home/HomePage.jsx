@@ -26,9 +26,7 @@ class HomePage extends Component {
   };
 
   componentDidMount() {
-    const { showNav } = this.props;
-    const SECOND = 1000;
-    setTimeout(showNav, 1 * SECOND);
+    this.props.showNav({ backgroundColor: "rgba(255,255,255,0)" });
   }
 
   render() {
@@ -54,7 +52,7 @@ const mapStateToProps = () => ({});
 const mapDispatchToProps = dispatch => ({
   openSignUpPage: () => dispatch(openSignUpModalActionCreator()),
   openLoginPage: () => dispatch(openLoginModalActionCreator()),
-  showNav: () => dispatch(showNavActionCreator())
+  showNav: styles => dispatch(showNavActionCreator(styles))
 });
 const ReduxHomePage = connect(
   mapStateToProps,

@@ -6,7 +6,6 @@ import { connect } from "react-redux";
 import COOKIES from "../config/COOKIES";
 import { loginUser } from "../reducers/auth/authActionCreators";
 import { authInfoSelector } from "../reducers/rootReducer";
-import { devLog } from "../util/ObjectUtils";
 
 const mapStateToProps = state => ({
   authInfo: authInfoSelector(state)
@@ -20,11 +19,10 @@ const withCookies = WrappedComponent =>
     mapStateToProps,
     mapDispatchToProps
   )(
-    class AuthenticatedComponent extends Component {
+    class AuthenticatedCookiesComponent extends Component {
       static propTypes = {
         getJWTFromCookie: PropTypes.func.isRequired,
         logUser: PropTypes.func.isRequired,
-        redirectToLoginPage: PropTypes.func.isRequired,
         authInfo: PropTypes.object.isRequired
       };
       /* eslint-enable */
@@ -33,7 +31,6 @@ const withCookies = WrappedComponent =>
         super(props);
         const { authInfo, getJWTFromCookie, logUser } = props;
         const token = getJWTFromCookie();
-        devLog(token, "token");
         if (token) {
           if (!authInfo.jwToken) {
             logUser(token);

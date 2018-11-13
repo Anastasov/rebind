@@ -72,19 +72,3 @@ export const handleResponse = (
     return data;
   });
 };
-
-// const handleError = (dispatch, error) => {
-//   devLog(error.errors, "Caught Error");
-//   return promiseTo(() =>
-//     dispatch(setFormErrorsActionCreator(error.errors))
-//   ).then(
-//     promiseTo(() =>
-//       dispatch(
-//         showSnackBarActionCreator({
-//           variant: "error",
-//           message: `Ooops... ${error.message}`
-//         })
-//       )
-//     )
-//   );
-// };

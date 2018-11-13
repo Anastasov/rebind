@@ -1,5 +1,6 @@
 package student.manchester.service.auth;
 
+import student.manchester.api.auth.bean.UpdateUserInput;
 import student.manchester.model.auth.bean.UserDTO;
 
 /**
@@ -13,4 +14,8 @@ public interface UserService {
     UserDTO findById(Long userId);
 
     UserDTO getUserByCredentials(String username, String password);
+
+    String generateUsernameFromEmail(String email);
+
+    UserDTO updateUser(Long id, UpdateUserInput input);
 }

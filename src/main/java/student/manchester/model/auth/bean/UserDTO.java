@@ -2,6 +2,11 @@ package student.manchester.model.auth.bean;
 
 import student.manchester.model.auth.User;
 
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 /**
  * @author Anastas Anastasov
  * on 10/19/2018.
@@ -18,6 +23,18 @@ public class UserDTO {
 
     private RoleDTO role;
 
+    private Date lastAuthLogout;
+
+    private String firstName;
+
+    private String lastName;
+
+    private String phone;
+
+    private String postcode;
+
+    private Set<BindDTO> binds = new HashSet<>();
+
     public UserDTO() {
 
     }
@@ -30,6 +47,16 @@ public class UserDTO {
             this.email = user.getEmail();
             if(user.getRole() != null) {
                 this.role = new RoleDTO(user.getRole());
+            }
+            this.lastAuthLogout = user.getLastAuthLogout();
+            this.firstName = user.getFirstName();
+            this.lastName = user.getLastName();
+            this.phone = user.getPhone();
+            this.postcode = user.getPostcode();
+            if(user.getBinds() != null && !user.getBinds().isEmpty()) {
+                this.binds = user.getBinds().stream()
+                        .map(BindDTO::new)
+                        .collect(Collectors.toSet());
             }
         }
     }
@@ -72,5 +99,53 @@ public class UserDTO {
 
     public void setRole(final RoleDTO role) {
         this.role = role;
+    }
+
+    public Date getLastAuthLogout() {
+        return lastAuthLogout;
+    }
+
+    public void setLastAuthLogout(final Date lastAuthLogout) {
+        this.lastAuthLogout = lastAuthLogout;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(final String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(final String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(final String phone) {
+        this.phone = phone;
+    }
+
+    public String getPostcode() {
+        return postcode;
+    }
+
+    public void setPostcode(final String postcode) {
+        this.postcode = postcode;
+    }
+
+    public Set<BindDTO> getBinds() {
+        return binds;
+    }
+
+    public void setBinds(final Set<BindDTO> binds) {
+        this.binds = binds;
     }
 }

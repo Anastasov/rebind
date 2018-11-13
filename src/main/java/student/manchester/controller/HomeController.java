@@ -22,12 +22,6 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @Controller
 public class HomeController {
 
-    @Autowired
-    private UserService userService;
-
-    @Autowired
-    private AuthenticationService authenticationService;
-
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String home(final @Auth JWTUserDetails userDetails) {
         return "redirect:/home";

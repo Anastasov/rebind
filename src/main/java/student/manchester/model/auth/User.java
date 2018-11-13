@@ -6,12 +6,19 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author Anastas Anastasov
@@ -33,8 +40,27 @@ public class User {
     @Column(name="password")
     private String password;
 
+    @Column(name="last_auth_logout")
+    @Temporal(TemporalType.DATE)
+    private Date lastAuthLogout;
+
     @Column(name="email")
     private String email;
+
+    @Column(name="first_name")
+    private String firstName;
+
+    @Column(name="last_name")
+    private String lastName;
+
+    @Column(name="phone")
+    private String phone;
+
+    @Column(name="postcode")
+    private String postcode;
+
+    @OneToMany(mappedBy="user")
+    private Set<Bind> binds = new HashSet<>();
 
     @ManyToOne(fetch = FetchType.EAGER)
     private Role role;
@@ -77,5 +103,53 @@ public class User {
 
     public void setRole(final Role role) {
         this.role = role;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(final String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(final String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(final String phone) {
+        this.phone = phone;
+    }
+
+    public String getPostcode() {
+        return postcode;
+    }
+
+    public void setPostcode(final String postcode) {
+        this.postcode = postcode;
+    }
+
+    public Set<Bind> getBinds() {
+        return binds;
+    }
+
+    public void setBinds(final Set<Bind> binds) {
+        this.binds = binds;
+    }
+
+    public Date getLastAuthLogout() {
+        return lastAuthLogout;
+    }
+
+    public void setLastAuthLogout(final Date lastAuthLogout) {
+        this.lastAuthLogout = lastAuthLogout;
     }
 }

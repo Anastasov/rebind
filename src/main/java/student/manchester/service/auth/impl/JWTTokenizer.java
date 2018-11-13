@@ -3,11 +3,13 @@ package student.manchester.service.auth.impl;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import student.manchester.configuration.security.exception.RejectedTokenException;
 import student.manchester.configuration.security.exception.TokenSecretNotConfiguredException;
 import student.manchester.model.auth.bean.RoleDTO;
 import student.manchester.model.auth.bean.UserDTO;
+import student.manchester.service.auth.UserService;
 import student.manchester.util.TimeUtil;
 
 import java.util.Map;
@@ -19,6 +21,9 @@ import java.util.Optional;
  */
 @Component
 public class JWTTokenizer {
+
+    @Autowired
+    private UserService userService;
 
     public static final String JWT_SECRET_VAR_NAME = "UI_DESERIALIZAER";
 
@@ -43,8 +48,12 @@ public class JWTTokenizer {
                     .setSigningKey(getSecret())
                     .parseClaimsJws(token)
                     .getBody();
-            userDTO = mapTokenToDTO(tokenBody);
-            // Is tokenBody.getIssuedAt() > last pass change ? ok : NOT_AUTHORIZED
+            userDTO = userService.findById(Long.valueOf(tokenBody.getId()));
+            if(userDTO.getLastAuthLogout() != null
+                    && tokenBody.getIssuedAt().before(userDTO.getLastAuthLogout())) {
+                throw new RejectedTokenException("Authentication details have changed since last login."
+                        + "Please login again.");
+            }
         } catch (final Exception ex) {
             throw new RejectedTokenException("The token :" + token + " couldn't be verified.", ex);
         }

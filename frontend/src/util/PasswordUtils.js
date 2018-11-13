@@ -14,4 +14,4 @@ export const validate = password => {
   return error;
 };
 
-export const x = 5;
+export const secondExport = 5;

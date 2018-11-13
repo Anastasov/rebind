@@ -15,10 +15,15 @@ const normalizeNameWord = input => {
   const firstLetter = word.charAt(0);
   return word.toLowerCase().replace(firstLetter, firstLetter.toUpperCase());
 };
-export const formatWrongThing = (thing, long, reason = "") => {
+export const formatWrongThing = (thing, reason = "") => {
   const word = normalizeNameWord(thing);
   const reasonMessage = reason ? `: ${reason}` : "";
-  return long
+  return reason
     ? `The ${word} you entered seems incorrect${reasonMessage}`
     : `${word} is not correct`;
+};
+
+export const formatUpdateSuccess = thing => {
+  const word = normalizeNameWord(thing);
+  return `${word} updated successfully.`;
 };

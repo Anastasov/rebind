@@ -23,7 +23,6 @@ import { openLoginModalActionCreator } from "../../reducers/modal/modalActionCre
 import isEmailValid from "sane-email-validation";
 import { formatRequiredThing, formatWrongThing } from "../../config/ux";
 import styles from "./AuthModalContainerStyles";
-import { devLog } from "../../util/ObjectUtils";
 import TextField from "../form/TextField";
 import * as PasswordUtils from "../../util/PasswordUtils";
 /* eslint-enable */
@@ -46,7 +45,7 @@ const validate = values => {
   if (!values.email) {
     errors.email = formatRequiredThing("email");
   } else if (!isEmailValid(values.email)) {
-    errors.email = formatWrongThing("email", false);
+    errors.email = formatWrongThing("email");
   }
 
   let passwordValidationError = null;

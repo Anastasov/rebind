@@ -2,6 +2,7 @@ package student.manchester.service.auth.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import student.manchester.annotation.TransactionalService;
+import student.manchester.api.auth.bean.UpdateUserInput;
 import student.manchester.api.exception.ApiInputException;
 import student.manchester.dao.auth.RoleDao;
 import student.manchester.dao.auth.UserDao;
@@ -13,6 +14,8 @@ import student.manchester.service.auth.UserService;
 import student.manchester.service.auth.exception.LogicException;
 
 import javax.mail.internet.InternetAddress;
+import java.util.List;
+import java.util.Optional;
 import java.util.regex.Pattern;
 
 /**
@@ -63,6 +66,7 @@ public class UserServiceImpl implements UserService {
     private void saveUser(final UserDTO userData) {
         final User user = new User();
         user.setEmail(userData.getEmail());
+        user.setUsername(userData.getUsername());
         user.setPassword(userData.getPassword());
         assignRole(user, Roles.UNCONFIRMED_USER);
         userDao.save(user);
@@ -98,10 +102,38 @@ public class UserServiceImpl implements UserService {
     private UserDTO createDTO(final String email, final String password) {
         final UserDTO user = new UserDTO();
         user.setEmail(email);
+        user.setUsername(generateUsernameFromEmail(email));
         user.setPassword(password);
         return user;
     }
 
+    @Override
+    public String generateUsernameFromEmail(final String email) {
+        String username = email.split("@")[0].toLowerCase();
+        final List<User> existingUsernames = userDao.findByUsernameStarting(username);
+        if(existingUsernames != null && !existingUsernames.isEmpty()) {
+            final User lastUser = existingUsernames.get(0);
+            final String[] usernames = lastUser.getUsername().split(username);
+            if(usernames.length == 2) {
+                username += Integer.valueOf(usernames[1]) + 1;
+            } else{
+                username += "1";
+            }
+        }
+        return username;
+    }
+
+    @Override
+    public UserDTO updateUser(final Long id, final UpdateUserInput input) {
+        final User entity = userDao.load(id);
+        Optional.ofNullable(input.getUsername()).ifPresent(entity::setUsername);
+        Optional.ofNullable(input.getFirstName()).ifPresent(entity::setFirstName);
+        Optional.ofNullable(input.getLastName()).ifPresent(entity::setLastName);
+        Optional.ofNullable(input.getEmail()).ifPresent(entity::setEmail);
+        Optional.ofNullable(input.getPhone()).ifPresent(entity::setPhone);
+        Optional.ofNullable(input.getPostcode()).ifPresent(entity::setPostcode);
+        return new UserDTO(entity);
+    }
 
     private static class Validator {
         /**

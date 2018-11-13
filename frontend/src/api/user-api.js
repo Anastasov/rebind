@@ -1,4 +1,3 @@
-// import { devLog } from "../util/ObjectUtils";
 import * as authApi from "./auth-api";
 
 const defaultHeaderProps = {
@@ -30,6 +29,15 @@ const UserApi = {
     return fetch(`/api/user/${id}/profile`, {
       method: "GET",
       headers: authApi.authHeaders(this.authInfo)
+    });
+  },
+  changeProfileDataField(id, field, value) {
+    const body = {};
+    body[field] = value;
+    return fetch(`/api/user/${id}/profile/update`, {
+      method: "POST",
+      headers: authApi.authHeaders(this.authInfo),
+      body: JSON.stringify(body)
     });
   }
 };

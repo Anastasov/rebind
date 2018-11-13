@@ -15,7 +15,7 @@ const showError = (meta, orError) =>
 const visibleHelperText = (meta, orError, helperText) => {
   let helper = null;
   if (showError(meta, orError)) {
-    helper = meta.error;
+    helper = meta.error || helperText.text;
   } else if (meta.pristine || helperText.static) {
     helper = helperText.text;
   }

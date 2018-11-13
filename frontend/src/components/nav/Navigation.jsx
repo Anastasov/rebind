@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import { push } from "react-router-redux";
 import ReBind from "../../config/ReBind";
 import PropTypes from "prop-types";
-import { Link, withRouter } from "react-router-dom";
+import { withRouter } from "react-router-dom";
 import { withStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
@@ -27,12 +27,10 @@ import styles from "./NavigationStyles";
 
 class Navigation extends Component {
   static defaultProps = {
-    title: ReBind.PRESENTABLE_NAME,
     navbar: {}
   };
 
   static propTypes = {
-    title: PropTypes.string,
     classes: PropTypes.object.isRequired,
     navbar: PropTypes.object.isRequired,
     authInfo: PropTypes.object.isRequired,
@@ -43,26 +41,8 @@ class Navigation extends Component {
     onHideUserMenu: PropTypes.func.isRequired
   };
 
-  state = {
-    auth: true,
-    anchorEl: null
-  };
-
-  handleChange = event => {
-    this.setState({ auth: event.target.checked });
-  };
-
-  handleMenu = event => {
-    this.setState({ anchorEl: event.currentTarget });
-  };
-
-  handleClose = () => {
-    this.setState({ anchorEl: null });
-  };
-
   render() {
     const {
-      title,
       classes,
       navbar,
       authInfo,
@@ -72,12 +52,15 @@ class Navigation extends Component {
       openProfilePage,
       signOutUser
     } = this.props;
-    const { anchorEl } = this.state;
-    const open = Boolean(anchorEl);
+    const open = Boolean(navbar.userMenuDropdownAnchor);
 
     return navbar.show ? (
       <div style={this.props.style} className={classes.root}>
-        <AppBar color="secondary" position="fixed">
+        <AppBar
+          color="secondary"
+          position="fixed"
+          style={navbar.additionalStyles}
+        >
           <Toolbar>
             <IconButton
               className={classes.menuButton}
@@ -93,7 +76,7 @@ class Navigation extends Component {
               className={classes.logo_font}
               onClick={openHomePage}
             >
-              {title}
+              {ReBind.PRESENTABLE_NAME}
             </Typography>
             {authInfo &&
               authInfo.jwToken && (
@@ -101,17 +84,14 @@ class Navigation extends Component {
                   <IconButton
                     aria-owns={open ? "menu-appbar" : null}
                     aria-haspopup="true"
-                    onClick={event => {
-                      onShowUserMenu();
-                      this.handleMenu(event);
-                    }}
+                    onClick={event => onShowUserMenu(event.currentTarget)}
                     color="inherit"
                   >
                     <AccountCircle />
                   </IconButton>
                   <Menu
                     id="menu-appbar"
-                    anchorEl={anchorEl}
+                    anchorEl={navbar.userMenuDropdownAnchor}
                     anchorOrigin={{
                       vertical: "top",
                       horizontal: "right"
@@ -121,25 +101,24 @@ class Navigation extends Component {
                       horizontal: "right"
                     }}
                     open={open}
-                    onClose={this.handleClose}
                   >
-                    <MenuItem color="inherit" onClick={openProfilePage}>
-                      Profile
-                    </MenuItem>
                     <MenuItem
                       color="inherit"
-                      onClick={event => {
+                      onClick={() => {
+                        openProfilePage();
                         onHideUserMenu();
-                        this.handleClose(event);
                       }}
                     >
+                      Profile
+                    </MenuItem>
+                    <MenuItem color="inherit" onClick={onHideUserMenu}>
                       My account
                     </MenuItem>
                     <MenuItem
                       color="inherit"
-                      onClick={event => {
+                      onClick={() => {
                         signOutUser();
-                        this.handleClose(event);
+                        onHideUserMenu();
                       }}
                     >
                       Sign Out
@@ -163,7 +142,7 @@ const mapStateToProps = state => ({
   navbar: navbarSelector(state)
 });
 const mapDispatchToProps = dispatch => ({
-  onShowUserMenu: () => dispatch(showUserMenuActionCreator()),
+  onShowUserMenu: anchor => dispatch(showUserMenuActionCreator(anchor)),
   onHideUserMenu: () => dispatch(hideUserMenuActionCreator()),
   openHomePage: () => dispatch(push("/home")),
   openProfilePage: () => dispatch(push("/profile")),
