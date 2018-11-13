@@ -50,6 +50,15 @@ export const loginUser = jwToken => {
   };
 };
 
+export const LOGOUT_USER = "LOGOUT_USER";
+export const logoutUser = () => ({
+  type: LOGOUT_USER,
+  payload: {
+    jwToken: null,
+    id: null
+  }
+});
+
 export const SEND_REGISTER_DATA = "SEND_REGISTER_DATA";
 export const sendRegisterDataActionCreator = () => ({
   type: SEND_REGISTER_DATA,
@@ -135,6 +144,6 @@ export const handleLoginActionCreator = (user, redirect) => (
 
 export const signoutUser = () => dispatch => {
   dispatch(setCookie(COOKIES.TOKEN, ""));
-  dispatch(loginUser(""));
+  dispatch(logoutUser());
   dispatch(push("/home"));
 };

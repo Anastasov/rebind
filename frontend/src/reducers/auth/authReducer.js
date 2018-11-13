@@ -6,7 +6,8 @@ import {
   SEND_REGISTER_DATA,
   MOUSE_ON_REGISTER_BUTTON,
   MOUSE_ON_LOGIN_BUTTON,
-  SET_USER_DATA
+  SET_USER_DATA,
+  LOGOUT_USER
 } from "./authActionCreators";
 
 const authReducer = (state, action) => {
@@ -19,6 +20,7 @@ const authReducer = (state, action) => {
     case SET_USER_DATA:
     case MOUSE_ON_REGISTER_BUTTON:
     case MOUSE_ON_LOGIN_BUTTON:
+    case LOGOUT_USER:
     case "SHOW_USER_MENU":
     case "HIDE_USER_MENU":
       return assign(state, { ...payload });

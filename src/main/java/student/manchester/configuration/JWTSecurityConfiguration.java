@@ -62,6 +62,7 @@ public class JWTSecurityConfiguration extends WebSecurityConfigurerAdapter {
           .exceptionHandling()
                 .authenticationEntryPoint(authEntryPoint).and()
           .sessionManagement()
+                .enableSessionUrlRewriting(false)
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS).and();
     }
 }

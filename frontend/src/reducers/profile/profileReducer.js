@@ -21,6 +21,7 @@ const profileReducer = (state = INITIAL_STATE, action) => {
   switch (type) {
     case PUSH_ERROR_UPDATE:
     case POP_ERROR_UPDATE:
+      console.log("New Error", { ...state.error, ...payload });
       return { ...state, error: { ...state.error, ...payload } };
     case PUSH_SUCCESS_UPDATE:
       success[payload] = true;

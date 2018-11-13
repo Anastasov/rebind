@@ -45,7 +45,7 @@ export const popErrorActionCreator = field => {
   payload[field] = "";
   return {
     type: POP_ERROR_UPDATE,
-    payload: field
+    payload
   };
 };
 
