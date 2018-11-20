@@ -11,8 +11,8 @@ import {
 import withMobileDialog from "@material-ui/core/withMobileDialog";
 import withCookies from "../../components/withCookies";
 import HomePageResponsiveUI from "./HomePageResponsiveUI";
-import verticalStyles from "./HomePageVerticalStyles";
-import horizontalStyles from "./HomePageHorizontalStyles";
+import verticalStyles from "./styles/HomePageVerticalStyles";
+import horizontalStyles from "./styles/HomePageHorizontalStyles";
 import { showNavActionCreator } from "../../reducers/nav/navActionCreators";
 const VerticalUI = withStyles(verticalStyles)(HomePageResponsiveUI);
 const HorizontalUI = withStyles(horizontalStyles)(HomePageResponsiveUI);

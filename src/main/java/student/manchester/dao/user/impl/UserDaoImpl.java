@@ -1,8 +1,8 @@
-package student.manchester.dao.auth.impl;
+package student.manchester.dao.user.impl;
 
 import org.springframework.stereotype.Repository;
 import student.manchester.dao.GenericDaoHibernate;
-import student.manchester.dao.auth.UserDao;
+import student.manchester.dao.user.UserDao;
 import student.manchester.model.auth.User;
 
 import javax.persistence.criteria.CriteriaBuilder;

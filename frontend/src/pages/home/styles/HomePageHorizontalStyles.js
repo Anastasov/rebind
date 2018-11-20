@@ -1,6 +1,6 @@
-import ReBind from "../../config/ReBind";
-import defaults from "../../config/globalStyles";
-import backgroundImage from "../../../assets/patrick_bateman.jpg";
+import ReBind from "../../../config/ReBind";
+import defaults from "../../../config/globalStyles";
+import backgroundImage from "../../../../assets/patrick_bateman.jpg";
 
 const styles = {
   ...defaults,

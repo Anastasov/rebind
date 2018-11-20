@@ -1,4 +1,4 @@
-package student.manchester.dao.auth;
+package student.manchester.dao.user;
 
 import student.manchester.dao.GenericDao;
 import student.manchester.model.auth.User;

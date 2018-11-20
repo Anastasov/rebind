@@ -2,12 +2,16 @@ package student.manchester.service.auth.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import student.manchester.annotation.TransactionalService;
-import student.manchester.api.auth.bean.UpdateUserInput;
+import student.manchester.api.auth.bean.BindUpdateRequest;
+import student.manchester.api.auth.bean.UserUpdateRequest;
 import student.manchester.api.exception.ApiInputException;
 import student.manchester.dao.auth.RoleDao;
-import student.manchester.dao.auth.UserDao;
+import student.manchester.dao.user.BindDao;
+import student.manchester.dao.user.UserDao;
+import student.manchester.model.auth.Bind;
 import student.manchester.model.auth.Roles;
 import student.manchester.model.auth.User;
+import student.manchester.model.auth.bean.BindDTO;
 import student.manchester.model.auth.bean.RoleDTO;
 import student.manchester.model.auth.bean.UserDTO;
 import student.manchester.service.auth.UserService;
@@ -29,6 +33,9 @@ public class UserServiceImpl implements UserService {
     private UserDao userDao;
 
     @Autowired
+    private BindDao bindDao;
+
+    @Autowired
     private RoleDao roleDao;
 
     @Override
@@ -43,6 +50,80 @@ public class UserServiceImpl implements UserService {
         return user;
     }
 
+    @Override
+    public UserDTO createUser(final String email, final String password) {
+        final UserDTO user = createDTO(email, password);
+        validateNewUser(user);
+        saveUser(user);
+        return user;
+    }
+
+    @Override
+    public String generateUsernameFromEmail(final String email) {
+        String username = email.split("@")[0].toLowerCase();
+        final List<User> existingUsernames = userDao.findByUsernameStarting(username);
+        if(existingUsernames != null && !existingUsernames.isEmpty()) {
+            final User lastUser = existingUsernames.get(0);
+            final String[] usernames = lastUser.getUsername().split(username);
+            if(usernames.length == 2) {
+                username += Integer.valueOf(usernames[1]) + 1;
+            } else{
+                username += "1";
+            }
+        }
+        return username;
+    }
+
+    @Override
+    public UserDTO updateUser(final Long id, final UserUpdateRequest input) {
+        final User entity = getRequiredUser(id);
+        Optional.ofNullable(input.getUsername()).ifPresent(entity::setUsername);
+        Optional.ofNullable(input.getFirstName()).ifPresent(entity::setFirstName);
+        Optional.ofNullable(input.getLastName()).ifPresent(entity::setLastName);
+        Optional.ofNullable(input.getEmail()).ifPresent(entity::setEmail);
+        Optional.ofNullable(input.getPhone()).ifPresent(entity::setPhone);
+        Optional.ofNullable(input.getPostcode()).ifPresent(entity::setPostcode);
+        return new UserDTO(entity);
+    }
+
+    @Override
+    public BindDTO createBind(final Long userId, final BindUpdateRequest input) {
+        final User user = getRequiredUser(userId);
+        final Bind bind = new Bind();
+        Optional.ofNullable(input.getSelectedIcon()).ifPresent(bind::setIcon);
+        Optional.ofNullable(input.getName()).ifPresent(bind::setName);
+        Optional.ofNullable(input.getUrl()).ifPresent(bind::setUrl);
+        bind.setUser(user);
+        bindDao.save(bind);
+        return new BindDTO(bind);
+    }
+
+    @Override
+    public BindDTO updateBind(final Long userId, final Long bindId, final BindUpdateRequest input) {
+        final Bind bind = getRequiredBind(bindId);
+        Optional.ofNullable(input.getSelectedIcon()).ifPresent(bind::setIcon);
+        Optional.ofNullable(input.getName()).ifPresent(bind::setName);
+        Optional.ofNullable(input.getUrl()).ifPresent(bind::setUrl);
+        return new BindDTO(bind);
+    }
+
+    @Override
+    public boolean deleteBind(final Long id, final Long bindId) {
+        boolean deletedSuccessfully = true;
+        try {
+            final User user = getRequiredUser(id);
+            final Optional<Bind> deletedBind =
+                    user.getBinds().stream()
+                        .filter(bind -> bind.getId().equals(bindId))
+                        .findFirst();
+            user.getBinds().remove(deletedBind
+                    .orElseThrow(() -> new RuntimeException("Bind doesn't exist")));
+        } catch(final Exception ex) {
+            deletedSuccessfully = false;
+        }
+        return deletedSuccessfully;
+    }
+
     private UserDTO checkCredentialsMatch(final String email, final String password) {
         final User user = userDao.findBy(email, password);
         validateDatabaseMatch(user);
@@ -55,12 +136,20 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    @Override
-    public UserDTO createUser(final String email, final String password) {
-        final UserDTO user = createDTO(email, password);
-        validateNewUser(user);
-        saveUser(user);
-        return user;
+    private Bind getRequiredBind(final Long id) {
+        final Bind entity = bindDao.get(id);
+        if(entity == null) {
+            throw new LogicException("Couldn't find user with id[" + id + "]");
+        }
+        return entity;
+    }
+
+    private User getRequiredUser(final Long userId) {
+        final User entity = userDao.get(userId);
+        if(entity == null) {
+            throw new LogicException("Couldn't find user with id[" + userId + "]");
+        }
+        return entity;
     }
 
     private void saveUser(final UserDTO userData) {
@@ -105,34 +194,6 @@ public class UserServiceImpl implements UserService {
         user.setUsername(generateUsernameFromEmail(email));
         user.setPassword(password);
         return user;
-    }
-
-    @Override
-    public String generateUsernameFromEmail(final String email) {
-        String username = email.split("@")[0].toLowerCase();
-        final List<User> existingUsernames = userDao.findByUsernameStarting(username);
-        if(existingUsernames != null && !existingUsernames.isEmpty()) {
-            final User lastUser = existingUsernames.get(0);
-            final String[] usernames = lastUser.getUsername().split(username);
-            if(usernames.length == 2) {
-                username += Integer.valueOf(usernames[1]) + 1;
-            } else{
-                username += "1";
-            }
-        }
-        return username;
-    }
-
-    @Override
-    public UserDTO updateUser(final Long id, final UpdateUserInput input) {
-        final User entity = userDao.load(id);
-        Optional.ofNullable(input.getUsername()).ifPresent(entity::setUsername);
-        Optional.ofNullable(input.getFirstName()).ifPresent(entity::setFirstName);
-        Optional.ofNullable(input.getLastName()).ifPresent(entity::setLastName);
-        Optional.ofNullable(input.getEmail()).ifPresent(entity::setEmail);
-        Optional.ofNullable(input.getPhone()).ifPresent(entity::setPhone);
-        Optional.ofNullable(input.getPostcode()).ifPresent(entity::setPostcode);
-        return new UserDTO(entity);
     }
 
     private static class Validator {

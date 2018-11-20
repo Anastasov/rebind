@@ -36,3 +36,26 @@ export const createRows = (row, containerProps, itemProps) => (
     ))}
   </Grid>
 );
+
+export const createStyledRows = (row, containerProps, itemProps) => (
+  <Grid
+    container
+    direction="column"
+    spacing={8}
+    justify="center"
+    alignItems="center"
+    {...containerProps}
+  >
+    {row.map((col, index) => {
+      const currentProps = itemProps[index];
+      return (
+        <Grid key={index.toString()} item {...currentProps}>
+          {col}
+        </Grid>
+      );
+    })}
+  </Grid>
+);
+
+export const createMatrix = (cells, containerProps, itemProps) =>
+  createRows([createCols(cells, containerProps, itemProps)]);

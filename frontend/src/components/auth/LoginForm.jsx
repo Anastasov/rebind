@@ -26,8 +26,6 @@ import styles from "./AuthModalContainerStyles";
 import { openSignUpModalActionCreator } from "../../reducers/modal/modalActionCreators";
 /* eslint-enable */
 
-export const PAGE_NAME = "Login";
-
 const passAdornment = (showPassword, toggleShowPassword) => (
   <InputAdornment position="end">
     <IconButton
@@ -78,7 +76,9 @@ const LoginFormComponent = ({
     )}
   >
     <DialogContent>
-      <DialogContentText>to continue with ReBind.</DialogContentText>
+      <DialogContentText variant="body1">
+        to continue with ReBind.
+      </DialogContentText>
       <br />
       <Field
         name="email"
@@ -104,7 +104,7 @@ const LoginFormComponent = ({
         name="password"
         type={authInfo.isPasswordVisible ? "text" : "password"}
         label="Password"
-        placeholder="mySecretPassowrd"
+        placeholder="mySecretPassword"
         props={{
           disabled: submitting
         }}
@@ -122,7 +122,7 @@ const LoginFormComponent = ({
       <Button
         disableRipple
         onClick={openSignUpModal}
-        label="Go to Sign In"
+        label="Go to Sign Up"
         variant="text"
         color="primary"
         size="large"
@@ -138,7 +138,7 @@ const LoginFormComponent = ({
       </Button>
       <Button
         type="submit"
-        label="Submit"
+        label="Login"
         variant="contained"
         color="primary"
         size="large"

@@ -27,8 +27,6 @@ import TextField from "../form/TextField";
 import * as PasswordUtils from "../../util/PasswordUtils";
 /* eslint-enable */
 
-export const PAGE_NAME = "Sign up";
-
 const passAdornment = (showPassword, toggleShowPassword) => (
   <InputAdornment position="end">
     <IconButton
@@ -85,7 +83,9 @@ const RegisterFormComponent = ({
     )}
   >
     <DialogContent>
-      <DialogContentText>to make your life easier.</DialogContentText>
+      <DialogContentText variant="body1">
+        to make your life easier.
+      </DialogContentText>
       <br />
       <Field
         name="email"
@@ -112,7 +112,7 @@ const RegisterFormComponent = ({
         name="password"
         type={authInfo.isPasswordVisible ? "text" : "password"}
         label="Password"
-        placeholder="mySecretPassowrd"
+        placeholder="mySecretPassword"
         helperText={{ text: "Use 8 or more letters and numbers" }}
         orError={meta => meta.dirty && meta.error}
         component={TextField}
@@ -131,7 +131,7 @@ const RegisterFormComponent = ({
         name="re_password"
         type={authInfo.isPasswordVisible ? "text" : "password"}
         label="Re-password"
-        placeholder="mySecretPassowrd"
+        placeholder="mySecretPassword"
         props={{
           disabled: submitting
         }}
@@ -144,7 +144,7 @@ const RegisterFormComponent = ({
       <Button
         disableRipple
         onClick={openLoginModal}
-        label="Go to Sign In"
+        label="Go to Login"
         variant="text"
         color="primary"
         size="large"

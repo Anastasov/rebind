@@ -6,7 +6,7 @@ import java.io.Serializable;
  * @author Anastas Anastasov
  * on 11/12/2018.
  */
-public class UpdateUserInput implements Serializable {
+public class UserUpdateRequest implements Serializable {
 
     private String username;
     private String firstName;

@@ -24,3 +24,32 @@ export const devErr = (value, message = "") => {
 
 export const afterMinutes = minutes =>
   new Date(new Date().getTime() + minutes * 60 * 1000);
+
+export const isInstanceOf = (element, id) => {
+  if (!element) return false;
+  if (element.id === id) {
+    return true;
+  }
+  if (element.parentNode) {
+    return isInstanceOf(element.parentNode, id);
+  }
+  return false;
+};
+
+export const doIfChildOf = (id, doJob) => event => {
+  if (isInstanceOf(event.explicitOriginalTarget, id)) {
+    doJob();
+  }
+};
+
+/* eslint-disable */
+export const getObjectProps = obj => {
+  const props = [];
+  for (let key in obj) {
+    if (obj.hasOwnProperty(key)) {
+      props.push(key);
+    }
+  }
+  return props;
+};
+/* eslint-enable */

@@ -39,6 +39,26 @@ const UserApi = {
       headers: authApi.authHeaders(this.authInfo),
       body: JSON.stringify(body)
     });
+  },
+  changeBind(id, bindId, bind) {
+    let props = bind ? { body: JSON.stringify(bind) } : {};
+    let url;
+    if (!bindId) {
+      // create
+      url = `/api/user/${id}/bind/create`;
+    } else if (!bind) {
+      // delete
+      url = `/api/user/${id}/bind/${bindId}/delete`;
+    } else {
+      // update
+      url = `/api/user/${id}/bind/${bindId}/update`;
+    }
+
+    return fetch(url, {
+      ...props,
+      method: "POST",
+      headers: authApi.authHeaders(this.authInfo)
+    });
   }
 };
 

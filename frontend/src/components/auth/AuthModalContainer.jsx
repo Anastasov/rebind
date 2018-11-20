@@ -14,7 +14,7 @@ import {
   SIGN_UP_MODAL_NAME,
   LOGIN_MODAL_NAME
 } from "../../reducers/modal/modalActionCreators";
-import { closeAuthenticationModalActionCreator } from "../../reducers/modal/modalActionCreators";
+import { closeModalActionCreator } from "../../reducers/modal/modalActionCreators";
 import { modalSelector } from "../../reducers/rootReducer";
 /* eslint-enable */
 
@@ -79,8 +79,7 @@ const mapStateToProps = state => ({
   modal: modalSelector(state)
 });
 const mapDispatchToProps = dispatch => ({
-  closeAuthenticationWindow: () =>
-    dispatch(closeAuthenticationModalActionCreator({}))
+  closeAuthenticationWindow: () => dispatch(closeModalActionCreator({}))
 });
 const ReduxAuthModalContainer = connect(
   mapStateToProps,

@@ -1,9 +1,12 @@
-export const SHOW_SIGN_UP_PAGE = "SHOW_SIGN_UP_PAGE";
+import { setBindDataActionCreator } from "../profile/bindInitializerDuck";
+
+export const SHOW_SIGN_UP_MODAL = "SHOW_SIGN_UP_MODAL";
 export const SIGN_UP_MODAL_NAME = "sign_up";
 export const openSignUpModalActionCreator = () => ({
-  type: SHOW_SIGN_UP_PAGE,
+  type: SHOW_SIGN_UP_MODAL,
   payload: {
-    show: SIGN_UP_MODAL_NAME
+    show: SIGN_UP_MODAL_NAME,
+    title: "Sign up"
   }
 });
 
@@ -13,12 +16,41 @@ export const openLoginModalActionCreator = (redirect = "") => ({
   type: SHOW_LOGIN_MODAL,
   payload: {
     show: LOGIN_MODAL_NAME,
+    title: "Login",
     redirect
   }
 });
 
+export const SHOW_EDIT_BIND_MODAL = "SHOW_EDIT_BIND_MODAL";
+export const EDIT_BIND_MODAL_NAME = "edit_bind";
+export const openEditBindModalActionCreator = () => ({
+  type: SHOW_EDIT_BIND_MODAL,
+  payload: {
+    show: EDIT_BIND_MODAL_NAME,
+    bodyClass: "modal_content"
+  }
+});
+
+export const ALERT_DELETE_BIND = "ALERT_DELETE_BIND";
+export const ALERT_DELETE_BIND_NAME = "alert_delete_bind";
+export const alertDeleteBindActionCreator = bind => ({
+  type: ALERT_DELETE_BIND,
+  payload: {
+    show: ALERT_DELETE_BIND_NAME,
+    title: "Permanently delete",
+    data: {
+      bind
+    }
+  }
+});
+
+export const loadBindModalActionCreator = bind => dispatch => {
+  dispatch(openEditBindModalActionCreator());
+  dispatch(setBindDataActionCreator(bind));
+};
+
 export const CLOSE_MODAL = "CLOSE_MODAL";
-export const closeAuthenticationModalActionCreator = () => ({
+export const closeModalActionCreator = () => ({
   type: CLOSE_MODAL,
   payload: {
     show: ""

@@ -6,13 +6,17 @@ import { withStyles } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
-import styles from "./MyProfilePageStyles";
-import { authInfoSelector } from "../../reducers/rootReducer";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import Typography from "@material-ui/core/Typography";
+import styles from "./styles/MyProfilePageStyles";
+import { authInfoSelector, profileSelector } from "../../reducers/rootReducer";
 import { showNavActionCreator } from "../../reducers/nav/navActionCreators";
 import { fetchProfileData } from "../../reducers/profile/profileActionCreators";
 import authComponent from "../../components/auth/authComponent";
 import ProfileForm from "./ProfileForm";
+import Binds from "./Binds";
 import DefaultProfilePic from "../../../assets/profile-pic-default.jpg";
+import { createRows } from "../../util/GridUtil";
 /* eslint-enable */
 
 class MyProfilePage extends Component {
@@ -31,12 +35,25 @@ class MyProfilePage extends Component {
   };
 
   componentDidMount() {
-    const { showNav } = this.props;
+    const { showNav, authInfo, fetchProfile } = this.props;
+    if (authInfo.id) {
+      fetchProfile(authInfo.id);
+    }
     showNav();
   }
 
   render() {
-    const { authInfo, classes } = this.props;
+    const { classes, authInfo, profile } = this.props;
+    const body = profile.initializing
+      ? [
+          <div className={classes.progressContainer}>
+            <CircularProgress className={classes.progress} size={100} />
+            <Typography className={classes.progressText} variant="h6">
+              Loading...
+            </Typography>
+          </div>
+        ]
+      : [<ProfileForm authInfo={authInfo} />, <Binds authInfo={authInfo} />];
     return (
       <div className={classes.root}>
         <div className={classes.root_body}>
@@ -47,7 +64,11 @@ class MyProfilePage extends Component {
               title="Profile Photo"
             />
             <CardContent className={classes.content}>
-              <ProfileForm authInfo={authInfo} />
+              {createRows(body, {
+                spacing: 40,
+                alignItems: profile.initializing ? "center" : "flex-start",
+                justify: profile.initializing ? "space-evenly" : "center"
+              })}
             </CardContent>
           </Card>
         </div>
@@ -59,7 +80,8 @@ const AuthMyProfilePage = authComponent(MyProfilePage, "/profile");
 const StyledMyProfilePage = withStyles(styles)(AuthMyProfilePage);
 
 const mapStateToProps = state => ({
-  authInfo: authInfoSelector(state)
+  authInfo: authInfoSelector(state),
+  profile: profileSelector(state)
 });
 const mapDispatchToProps = dispatch => ({
   showNav: () => dispatch(showNavActionCreator()),

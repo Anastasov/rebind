@@ -11,21 +11,17 @@ import {
 } from "redux-form";
 import { withStyles } from "@material-ui/core/styles";
 import Fade from "@material-ui/core/Fade";
-import Typography from "@material-ui/core/Typography";
 import TextField from "../../components/form/TextField";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import CheckCircle from "@material-ui/icons/CheckCircle";
-import { createRows, createCols } from "../../util/GridUtil";
-import styles from "./ProfileFormStyles";
+import { createMatrix } from "../../util/GridUtil";
+import styles from "./styles/ProfileFormStyles";
 import {
   profileInitializerSelector,
   profileSelector
 } from "../../reducers/rootReducer";
-import {
-  fetchProfileData,
-  changeProfileDataField
-} from "../../reducers/profile/profileActionCreators";
+import { changeProfileDataField } from "../../reducers/profile/profileActionCreators";
 import { formatRequiredThing, formatWrongThing } from "../../config/ux";
 /* eslint-enable */
 
@@ -103,16 +99,8 @@ class ProfileFormComponent extends Component {
     invalid: PropTypes.bool,
     submitting: PropTypes.bool.isRequired,
     errors: PropTypes.object.isRequired,
-    changeDatum: PropTypes.func.isRequired,
-    initData: PropTypes.func.isRequired
+    changeDatum: PropTypes.func.isRequired
   };
-
-  componentDidMount() {
-    const { authInfo, initData } = this.props;
-    if (authInfo.id) {
-      initData(authInfo.id);
-    }
-  }
 
   synchChangeWithServer = (field, value) => {
     const { authInfo, errors, changeDatum } = this.props;
@@ -124,109 +112,93 @@ class ProfileFormComponent extends Component {
   render() {
     const { classes, profile, invalid, initialValues, errors } = this.props;
     const allErrors = { ...errors, ...profile.error };
-
-    const content = profile.initializing ? (
-      <div className={classes.progressContainer}>
-        <CircularProgress className={classes.progress} size={100} />
-        <Typography className={classes.progressText} variant="title">
-          Loading ...
-        </Typography>
-      </div>
-    ) : (
-      createRows([
-        createCols(
-          [
-            <AutoSubmittingField
-              name="username"
-              type="text"
-              label="Username"
-              placeholder="emuskfan5"
-              classes={classes}
-              submitting={profile.submitting}
-              success={profile.success}
-              formIsInvalid={invalid}
-              errors={allErrors}
-              initialValues={initialValues}
-              synchChangeWithServer={this.synchChangeWithServer}
-            />,
-            <AutoSubmittingField
-              name="email"
-              type="email"
-              label="Email"
-              placeholder="my-email@mail.com"
-              classes={classes}
-              submitting={profile.submitting}
-              success={profile.success}
-              formIsInvalid={invalid}
-              errors={allErrors}
-              initialValues={initialValues}
-              synchChangeWithServer={this.synchChangeWithServer}
-            />,
-            <AutoSubmittingField
-              name="firstName"
-              type="text"
-              label="First Name"
-              placeholder="John"
-              classes={classes}
-              submitting={profile.submitting}
-              success={profile.success}
-              formIsInvalid={invalid}
-              errors={allErrors}
-              initialValues={initialValues}
-              synchChangeWithServer={this.synchChangeWithServer}
-            />,
-            <AutoSubmittingField
-              name="lastName"
-              type="text"
-              label="Last Name"
-              placeholder="Johnson"
-              classes={classes}
-              submitting={profile.submitting}
-              success={profile.success}
-              formIsInvalid={invalid}
-              errors={allErrors}
-              initialValues={initialValues}
-              synchChangeWithServer={this.synchChangeWithServer}
-            />,
-            <AutoSubmittingField
-              name="phone"
-              type="text"
-              label="Phone Number"
-              placeholder="0 7401 765522"
-              normalize={value =>
-                /^[\s0-9]+$/.test(value)
-                  ? value
-                  : value.substring(0, value.length - 1)
-              }
-              classes={classes}
-              submitting={profile.submitting}
-              success={profile.success}
-              formIsInvalid={invalid}
-              errors={allErrors}
-              initialValues={initialValues}
-              synchChangeWithServer={this.synchChangeWithServer}
-            />,
-            <AutoSubmittingField
-              name="postcode"
-              type="text"
-              label="Post Code"
-              placeholder="M14 7LH"
-              normalize={value => value.toUpperCase()}
-              classes={classes}
-              submitting={profile.submitting}
-              success={profile.success}
-              formIsInvalid={invalid}
-              errors={allErrors}
-              initialValues={initialValues}
-              synchChangeWithServer={this.synchChangeWithServer}
-            />
-          ],
-          { spacing: 40 },
-          { xs: 5 }
-        )
-      ])
-    );
-    return content;
+    const fields = [
+      <AutoSubmittingField
+        name="username"
+        type="text"
+        label="Set your username"
+        placeholder="emuskfan5"
+        classes={classes}
+        submitting={profile.submitting}
+        success={profile.success}
+        formIsInvalid={invalid}
+        errors={allErrors}
+        initialValues={initialValues}
+        synchChangeWithServer={this.synchChangeWithServer}
+      />,
+      <AutoSubmittingField
+        name="email"
+        type="email"
+        label="Set your email"
+        placeholder="my-email@mail.com"
+        classes={classes}
+        submitting={profile.submitting}
+        success={profile.success}
+        formIsInvalid={invalid}
+        errors={allErrors}
+        initialValues={initialValues}
+        synchChangeWithServer={this.synchChangeWithServer}
+      />,
+      <AutoSubmittingField
+        name="firstName"
+        type="text"
+        label="Set your first name"
+        placeholder="John"
+        classes={classes}
+        submitting={profile.submitting}
+        success={profile.success}
+        formIsInvalid={invalid}
+        errors={allErrors}
+        initialValues={initialValues}
+        synchChangeWithServer={this.synchChangeWithServer}
+      />,
+      <AutoSubmittingField
+        name="lastName"
+        type="text"
+        label="Set your last name"
+        placeholder="Johnson"
+        classes={classes}
+        submitting={profile.submitting}
+        success={profile.success}
+        formIsInvalid={invalid}
+        errors={allErrors}
+        initialValues={initialValues}
+        synchChangeWithServer={this.synchChangeWithServer}
+      />,
+      <AutoSubmittingField
+        name="phone"
+        type="text"
+        label="Set your phone number"
+        placeholder="0 7401 765522"
+        normalize={value =>
+          /^[\s0-9]+$/.test(value)
+            ? value
+            : value.substring(0, value.length - 1)
+        }
+        classes={classes}
+        submitting={profile.submitting}
+        success={profile.success}
+        formIsInvalid={invalid}
+        errors={allErrors}
+        initialValues={initialValues}
+        synchChangeWithServer={this.synchChangeWithServer}
+      />,
+      <AutoSubmittingField
+        name="postcode"
+        type="text"
+        label="Set your post code"
+        placeholder="M14 7LH"
+        normalize={value => value.toUpperCase()}
+        classes={classes}
+        submitting={profile.submitting}
+        success={profile.success}
+        formIsInvalid={invalid}
+        errors={allErrors}
+        initialValues={initialValues}
+        synchChangeWithServer={this.synchChangeWithServer}
+      />
+    ];
+    return createMatrix(fields, { spacing: 24 }, { xs: 5 });
   }
 }
 
@@ -262,7 +234,6 @@ const mapStateToProps = state => ({
   }
 });
 const mapDispatchToProps = {
-  initData: fetchProfileData,
   changeDatum: changeProfileDataField
 };
 const ReduxProfileForm = connect(

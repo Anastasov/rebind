@@ -3,10 +3,10 @@ import { setCookie } from "redux-cookie";
 import jwtDecode from "jwt-decode";
 import UserApi from "../../api/user-api";
 import {
+  closeModalActionCreator,
   showProgressBarActionCreator,
   hideProgressBarActionCreator,
-  hideHeaderErrorActionCreator,
-  closeAuthenticationModalActionCreator
+  hideHeaderErrorActionCreator
 } from "../modal/modalActionCreators";
 import COOKIES from "../../config/COOKIES";
 import { showSnackBarActionCreator } from "../snackbar/snackbarActionCreators";
@@ -111,7 +111,7 @@ const showSuccessAndCloseModal = (dispatch, redirect, message) => data => {
     })
   );
   dispatch(setUserDataActionCreator({ id: data.id }));
-  dispatch(closeAuthenticationModalActionCreator());
+  dispatch(closeModalActionCreator());
   if (!redirect) {
     dispatch(push("/profile"));
   }

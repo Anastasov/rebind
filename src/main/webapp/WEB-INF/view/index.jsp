@@ -9,8 +9,8 @@
 </head>
 <body>
 <div id="rebind-app" ></div>
-<spring:url value="/resources/js/rebind-app.js" var="rebindApp" />
-<script type="text/javascript" src="${rebindApp}"></script>
+<%--<spring:url value="/resources/js/rebind-app.js" var="rebindApp" />--%>
+<script type="text/javascript" src="/resources/js/rebind-app.js"></script>
 
 </body>
 </html>

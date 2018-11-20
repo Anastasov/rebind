@@ -1,14 +1,23 @@
 // thi is a duck: https://github.com/erikras/ducks-modular-redux
 export const INIT_PROFILE_DATA = "INIT_PROFILE_DATA";
-export const initProfileDataActionCreator = payload => ({
+export const initProfileDataActionCreator = ({
+  username,
+  email,
+  firstName,
+  lastName,
+  phone,
+  postcode,
+  binds
+}) => ({
   type: INIT_PROFILE_DATA,
   payload: {
-    email: payload.email,
-    firstName: payload.firstName,
-    lastName: payload.lastName,
-    username: payload.username,
-    phone: payload.phone,
-    postcode: payload.postcode
+    username,
+    email,
+    firstName,
+    lastName,
+    phone,
+    postcode,
+    binds
   }
 });
 
