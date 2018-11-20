@@ -21,6 +21,12 @@ const THEME = {
       dark: DARK_GREY,
       contrastText: YELLOW,
       altText: LIGHT_GREY
+    },
+    error: {
+      light: "#e57373",
+      main: "#f44336",
+      dark: "#d32f2f",
+      contrastText: "#fff"
     }
   },
   typography: {
@@ -40,6 +46,14 @@ const THEME = {
     button: {
       // fontStyle: "italic"
     }
+  },
+  zIndex: {
+    mobileStepper: 1000,
+    appBar: 1100,
+    drawer: 1200,
+    snackbar: 1300,
+    tooltip: 1400,
+    modal: 1500
   }
 };
 const ReBind = {

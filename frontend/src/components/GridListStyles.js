@@ -9,19 +9,23 @@ const defaultItem = {
   padding: `${logoPaddingSize}px ${logoPaddingSize}px ${logoPaddingSize}px ${logoPaddingSize}px`
 };
 
+const wrapper = {
+  display: "flex",
+  flexWrap: "wrap",
+  justifyContent: "space-around",
+  overflow: "none"
+};
+
 const styles = {
   ...defaults,
   wrapper: {
-    display: "flex",
-    flexWrap: "wrap",
-    justifyContent: "space-around",
+    ...wrapper
+  },
+  wrapper_scroll: {
+    ...wrapper,
     overflow: "auto"
   },
-  gridList: {
-    width: 300,
-    minHeight: 300,
-    height: 450
-  },
+  gridList: {},
   item: {
     ...defaultItem
   },

@@ -14,6 +14,12 @@ const INITIAL_STATE = {
   error: {}
 };
 
+const deleteField = (error, field) => {
+  const obj = { ...error };
+  delete obj[field];
+  return obj;
+};
+
 const profileReducer = (state = INITIAL_STATE, action) => {
   const { type, payload } = action;
   const submitting = { ...state.submitting };
@@ -21,7 +27,7 @@ const profileReducer = (state = INITIAL_STATE, action) => {
   switch (type) {
     case PUSH_ERROR_UPDATE:
     case POP_ERROR_UPDATE:
-      return { ...state, error: { ...state.error, ...payload } };
+      return { ...state, error: deleteField(state.error, payload) };
     case PUSH_SUCCESS_UPDATE:
       success[payload] = true;
       return { ...state, success };

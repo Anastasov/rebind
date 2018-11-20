@@ -82,6 +82,9 @@ AutoSubmittingField.defaultProps = {
   formIsInvalid: false
 };
 
+const normalizeNumber = value =>
+  /^[\s0-9]+$/.test(value) ? value : value.substring(0, value.length - 1);
+
 class ProfileFormComponent extends Component {
   static defaultProps = {
     profile: {
@@ -170,11 +173,7 @@ class ProfileFormComponent extends Component {
         type="text"
         label="Set your phone number"
         placeholder="0 7401 765522"
-        normalize={value =>
-          /^[\s0-9]+$/.test(value)
-            ? value
-            : value.substring(0, value.length - 1)
-        }
+        normalize={normalizeNumber}
         classes={classes}
         submitting={profile.submitting}
         success={profile.success}

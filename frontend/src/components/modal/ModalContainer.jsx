@@ -51,7 +51,13 @@ class ModalContainer extends Component {
   render() {
     const { classes, modal, fullScreen, closeModal } = this.props;
     const disableClose = modal.showProgressBar || !!modal.redirect;
-    const close = () => !disableClose && closeModal();
+    const onClose = () => {
+      if (modal.onClose) {
+        modal.onClose();
+      }
+      closeModal();
+    };
+    const close = () => !disableClose && onClose();
     let body = mapNameToComponent(modal.show);
     return (
       <Dialog

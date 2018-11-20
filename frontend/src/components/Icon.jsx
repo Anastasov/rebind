@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import Avatar from "@material-ui/core/Avatar";
 import EmptyIcon from "../../assets/icons/empty-logo.png";
 import { withStyles } from "@material-ui/core/styles";
-import FacebookIcon from "../../assets/icons/facebook-logo.png";
+import FacebookIcon from "../../assets/icons/facebook-square-logo.png";
 import InstagramIcon from "../../assets/icons/instagram-logo.png";
 import SnapchatIcon from "../../assets/icons/snapchat-logo.png";
 import TwitterIcon from "../../assets/icons/twitter-logo.png";

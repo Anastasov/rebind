@@ -3,6 +3,8 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import {
+  Form,
+  reset,
   reduxForm,
   formValueSelector,
   getFormSyncErrors,
@@ -11,6 +13,11 @@ import {
 } from "redux-form";
 import { withStyles } from "@material-ui/core/styles";
 import WarningIcon from "@material-ui/icons/Warning";
+import SwipeableViews from "react-swipeable-views";
+import AppBar from "@material-ui/core/AppBar";
+import Tabs from "@material-ui/core/Tabs";
+import Slide from "@material-ui/core/Slide";
+import Tab from "@material-ui/core/Tab";
 import Typography from "@material-ui/core/Typography";
 import Icon, { Icons } from "../../components/Icon";
 import GridList from "../../components/GridList";
@@ -20,14 +27,18 @@ import styles from "./styles/BindFormStyles";
 import {
   bindInitializerSelector,
   profileSelector,
-  authInfoSelector
+  authInfoSelector,
+  modalSelector
 } from "../../reducers/rootReducer";
 import {
   changeBind,
-  setIconOnBindForm
+  setIconOnBindForm,
+  setTabOnBindForm
 } from "../../reducers/profile/profileActionCreators";
 import { formatRequiredThing, formatWrongThing } from "../../config/ux";
 import { hasOwnProps } from "../../util/ObjectUtils";
+import { setModalOnCloseActionCreator } from "../../reducers/modal/modalActionCreators";
+import TabContainer from "../../components/nav/TabContainer";
 /* eslint-enable */
 
 const createItem = (name, title, select, selectedIcon) => ({
@@ -37,6 +48,7 @@ const createItem = (name, title, select, selectedIcon) => ({
   selected: selectedIcon === name,
   onClickAway: () => select("")
 });
+const doNothing = () => ({});
 
 const lastOf = (fieldName, values) => {
   switch (fieldName) {
@@ -50,7 +62,7 @@ const lastOf = (fieldName, values) => {
       return true;
   }
 };
-class ProfileFormComponent extends Component {
+class BindFormComponent extends Component {
   static defaultProps = {
     profile: {
       submitting: {}
@@ -63,6 +75,7 @@ class ProfileFormComponent extends Component {
   static propTypes = {
     initialValues: PropTypes.object.isRequired,
     authInfo: PropTypes.object,
+    modal: PropTypes.object,
     profile: PropTypes.object,
     classes: PropTypes.object.isRequired,
     invalid: PropTypes.bool,
@@ -71,8 +84,19 @@ class ProfileFormComponent extends Component {
     errors: PropTypes.object.isRequired,
     fieldsMeta: PropTypes.object.isRequired,
     changeBindProp: PropTypes.func.isRequired,
-    selectIcon: PropTypes.func.isRequired
+    setModalOnClose: PropTypes.func.isRequired,
+    resetForm: PropTypes.func.isRequired,
+    selectIcon: PropTypes.func.isRequired,
+    selectTab: PropTypes.func.isRequired
   };
+
+  componentDidMount() {
+    const { setModalOnClose, resetForm } = this.props;
+    setModalOnClose(() => {
+      resetForm();
+      setModalOnClose(doNothing);
+    });
+  }
 
   synchChangeWithServer = () => {
     const {
@@ -96,53 +120,78 @@ class ProfileFormComponent extends Component {
       classes,
       profile,
       selectIcon,
+      selectTab,
       fieldsMeta,
       initialValues,
       formValues,
       errors
     } = this.props;
-
+    const userIsNotTyping =
+      (!fieldsMeta.url || !fieldsMeta.url.active) &&
+      (!fieldsMeta.name || !fieldsMeta.name.active);
+    const showIconError = lastOf("selectedIcon", formValues) && userIsNotTyping;
+    const touchedOrLast = fieldName =>
+      (fieldsMeta[fieldName] && fieldsMeta[fieldName].touched) ||
+      lastOf(fieldName, formValues);
+    const selectAndChangeTab = name => {
+      selectIcon(name);
+      setTimeout(() => selectTab(1), 500);
+    };
     const items = [
+      createItem(
+        Icons.FACEBOOK.name,
+        "Facebook",
+        selectAndChangeTab,
+        formValues.selectedIcon
+      ),
       createItem(
         Icons.SNAPCHAT.name,
         "Snapchat",
-        selectIcon,
+        selectAndChangeTab,
         formValues.selectedIcon
       ),
       createItem(
         Icons.INSTAGRAM.name,
         "Instagram",
-        selectIcon,
+        selectAndChangeTab,
         formValues.selectedIcon
       ),
       createItem(
         Icons.TWITTER.name,
         "Twitter",
-        selectIcon,
+        selectAndChangeTab,
         formValues.selectedIcon
       )
     ];
-    const touchedOrLast = fieldName =>
-      (fieldsMeta[fieldName] && fieldsMeta[fieldName].touched) ||
-      lastOf(fieldName, formValues);
-    const leftPanel = <GridList items={items} />;
+    const leftPanel = (
+      <React.Fragment>
+        <Slide direction="right" in={showIconError} mountOnEnter unmountOnExit>
+          <Typography className={classes.error} variant="caption">
+            Please select an icon from the list.
+          </Typography>
+        </Slide>
+
+        <GridList items={items} cols={8} spacing={14} />
+      </React.Fragment>
+    );
+
     let icon;
+
     if (formValues.selectedIcon) {
       icon = <Icon name={formValues.selectedIcon} />;
-    } else {
-      icon = lastOf("selectedIcon", formValues) ? (
-        createRows(
-          [
-            <WarningIcon className={classes.icon_warning} />,
-            <Typography variant="caption" gutterBottom align="center">
-              Please select an icon from the list.
-            </Typography>
-          ],
-          { spacing: 0 }
-        )
-      ) : (
-        <Icon empty />
+    } else if (showIconError) {
+      selectTab(0);
+      icon = createRows(
+        [
+          <WarningIcon className={classes.icon_warning} />,
+          <Typography variant="caption" gutterBottom align="center">
+            Please select an icon from the list.
+          </Typography>
+        ],
+        { spacing: 0 }
       );
+    } else {
+      icon = <Icon empty />;
     }
 
     const rightPanel = createStyledRows(
@@ -184,12 +233,33 @@ class ProfileFormComponent extends Component {
       {},
       [{ xs: 6 }, { xs: 8 }, { xs: 12 }]
     );
+    const direction = "ltr";
     return (
-      !profile.initializing &&
-      createCols(
-        [leftPanel, rightPanel],
-        { spacing: 24, style: { minWidth: 500 } },
-        { xs: 6 }
+      !profile.initializing && (
+        <Form onSubmit={doNothing}>
+          <div className={classes.root}>
+            <AppBar position="static" color="secondary">
+              <Tabs
+                value={formValues.tabSelected}
+                onChange={(event, value) => selectTab(value)}
+                indicatorColor="secondary"
+                textColor="primary"
+                fullWidth
+              >
+                <Tab label="Select Icon" />
+                <Tab label="Bind Details" />
+              </Tabs>
+            </AppBar>
+            <SwipeableViews
+              axis={direction === "rtl" ? "x-reverse" : "x"}
+              index={formValues.tabSelected}
+              onChangeIndex={selectTab}
+            >
+              <TabContainer dir={direction}>{leftPanel}</TabContainer>
+              <TabContainer dir={direction}>{rightPanel}</TabContainer>
+            </SwipeableViews>
+          </div>
+        </Form>
       )
     );
   }
@@ -218,18 +288,20 @@ const validate = values => {
   return errors;
 };
 
-const ProfileForm = reduxForm({
+const BindForm = reduxForm({
   form: "bind",
   validate,
   enableReinitialize: true
-})(ProfileFormComponent);
-const StyledProfileForm = withStyles(styles)(ProfileForm);
+})(BindFormComponent);
+const StyledBindForm = withStyles(styles)(BindForm);
 
 const mapStateToProps = state => ({
   authInfo: authInfoSelector(state),
+  modal: modalSelector(state),
   initialValues: bindInitializerSelector(state),
   fieldsMeta: getFormMeta("bind")(state),
   formValues: {
+    tabSelected: formValueSelector("bind")(state, "tabSelected"),
     selectedIcon: formValueSelector("bind")(state, "selectedIcon"),
     name: formValueSelector("bind")(state, "name"),
     url: formValueSelector("bind")(state, "url")
@@ -243,11 +315,14 @@ const mapStateToProps = state => ({
 });
 const mapDispatchToProps = {
   changeBindProp: changeBind,
-  selectIcon: setIconOnBindForm
+  selectIcon: setIconOnBindForm,
+  selectTab: setTabOnBindForm,
+  setModalOnClose: setModalOnCloseActionCreator,
+  resetForm: () => reset("bind")
 };
-const ReduxProfileForm = connect(
+const ReduxBindForm = connect(
   mapStateToProps,
   mapDispatchToProps
-)(StyledProfileForm);
+)(StyledBindForm);
 
-export default ReduxProfileForm;
+export default ReduxBindForm;

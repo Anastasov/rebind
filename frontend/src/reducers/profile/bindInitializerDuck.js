@@ -6,7 +6,8 @@ export const setBindDataActionCreator = ({ id, icon, name, url }) => ({
     id,
     slectedIcon: icon,
     name,
-    url
+    url,
+    tabSelected: id ? 1 : 0
   }
 });
 

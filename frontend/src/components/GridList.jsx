@@ -10,24 +10,39 @@ import Icon from "./Icon";
 import { doIfChildOf } from "../util/ObjectUtils";
 /* eslint-enable */
 
-const getGridListSize = items => ({ height: items.length * logoPixelSize });
-
+const getGridListSize = (items, spacing) => ({
+  height: items.length * (logoPixelSize + spacing)
+});
+const MAXIMUM_NUMBER_OF_ICONS_ON_MODAL = 24;
 const GridListWrapper = ({
   classes,
   items = [],
+  spacing = 0,
+  cols = 3,
   onAwayClick,
   dynamic = true
 }) => (
   <ClickAwayListener onClickAway={onAwayClick}>
-    <div id="wrapper-grid" className={classes.wrapper}>
+    <div
+      id="wrapper-grid"
+      className={
+        items && items.length > MAXIMUM_NUMBER_OF_ICONS_ON_MODAL
+          ? classes.wrapper_scroll
+          : classes.wrapper
+      }
+    >
       <GridList
-        style={dynamic && getGridListSize(items)}
+        style={dynamic && getGridListSize(items, spacing)}
         className={classes.gridList}
-        spacing={0}
-        cols={3}
+        spacing={spacing}
+        cols={cols}
       >
         {items.map(item => (
-          <GridListTile key={item.name} cols={1}>
+          <GridListTile
+            style={{ height: 75, width: "" }}
+            key={item.name}
+            cols={1}
+          >
             <ClickAwayListener
               onClickAway={doIfChildOf("wrapper-grid", item.onClickAway)}
             >
@@ -51,6 +66,8 @@ const GridListWrapper = ({
 
 GridListWrapper.propTypes = {
   classes: PropTypes.object.isRequired,
+  cols: PropTypes.number,
+  spacing: PropTypes.number,
   onAwayClick: PropTypes.func,
   dynamic: PropTypes.bool,
   items: PropTypes.array
@@ -58,6 +75,8 @@ GridListWrapper.propTypes = {
 
 GridListWrapper.defaultProps = {
   items: [],
+  cols: 3,
+  spacing: 0,
   onAwayClick: () => null,
   dynamic: true
 };

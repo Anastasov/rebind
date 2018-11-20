@@ -65,6 +65,14 @@ export const showProgressBarActionCreator = () => ({
   }
 });
 
+export const SET_MODAL_ON_CLOSE = "SET_MODAL_ON_CLOSE";
+export const setModalOnCloseActionCreator = onClose => ({
+  type: SET_MODAL_ON_CLOSE,
+  payload: {
+    onClose
+  }
+});
+
 export const HIDE_PROGRESS_BAR = "HIDE_PROGRESS_BAR";
 export const hideProgressBarActionCreator = () => ({
   type: HIDE_PROGRESS_BAR,

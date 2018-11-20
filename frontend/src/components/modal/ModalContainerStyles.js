@@ -32,10 +32,6 @@ const styles = {
     marginTop: "2%"
   },
   modal_content: {
-    marginTop: "3%",
-    marginBot: "3%",
-    marginLeft: "3%",
-    marginRight: "3%",
     overflow: "hidden"
   }
 };

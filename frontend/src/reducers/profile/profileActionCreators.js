@@ -49,18 +49,20 @@ export const pushErrorActionCreator = (field, message) => {
 };
 
 export const POP_ERROR_UPDATE = "POP_ERROR_UPDATE";
-export const popErrorActionCreator = field => {
-  const payload = {};
-  payload[field] = "";
-  return {
-    type: POP_ERROR_UPDATE,
-    payload
-  };
-};
+export const popErrorActionCreator = payload => ({
+  type: POP_ERROR_UPDATE,
+  payload
+});
 
 export const SET_INITIALIZING = "SET_INITIALIZING";
 export const setInitializing = initializing => ({
   type: SET_INITIALIZING,
+  payload: { initializing }
+});
+
+export const SET_TAB = "SET_TAB";
+export const setTab = initializing => ({
+  type: SET_TAB,
   payload: { initializing }
 });
 
@@ -70,6 +72,9 @@ export const setIconOnBindForm = icon => (dispatch, getState) => {
     dispatch(change("bind", "selectedIcon", icon));
   }
 };
+
+export const setTabOnBindForm = tab => dispatch =>
+  dispatch(change("bind", "tabSelected", tab));
 
 const setData = dispatch => data => {
   dispatch(initProfileDataActionCreator(data.user));
@@ -119,12 +124,14 @@ export const changeBind = (userId, bindId, bind) => (dispatch, getState) => {
   const isDelete = !bind;
   // const isUpdate = bindId && bind;
   const changedProps = getObjectProps(bind);
+
   // call api for change -> loading
   dispatch(showProgressBarActionCreator());
   changedProps.forEach(field => {
     dispatch(popErrorActionCreator(field));
     dispatch(pushSubmittingActionCreator(field));
   });
+
   return UserApi.auth(getState())
     .changeBind(userId, bindId, bind)
     .then(handleResponse(dispatch))
