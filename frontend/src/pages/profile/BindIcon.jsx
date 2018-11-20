@@ -10,12 +10,28 @@ import Icon from "../../components/Icon";
 /* eslint-enable */
 
 const BindIcon = ({ classes, bind, deleteBindAlert }) =>
-  isMobile ? null : (
+  isMobile ? (
+    <React.Fragment>
+      <Icon name={bind.icon} alt={bind.name} />
+      <div>
+        <div className={classes.arrow_permanent} />
+        <div
+          className={classes.tooltip_permanent}
+          onClick={() => deleteBindAlert(bind)}
+        >
+          <DeleteIcon
+            className={classes.delete_icon_permanent}
+            color="primary"
+          />
+        </div>
+      </div>
+    </React.Fragment>
+  ) : (
     <Tooltip
       title={
         <div onClick={() => deleteBindAlert(bind)}>
           <DeleteIcon className={classes.delete_icon} color="primary" />
-          <span className={classes.arrowArrow} />
+          <span className={classes.arrow} />
         </div>
       }
       classes={{ tooltip: classes.tooltip, popper: classes.arrowPopper }}

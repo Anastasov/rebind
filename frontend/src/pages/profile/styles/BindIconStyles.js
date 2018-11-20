@@ -1,4 +1,5 @@
 import defaults from "../../../config/globalStyles";
+import Arrow from "../../../../assets/arrow.png";
 import ReBind from "../../../config/ReBind";
 
 const styles = {
@@ -10,7 +11,7 @@ const styles = {
     background: ReBind.THEME.palette.secondary.dark
   },
   arrowPopper: {
-    '&[x-placement*="bottom"] $arrowArrow': {
+    '&[x-placement*="bottom"] $arrow': {
       top: 0,
       left: "0.7em",
       marginTop: "-0.9em",
@@ -23,7 +24,7 @@ const styles = {
         } transparent`
       }
     },
-    '&[x-placement*="top"] $arrowArrow': {
+    '&[x-placement*="top"] $arrow': {
       bottom: 0,
       left: "0.7em",
       marginBottom: "-0.9em",
@@ -36,7 +37,7 @@ const styles = {
         } transparent transparent transparent`
       }
     },
-    '&[x-placement*="right"] $arrowArrow': {
+    '&[x-placement*="right"] $arrow': {
       left: 0,
       marginLeft: "-0.9em",
       height: "3em",
@@ -48,7 +49,7 @@ const styles = {
         } transparent transparent`
       }
     },
-    '&[x-placement*="left"] $arrowArrow': {
+    '&[x-placement*="left"] $arrow': {
       right: 0,
       marginRight: "-0.9em",
       height: "3em",
@@ -61,7 +62,7 @@ const styles = {
       }
     }
   },
-  arrowArrow: {
+  arrow: {
     position: "absolute",
     fontSize: 7,
     width: "3em",
@@ -74,6 +75,27 @@ const styles = {
       height: 0,
       borderStyle: "solid"
     }
+  },
+  delete_icon_permanent: {
+    fontSize: 22
+  },
+  tooltip_permanent: {
+    background: ReBind.THEME.palette.secondary.dark,
+    height: 30,
+    width: 30,
+    borderRadius: "10%",
+    marginLeft: "22%",
+    padding: 3
+  },
+  arrow_permanent: {
+    width: 10,
+    height: 10,
+    marginTop: "10%",
+    marginLeft: "40%",
+    backgroundImage: `url(${Arrow})`,
+    backgroundSize: "cover",
+    backgroundPosition: "center center",
+    position: "relative"
   }
 };
 export default styles;
