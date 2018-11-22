@@ -1,6 +1,7 @@
 const styles = {
   root: {
-    textAlign: "center"
+    textAlign: "center",
+    overflow: "hidden"
   },
   root_body: {
     paddingTop: "70px",

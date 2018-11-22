@@ -3,6 +3,13 @@ import ReBind from "../../../config/ReBind";
 
 const styles = {
   ...defaults,
+  form: {
+    minHeight: 250,
+    marginTop: "2%",
+    marginBottom: "2%",
+    overflow: "hidden"
+  },
+  content: {},
   icon_warning: {
     fontSize: 62,
     color: ReBind.THEME.palette.error.main

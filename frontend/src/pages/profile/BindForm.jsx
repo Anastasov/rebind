@@ -177,62 +177,66 @@ class BindFormComponent extends Component {
       icon = <Icon empty />;
     }
 
-    const rightPanel = createStyledRows(
-      [
-        icon,
-        <AutoSubmittingField
-          form="bind"
-          name="name"
-          type="text"
-          label="Set 'Bind' name"
-          placeholder="Facebook"
-          variant="outlined"
-          classes={classes}
-          disabled={profile.submitting.name}
-          submitting={profile.submitting.name}
-          success={profile.success.name}
-          errors={touchedOrLast("name") ? errors.name : ""}
-          initialValue={initialValues.name}
-          synchChangeWithServer={this.synchChangeWithServer}
-          disableLoader
-        />,
-        <AutoSubmittingField
-          form="bind"
-          name="url"
-          type="text"
-          label="Set 'Bind' URL"
-          placeholder="https://www.facebook.com/zuck"
-          variant="outlined"
-          classes={classes}
-          disabled={profile.submitting.url}
-          submitting={profile.submitting.url}
-          success={profile.success.url}
-          error={touchedOrLast("url") ? errors.url : ""}
-          initialValue={initialValues.url}
-          synchChangeWithServer={this.synchChangeWithServer}
-          disableLoader
-        />
-      ],
-      {},
-      [{ xs: 6 }, { xs: 8 }, { xs: 12 }]
+    const rightPanel = (
+      <div className={classes.form}>
+        {createStyledRows(
+          [
+            icon,
+            <AutoSubmittingField
+              form="bind"
+              name="name"
+              type="text"
+              label="Set 'Bind' name"
+              placeholder="Facebook"
+              variant="outlined"
+              classes={classes}
+              disabled={profile.submitting.name}
+              submitting={profile.submitting.name}
+              success={profile.success.name}
+              errors={touchedOrLast("name") ? errors.name : ""}
+              initialValue={initialValues.name}
+              synchChangeWithServer={this.synchChangeWithServer}
+              disableLoader
+            />,
+            <AutoSubmittingField
+              form="bind"
+              name="url"
+              type="text"
+              label="Set 'Bind' URL"
+              placeholder="https://www.facebook.com/zuck"
+              variant="outlined"
+              classes={classes}
+              disabled={profile.submitting.url}
+              submitting={profile.submitting.url}
+              success={profile.success.url}
+              error={touchedOrLast("url") ? errors.url : ""}
+              initialValue={initialValues.url}
+              synchChangeWithServer={this.synchChangeWithServer}
+              disableLoader
+            />
+          ],
+          {},
+          [{ xs: 6 }, { xs: 8 }, { xs: 12 }]
+        )}
+      </div>
     );
     const direction = "ltr";
     return (
       !profile.initializing && (
         <Form onSubmit={doNothing}>
-          <div className={classes.root}>
-            <AppBar position="static" color="secondary">
-              <Tabs
-                value={formValues.tabSelected}
-                onChange={(event, value) => selectTab(value)}
-                indicatorColor="secondary"
-                textColor="primary"
-                fullWidth
-              >
-                <Tab label="Select Icon" />
-                <Tab label="Bind Details" />
-              </Tabs>
-            </AppBar>
+          <AppBar position="static" color="secondary">
+            <Tabs
+              value={formValues.tabSelected}
+              onChange={(event, value) => selectTab(value)}
+              indicatorColor="secondary"
+              textColor="primary"
+              fullWidth
+            >
+              <Tab label="Select Icon" />
+              <Tab label="Bind Details" />
+            </Tabs>
+          </AppBar>
+          <div className={classes.content}>
             <SwipeableViews
               axis={direction === "rtl" ? "x-reverse" : "x"}
               index={formValues.tabSelected}

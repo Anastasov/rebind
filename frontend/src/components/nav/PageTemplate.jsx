@@ -26,14 +26,14 @@ class PageTemplate extends Component {
   };
 
   render() {
-    const { authInfo, path, navbar, setNavTabIndex } = this.props;
+    const { classes, authInfo, path, navbar, setNavTabIndex } = this.props;
     const direction = "ltr";
     const showBottomNavigation =
       authInfo.jwToken && showBottomNavigationForPath(path);
     const { tabIndex } = navbar;
     const body = getPageBodyForPath(path);
     return (
-      <Fragment>
+      <div className={classes.root}>
         <Navigation />
         <ColoredSnackbar />
         <SwipeableViews
@@ -54,7 +54,7 @@ class PageTemplate extends Component {
             setNavTabIndex={setNavTabIndex}
           />
         )}
-      </Fragment>
+      </div>
     );
   }
 }
