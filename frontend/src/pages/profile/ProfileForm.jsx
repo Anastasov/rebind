@@ -9,7 +9,6 @@ import {
   getFormAsyncErrors,
   getFormMeta
 } from "redux-form";
-import { withStyles } from "@material-ui/core/styles";
 import Fade from "@material-ui/core/Fade";
 import TextField from "../../components/form/TextField";
 import InputAdornment from "@material-ui/core/InputAdornment";
@@ -23,6 +22,7 @@ import {
 } from "../../reducers/rootReducer";
 import { changeProfileDataField } from "../../reducers/profile/profileActionCreators";
 import { formatRequiredThing, formatWrongThing } from "../../config/ux";
+import responsiveComponent from "../../meta-components/responsiveComponent";
 /* eslint-enable */
 
 const AutoSubmittingField = ({
@@ -222,7 +222,10 @@ const ProfileForm = reduxForm({
   enableReinitialize: true,
   destroyOnUnmount: false
 })(ProfileFormComponent);
-const StyledProfileForm = withStyles(styles)(ProfileForm);
+const StyledProfileForm = responsiveComponent(ProfileForm, {
+  vertical: styles,
+  horizontal: styles
+});
 
 const mapStateToProps = state => ({
   initialValues: profileInitializerSelector(state),

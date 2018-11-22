@@ -2,8 +2,7 @@
 import React, { Component, Fragment } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { withStyles } from "@material-ui/core/styles";
-import styles from "./ModalContainerStyles";
+import styles from "./styles/ModalContainerStyles";
 import RegisterForm from "../auth/RegisterForm";
 import LoginForm from "../auth/LoginForm";
 import BindForm from "../../pages/profile/BindForm";
@@ -11,7 +10,6 @@ import DeleteBindAlert from "../../pages/profile/DeleteBindAlert";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
-import withMobileDialog from "@material-ui/core/withMobileDialog";
 import {
   SIGN_UP_MODAL_NAME,
   LOGIN_MODAL_NAME,
@@ -20,7 +18,9 @@ import {
 } from "../../reducers/modal/modalActionCreators";
 import { closeModalActionCreator } from "../../reducers/modal/modalActionCreators";
 import { modalSelector } from "../../reducers/rootReducer";
+import responsiveComponent from "../../meta-components/responsiveComponent";
 /* eslint-enable */
+
 const mapNameToComponent = name => {
   switch (name) {
     case SIGN_UP_MODAL_NAME:
@@ -42,14 +42,14 @@ class ModalContainer extends Component {
   };
 
   static propTypes = {
-    fullScreen: PropTypes.bool.isRequired,
+    isVerticalView: PropTypes.bool.isRequired,
     classes: PropTypes.object.isRequired,
     modal: PropTypes.object.isRequired,
     closeModal: PropTypes.func.isRequired
   };
 
   render() {
-    const { classes, modal, fullScreen, closeModal } = this.props;
+    const { classes, modal, isVerticalView, closeModal } = this.props;
     const disableClose = modal.showProgressBar || !!modal.redirect;
     const onClose = () => {
       if (modal.onClose) {
@@ -61,7 +61,7 @@ class ModalContainer extends Component {
     let body = mapNameToComponent(modal.show);
     return (
       <Dialog
-        fullScreen={fullScreen}
+        fullScreen={isVerticalView}
         open={!!modal.show}
         onBackdropClick={close}
         onEscapeKeyDown={close}
@@ -85,8 +85,10 @@ class ModalContainer extends Component {
 }
 
 // exports injections
-const StyledModalContainer = withStyles(styles)(ModalContainer);
-const MediaModalContainer = withMobileDialog()(StyledModalContainer);
+const StyledModalContainer = responsiveComponent(ModalContainer, {
+  vertical: styles,
+  horizontal: styles
+});
 const mapStateToProps = state => ({
   modal: modalSelector(state)
 });
@@ -96,6 +98,6 @@ const mapDispatchToProps = {
 const ReduxModalContainer = connect(
   mapStateToProps,
   mapDispatchToProps
-)(MediaModalContainer);
+)(StyledModalContainer);
 
 export default ReduxModalContainer;

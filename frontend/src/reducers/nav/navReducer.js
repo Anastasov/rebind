@@ -3,7 +3,8 @@ import {
   SHOW_USER_MENU,
   HIDE_USER_MENU,
   SHOW_NAVBAR,
-  HIDE_NAVBAR
+  HIDE_NAVBAR,
+  SET_NAV_TAB_INDEX
 } from "./navActionCreators";
 
 const navReducer = (state, action) => {
@@ -13,6 +14,7 @@ const navReducer = (state, action) => {
     case HIDE_USER_MENU:
     case SHOW_NAVBAR:
     case HIDE_NAVBAR:
+    case SET_NAV_TAB_INDEX:
       return assign(state, { ...payload });
     default:
       return assign(state);

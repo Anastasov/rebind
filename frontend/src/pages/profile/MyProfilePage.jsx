@@ -12,11 +12,12 @@ import styles from "./styles/MyProfilePageStyles";
 import { authInfoSelector, profileSelector } from "../../reducers/rootReducer";
 import { showNavActionCreator } from "../../reducers/nav/navActionCreators";
 import { fetchProfileData } from "../../reducers/profile/profileActionCreators";
-import authComponent from "../../components/auth/authComponent";
+import authComponent from "../../meta-components/authComponent";
 import ProfileForm from "./ProfileForm";
 import Binds from "./Binds";
 import DefaultProfilePic from "../../../assets/profile-pic-default.jpg";
 import { createRows } from "../../util/GridUtil";
+import responsiveComponent from "../../meta-components/responsiveComponent";
 /* eslint-enable */
 
 class MyProfilePage extends Component {
@@ -26,8 +27,6 @@ class MyProfilePage extends Component {
 
   static propTypes = {
     classes: PropTypes.object.isRequired,
-    getJWTFromCookie: PropTypes.func.isRequired,
-    logUser: PropTypes.func.isRequired,
     showNav: PropTypes.func.isRequired,
     fetchProfile: PropTypes.func.isRequired,
     authInfo: PropTypes.object.isRequired,
@@ -76,8 +75,10 @@ class MyProfilePage extends Component {
     );
   }
 }
-const AuthMyProfilePage = authComponent(MyProfilePage, "/profile");
-const StyledMyProfilePage = withStyles(styles)(AuthMyProfilePage);
+const StyledMyProfilePage = responsiveComponent(MyProfilePage, {
+  vertical: styles,
+  horizontal: styles
+});
 
 const mapStateToProps = state => ({
   authInfo: authInfoSelector(state),

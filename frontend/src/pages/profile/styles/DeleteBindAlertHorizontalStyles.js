@@ -19,13 +19,8 @@ const styles = {
     letterSpacing: "0.25px",
     fontSize: "0.8rem",
     lineHeight: "0em",
-    fontWeight: 100
-  },
-  button_alternative_normal: {
+    fontWeight: 100,
     left: "5px"
-  },
-  button_alternative_full: {
-    left: "1vw"
   },
   text: {
     marginTop: "2%"

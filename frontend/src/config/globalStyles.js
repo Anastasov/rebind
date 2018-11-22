@@ -4,7 +4,7 @@ const styles = {
   },
   root_body: {
     paddingTop: "70px",
-    height: "1000px"
+    height: "700px"
   },
   logo: {
     animation: "App-logo-spin infinite 20s linear",

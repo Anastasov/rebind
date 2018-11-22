@@ -36,8 +36,10 @@ export const isInstanceOf = (element, id) => {
   return false;
 };
 
+export const isLeftClick = event => event.button === 0;
+
 export const doIfChildOf = (id, doJob) => event => {
-  if (isInstanceOf(event.explicitOriginalTarget, id)) {
+  if (isLeftClick(event) && isInstanceOf(event.explicitOriginalTarget, id)) {
     doJob();
   }
 };
@@ -53,3 +55,13 @@ export const getObjectProps = obj => {
   return props;
 };
 /* eslint-enable */
+
+export const removeHigherOrderParams = all => {
+  const props = { ...all };
+  delete props.isVerticalView;
+  delete props.authInfo;
+  delete props.getJWTFromCookie;
+  delete props.logUser;
+  delete props.path;
+  return props;
+};

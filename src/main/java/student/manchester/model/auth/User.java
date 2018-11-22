@@ -17,6 +17,8 @@ import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -61,7 +63,7 @@ public class User {
     private String postcode;
 
     @OneToMany(mappedBy="user", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Bind> binds = new HashSet<>();
+    private Collection<Bind> binds = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.EAGER)
     private Role role;
@@ -138,11 +140,11 @@ public class User {
         this.postcode = postcode;
     }
 
-    public Set<Bind> getBinds() {
+    public Collection<Bind> getBinds() {
         return binds;
     }
 
-    public void setBinds(final Set<Bind> binds) {
+    public void setBinds(final Collection<Bind> binds) {
         this.binds = binds;
     }
 

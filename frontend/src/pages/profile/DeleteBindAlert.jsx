@@ -6,10 +6,10 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import Button from "@material-ui/core/Button";
-import { withStyles } from "@material-ui/core/styles";
-import withMobileDialog from "@material-ui/core/withMobileDialog";
+import responsiveComponent from "../../meta-components/responsiveComponent";
 import { modalSelector, authInfoSelector } from "../../reducers/rootReducer";
-import styles from "./styles/DeleteBindAlertStyles";
+import vertical from "./styles/DeleteBindAlertVerticalStyles";
+import horizontal from "./styles/DeleteBindAlertHorizontalStyles";
 import { closeModalActionCreator } from "../../reducers/modal/modalActionCreators";
 import { changeBind } from "../../reducers/profile/profileActionCreators";
 /* eslint-enable */
@@ -18,7 +18,6 @@ const DeleteBindAlert = ({
   classes,
   authInfo,
   bind,
-  fullScreen,
   closeModal,
   deleteBind
 }) => (
@@ -36,11 +35,6 @@ const DeleteBindAlert = ({
         color="primary"
         size="large"
         onClick={closeModal}
-        style={
-          fullScreen
-            ? styles.button_alternative_full
-            : styles.button_alternative_normal
-        }
         disableRipple
       >
         Cancel
@@ -69,12 +63,13 @@ DeleteBindAlert.propTypes = {
     url: PropTypes.string.isRequired
   }),
   closeModal: PropTypes.func.isRequired,
-  deleteBind: PropTypes.func.isRequired,
-  fullScreen: PropTypes.bool.isRequired
+  deleteBind: PropTypes.func.isRequired
 };
 
-const ResponsiveDeleteBindAlert = withMobileDialog()(DeleteBindAlert);
-const StyledDeleteBindAlert = withStyles(styles)(ResponsiveDeleteBindAlert);
+const StyledDeleteBindAlert = responsiveComponent(DeleteBindAlert, {
+  vertical,
+  horizontal
+});
 const mapStateToContentProps = state => ({
   authInfo: authInfoSelector(state),
   bind: modalSelector(state).data.bind

@@ -4,8 +4,8 @@ import PropTypes from "prop-types";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import GridList from "@material-ui/core/GridList";
 import GridListTile from "@material-ui/core/GridListTile";
-import { withStyles } from "@material-ui/core/styles";
-import styles, { logoPixelSize } from "./GridListStyles";
+import responsiveComponent from "../meta-components/responsiveComponent";
+import styles, { logoPixelSize } from "./styles/GridListStyles";
 import Icon from "./Icon";
 import { doIfChildOf } from "../util/ObjectUtils";
 /* eslint-enable */
@@ -20,7 +20,7 @@ const GridListWrapper = ({
   spacing = 0,
   cols = 3,
   onAwayClick,
-  dynamic = true
+  dynamic = false
 }) => (
   <ClickAwayListener onClickAway={onAwayClick}>
     <div
@@ -33,16 +33,13 @@ const GridListWrapper = ({
     >
       <GridList
         style={dynamic && getGridListSize(items, spacing)}
+        cellHeight={75}
         className={classes.gridList}
         spacing={spacing}
         cols={cols}
       >
         {items.map(item => (
-          <GridListTile
-            style={{ height: 75, width: "" }}
-            key={item.name}
-            cols={1}
-          >
+          <GridListTile key={item.name} cols={1} rows={1}>
             <ClickAwayListener
               onClickAway={doIfChildOf("wrapper-grid", item.onClickAway)}
             >
@@ -81,4 +78,7 @@ GridListWrapper.defaultProps = {
   dynamic: true
 };
 
-export default withStyles(styles)(GridListWrapper);
+export default responsiveComponent(GridListWrapper, {
+  vertical: styles,
+  horizontal: styles
+});

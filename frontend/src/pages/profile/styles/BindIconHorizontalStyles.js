@@ -1,9 +1,17 @@
 import defaults from "../../../config/globalStyles";
-import Arrow from "../../../../assets/arrow.png";
 import ReBind from "../../../config/ReBind";
 
 const styles = {
   ...defaults,
+  button: {
+    padding: 0,
+    "&:hover": {
+      background: "none"
+    }
+  },
+  delete_button: {
+    padding: 0
+  },
   delete_icon: {
     fontSize: 15
   },
@@ -75,27 +83,6 @@ const styles = {
       height: 0,
       borderStyle: "solid"
     }
-  },
-  delete_icon_permanent: {
-    fontSize: 22
-  },
-  tooltip_permanent: {
-    background: ReBind.THEME.palette.secondary.dark,
-    height: 30,
-    width: 30,
-    borderRadius: "10%",
-    marginLeft: "22%",
-    padding: 3
-  },
-  arrow_permanent: {
-    width: 10,
-    height: 10,
-    marginTop: "10%",
-    marginLeft: "40%",
-    backgroundImage: `url(${Arrow})`,
-    backgroundSize: "cover",
-    backgroundPosition: "center center",
-    position: "relative"
   }
 };
 export default styles;

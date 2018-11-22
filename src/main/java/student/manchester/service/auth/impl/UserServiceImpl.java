@@ -18,6 +18,8 @@ import student.manchester.service.auth.UserService;
 import student.manchester.service.auth.exception.LogicException;
 
 import javax.mail.internet.InternetAddress;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
@@ -40,7 +42,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDTO findById(final Long userId) {
-        final User entity = userDao.load(userId);
+        final User entity = getRequiredUser(userId);
         return  entity == null ? new UserDTO() : new UserDTO(entity);
     }
 
@@ -90,7 +92,7 @@ public class UserServiceImpl implements UserService {
     public BindDTO createBind(final Long userId, final BindUpdateRequest input) {
         final User user = getRequiredUser(userId);
         final Bind bind = new Bind();
-        Optional.ofNullable(input.getSelectedIcon()).ifPresent(bind::setIcon);
+        Optional.ofNullable(input.getIcon()).ifPresent(bind::setIcon);
         Optional.ofNullable(input.getName()).ifPresent(bind::setName);
         Optional.ofNullable(input.getUrl()).ifPresent(bind::setUrl);
         bind.setUser(user);
@@ -101,7 +103,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public BindDTO updateBind(final Long userId, final Long bindId, final BindUpdateRequest input) {
         final Bind bind = getRequiredBind(bindId);
-        Optional.ofNullable(input.getSelectedIcon()).ifPresent(bind::setIcon);
+        Optional.ofNullable(input.getIcon()).ifPresent(bind::setIcon);
         Optional.ofNullable(input.getName()).ifPresent(bind::setName);
         Optional.ofNullable(input.getUrl()).ifPresent(bind::setUrl);
         return new BindDTO(bind);
@@ -144,6 +146,7 @@ public class UserServiceImpl implements UserService {
         return entity;
     }
 
+    @SuppressWarnings("unchecked")
     private User getRequiredUser(final Long userId) {
         final User entity = userDao.get(userId);
         if(entity == null) {

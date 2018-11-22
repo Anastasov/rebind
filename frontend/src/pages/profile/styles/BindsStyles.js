@@ -2,7 +2,7 @@ import defaults from "../../../config/globalStyles";
 
 const styles = {
   ...defaults,
-  buttons: { marginTop: "5%", marginLeft: "4vw" },
+  buttons: { marginLeft: "4vw" },
   button: {
     padding: 0,
     "&:hover": {
@@ -10,7 +10,7 @@ const styles = {
     }
   },
   icon: {
-    fontSize: 55
+    fontSize: 60
   }
 };
 export default styles;

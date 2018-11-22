@@ -11,7 +11,6 @@ import {
   getFormAsyncErrors,
   getFormMeta
 } from "redux-form";
-import { withStyles } from "@material-ui/core/styles";
 import WarningIcon from "@material-ui/icons/Warning";
 import SwipeableViews from "react-swipeable-views";
 import AppBar from "@material-ui/core/AppBar";
@@ -27,8 +26,7 @@ import styles from "./styles/BindFormStyles";
 import {
   bindInitializerSelector,
   profileSelector,
-  authInfoSelector,
-  modalSelector
+  authInfoSelector
 } from "../../reducers/rootReducer";
 import {
   changeBind,
@@ -36,28 +34,29 @@ import {
   setTabOnBindForm
 } from "../../reducers/profile/profileActionCreators";
 import { formatRequiredThing, formatWrongThing } from "../../config/ux";
-import { hasOwnProps } from "../../util/ObjectUtils";
+import { hasOwnProps, getObjectProps, devLog } from "../../util/ObjectUtils";
 import { setModalOnCloseActionCreator } from "../../reducers/modal/modalActionCreators";
 import TabContainer from "../../components/nav/TabContainer";
+import responsiveComponent from "../../meta-components/responsiveComponent";
 /* eslint-enable */
 
-const createItem = (name, title, select, selectedIcon) => ({
+const createItem = (name, title, select, icon) => ({
   name,
   title,
   onClick: () => select(name),
-  selected: selectedIcon === name,
+  selected: icon === name,
   onClickAway: () => select("")
 });
 const doNothing = () => ({});
 
 const lastOf = (fieldName, values) => {
   switch (fieldName) {
-    case "selectedIcon":
-      return !values.selectedIcon && values.url && values.name;
+    case "icon":
+      return !values.icon && values.url && values.name;
     case "url":
-      return !values.url && values.selectedIcon && values.name;
+      return !values.url && values.icon && values.name;
     case "name":
-      return !values.name && values.selectedIcon && values.url;
+      return !values.name && values.icon && values.url;
     default:
       return true;
   }
@@ -69,13 +68,12 @@ class BindFormComponent extends Component {
     },
     authInfo: {},
     invalid: false,
-    selectedIcon: ""
+    icon: ""
   };
 
   static propTypes = {
     initialValues: PropTypes.object.isRequired,
     authInfo: PropTypes.object,
-    modal: PropTypes.object,
     profile: PropTypes.object,
     classes: PropTypes.object.isRequired,
     invalid: PropTypes.bool,
@@ -98,7 +96,7 @@ class BindFormComponent extends Component {
     });
   }
 
-  synchChangeWithServer = () => {
+  synchChangeWithServer = (field, value) => {
     const {
       authInfo,
       errors,
@@ -106,12 +104,11 @@ class BindFormComponent extends Component {
       initialValues,
       changeBindProp
     } = this.props;
+    const isAdd = !initialValues || !initialValues.id;
     if (!hasOwnProps(errors)) {
-      changeBindProp(
-        authInfo.id,
-        initialValues ? initialValues.id : null,
-        formValues
-      );
+      const bind = isAdd ? { ...formValues } : {};
+      bind[field] = value;
+      changeBindProp(authInfo.id, isAdd ? initialValues.id : null, bind);
     }
   };
 
@@ -129,56 +126,42 @@ class BindFormComponent extends Component {
     const userIsNotTyping =
       (!fieldsMeta.url || !fieldsMeta.url.active) &&
       (!fieldsMeta.name || !fieldsMeta.name.active);
-    const showIconError = lastOf("selectedIcon", formValues) && userIsNotTyping;
+    const showIconError = lastOf("icon", formValues) && userIsNotTyping;
     const touchedOrLast = fieldName =>
       (fieldsMeta[fieldName] && fieldsMeta[fieldName].touched) ||
       lastOf(fieldName, formValues);
-    const selectAndChangeTab = name => {
-      selectIcon(name);
-      setTimeout(() => selectTab(1), 500);
+    const selectAndChangeTab = iconName => {
+      const isCreating = !initialValues.icon;
+      if (isCreating) {
+        selectIcon(iconName);
+        selectTab(1);
+      } else if (iconName) {
+        this.synchChangeWithServer("icon", iconName);
+      }
     };
-    const items = [
+    const items = getObjectProps(Icons).map(iconKey =>
       createItem(
-        Icons.FACEBOOK.name,
-        "Facebook",
+        Icons[iconKey].name,
+        Icons[iconKey].title,
         selectAndChangeTab,
-        formValues.selectedIcon
-      ),
-      createItem(
-        Icons.SNAPCHAT.name,
-        "Snapchat",
-        selectAndChangeTab,
-        formValues.selectedIcon
-      ),
-      createItem(
-        Icons.INSTAGRAM.name,
-        "Instagram",
-        selectAndChangeTab,
-        formValues.selectedIcon
-      ),
-      createItem(
-        Icons.TWITTER.name,
-        "Twitter",
-        selectAndChangeTab,
-        formValues.selectedIcon
+        formValues.icon
       )
-    ];
+    );
     const leftPanel = (
       <React.Fragment>
         <Slide direction="right" in={showIconError} mountOnEnter unmountOnExit>
-          <Typography className={classes.error} variant="caption">
+          <Typography className={classes.error_message} variant="caption">
             Please select an icon from the list.
           </Typography>
         </Slide>
 
-        <GridList items={items} cols={8} spacing={14} />
+        <GridList items={items} cols={7} spacing={14} />
       </React.Fragment>
     );
 
     let icon;
-
-    if (formValues.selectedIcon) {
-      icon = <Icon name={formValues.selectedIcon} />;
+    if (formValues.icon) {
+      icon = <Icon name={formValues.icon} />;
     } else if (showIconError) {
       selectTab(0);
       icon = createRows(
@@ -268,8 +251,8 @@ class BindFormComponent extends Component {
 const validate = values => {
   const errors = {};
   const isLettersAndNumbers = value => /^[A-z0-9]+$/.test(value);
-  if (!values.selectedIcon) {
-    errors.selectedIcon = "select Icon please";
+  if (!values.icon) {
+    errors.icon = "select Icon please";
   }
 
   if (!values.name) {
@@ -293,16 +276,18 @@ const BindForm = reduxForm({
   validate,
   enableReinitialize: true
 })(BindFormComponent);
-const StyledBindForm = withStyles(styles)(BindForm);
+const StyledBindForm = responsiveComponent(BindForm, {
+  vertical: styles,
+  horizontal: styles
+});
 
 const mapStateToProps = state => ({
   authInfo: authInfoSelector(state),
-  modal: modalSelector(state),
   initialValues: bindInitializerSelector(state),
   fieldsMeta: getFormMeta("bind")(state),
   formValues: {
-    tabSelected: formValueSelector("bind")(state, "tabSelected"),
-    selectedIcon: formValueSelector("bind")(state, "selectedIcon"),
+    tabSelected: formValueSelector("bind")(state, "tabSelected") || 0,
+    icon: formValueSelector("bind")(state, "icon"),
     name: formValueSelector("bind")(state, "name"),
     url: formValueSelector("bind")(state, "url")
   },

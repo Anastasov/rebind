@@ -7,7 +7,7 @@ const styles = {
     fontSize: 62,
     color: ReBind.THEME.palette.error.main
   },
-  error: {
+  error_message: {
     flexBasis: "33.33%",
     borderLeft: `2px solid ${ReBind.THEME.palette.error.main}`,
     marginLeft: "20%",

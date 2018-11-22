@@ -45,8 +45,8 @@ export const alertDeleteBindActionCreator = bind => ({
 });
 
 export const loadBindModalActionCreator = bind => dispatch => {
-  dispatch(openEditBindModalActionCreator());
   dispatch(setBindDataActionCreator(bind));
+  dispatch(openEditBindModalActionCreator());
 };
 
 export const CLOSE_MODAL = "CLOSE_MODAL";

@@ -5,38 +5,26 @@ import { connect } from "react-redux";
 import { reduxForm, Form, Field } from "redux-form";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import Email from "@material-ui/icons/Email";
-import Visibility from "@material-ui/icons/Visibility";
-import VisibilityOff from "@material-ui/icons/VisibilityOff";
+import PasswordAdornment from "./PasswordAdornment";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import IconButton from "@material-ui/core/IconButton";
 import Button from "@material-ui/core/Button";
-import { withStyles } from "@material-ui/core/styles";
 import { authInfoSelector } from "../../reducers/rootReducer";
 import {
   setPasswordVisibilityActionCreator,
   handleRegisterActionCreator
 } from "../../reducers/auth/authActionCreators";
-import withMobileDialog from "@material-ui/core/withMobileDialog";
 import { openLoginModalActionCreator } from "../../reducers/modal/modalActionCreators";
 import isEmailValid from "sane-email-validation";
 import { formatRequiredThing, formatWrongThing } from "../../config/ux";
-import styles from "./AuthModalContainerStyles";
 import TextField from "../form/TextField";
 import * as PasswordUtils from "../../util/PasswordUtils";
+import horizontal from "./styles/AuthModalContainerHorizontalStyles";
+import vertical from "./styles/AuthModalContainerVerticalStyles";
+import responsiveComponent from "../../meta-components/responsiveComponent";
 /* eslint-enable */
-
-const passAdornment = (showPassword, toggleShowPassword) => (
-  <InputAdornment position="end">
-    <IconButton
-      aria-label="Toggle password visibility"
-      onClick={() => toggleShowPassword(!showPassword)}
-    >
-      {showPassword ? <Visibility /> : <VisibilityOff />}
-    </IconButton>
-  </InputAdornment>
-);
 
 const validate = values => {
   const errors = {};
@@ -64,7 +52,6 @@ const validate = values => {
 
 const RegisterFormComponent = ({
   classes,
-  fullScreen,
   authInfo,
   togglePasswordVisibility,
   handleRegister,
@@ -120,9 +107,11 @@ const RegisterFormComponent = ({
           disabled: submitting
         }}
         InputProps={{
-          endAdornment: passAdornment(
-            authInfo.isPasswordVisible,
-            togglePasswordVisibility
+          endAdornment: (
+            <PasswordAdornment
+              showPassword={authInfo.isPasswordVisible}
+              togglePasswordVisibility={togglePasswordVisibility}
+            />
           )
         }}
       />
@@ -150,11 +139,6 @@ const RegisterFormComponent = ({
         size="large"
         className={classes.button_alternative}
         disabled={submitting}
-        style={
-          fullScreen
-            ? styles.button_alternative_full
-            : styles.button_alternative_normal
-        }
       >
         Login
       </Button>
@@ -181,16 +165,17 @@ RegisterFormComponent.propTypes = {
   openLoginModal: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired,
   submitting: PropTypes.bool.isRequired,
-  fullScreen: PropTypes.bool.isRequired,
   valid: PropTypes.bool.isRequired
 };
 
-const ReduxFormRegisterForm = reduxForm({
+const RegisterForm = reduxForm({
   form: "register",
   validate
 })(RegisterFormComponent);
-const StyledRegisterForm = withStyles(styles)(ReduxFormRegisterForm);
-const ResponsiveRegisterForm = withMobileDialog()(StyledRegisterForm);
+const StyledRegisterForm = responsiveComponent(RegisterForm, {
+  vertical,
+  horizontal
+});
 
 const mapStateToContentProps = state => ({
   authInfo: authInfoSelector(state)
@@ -204,6 +189,6 @@ const mapDispatchToContentProps = dispatch => ({
 const ReduxRegisterForm = connect(
   mapStateToContentProps,
   mapDispatchToContentProps
-)(ResponsiveRegisterForm);
+)(StyledRegisterForm);
 
 export default ReduxRegisterForm;

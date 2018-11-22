@@ -21,3 +21,9 @@ export const hideNavActionCreator = () => ({
   type: HIDE_NAVBAR,
   payload: { show: false }
 });
+
+export const SET_NAV_TAB_INDEX = "SET_NAV_TAB_INDEX";
+export const setNavTabIndexActionCreator = tabIndex => ({
+  type: SET_NAV_TAB_INDEX,
+  payload: { tabIndex }
+});

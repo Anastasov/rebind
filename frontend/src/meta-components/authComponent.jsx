@@ -2,9 +2,9 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import withCookies from "../withCookies";
-import { openLoginModalActionCreator } from "../../reducers/modal/modalActionCreators";
-import { authInfoSelector } from "../../reducers/rootReducer";
+import { openLoginModalActionCreator } from "../reducers/modal/modalActionCreators";
+import { authInfoSelector } from "../reducers/rootReducer";
+import withCookies from "./withCookies";
 
 const mapStateToProps = state => ({
   authInfo: authInfoSelector(state)

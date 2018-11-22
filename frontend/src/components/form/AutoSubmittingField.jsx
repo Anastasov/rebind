@@ -1,15 +1,14 @@
 /* eslint-disable */
 import React from "react";
 import PropTypes from "prop-types";
-import { connect } from "react-redux";
 import { Field } from "redux-form";
 import Fade from "@material-ui/core/Fade";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import CheckCircle from "@material-ui/icons/CheckCircle";
-import { withStyles } from "@material-ui/core/styles";
+import responsiveComponent from "../../meta-components/responsiveComponent";
 import TextField from "./TextField";
-import styles from "./AutoSubmittingFieldStyles";
+import styles from "./styles/AutoSubmittingFieldStyles";
 /* eslint-enable */
 // refactor components to pass initialValues[name], error[name], submitting[name], success[name]
 const AutoSubmittingField = ({
@@ -69,4 +68,7 @@ AutoSubmittingField.defaultProps = {
   error: ""
 };
 
-export default withStyles(styles)(AutoSubmittingField);
+export default responsiveComponent(AutoSubmittingField, {
+  vertical: styles,
+  horizontal: styles
+});

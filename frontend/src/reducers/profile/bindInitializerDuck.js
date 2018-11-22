@@ -4,7 +4,7 @@ export const setBindDataActionCreator = ({ id, icon, name, url }) => ({
   type: SET_BIND_DATA,
   payload: {
     id,
-    slectedIcon: icon,
+    icon,
     name,
     url,
     tabSelected: id ? 1 : 0
@@ -12,10 +12,10 @@ export const setBindDataActionCreator = ({ id, icon, name, url }) => ({
 });
 
 export const SELECT_ICON = "SELECT_ICON";
-export const selectIconActionCreator = selectedIcon => ({
+export const selectIconActionCreator = icon => ({
   type: SELECT_ICON,
   payload: {
-    selectedIcon
+    icon
   }
 });
 

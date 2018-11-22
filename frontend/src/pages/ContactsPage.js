@@ -2,7 +2,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import HomePage from "./home/HomePage";
-import authComponent from "../components/auth/authComponent";
+import authComponent from "../meta-components/authComponent";
 /* eslint-enable */
 
 class ContactsPage extends Component {
@@ -13,4 +13,4 @@ class ContactsPage extends Component {
   /* eslint-enable */
 }
 
-export default authComponent(ContactsPage, "/con");
+export default ContactsPage;

@@ -9,8 +9,9 @@ import CloseIcon from "@material-ui/icons/Close";
 import IconButton from "@material-ui/core/IconButton";
 import SnackbarContent from "@material-ui/core/SnackbarContent";
 import WarningIcon from "@material-ui/icons/Warning";
-import { withStyles } from "@material-ui/core/styles";
-import styles from "./ColoredSnackbarWrapperStyles";
+import styles from "./styles/ColoredSnackbarWrapperStyles";
+import responsiveComponent from "../../meta-components/responsiveComponent";
+import { withStyles } from "@material-ui/core";
 /* eslint-enable */
 
 const variantIcon = {
@@ -69,4 +70,7 @@ ColoredSnackbarWrapper.defaultProps = {
   onClose: () => {}
 };
 
-export default withStyles(styles)(ColoredSnackbarWrapper);
+export default withStyles(styles)(ColoredSnackbarWrapper); // , {
+//   vertical: styles,
+//   horizontal: styles
+// });

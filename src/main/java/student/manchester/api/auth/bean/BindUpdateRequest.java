@@ -8,16 +8,16 @@ import java.io.Serializable;
  */
 public class BindUpdateRequest implements Serializable {
 
-    private String selectedIcon;
+    private String icon;
     private String name;
     private String url;
 
-    public String getSelectedIcon() {
-        return selectedIcon;
+    public String getIcon() {
+        return icon;
     }
 
-    public void setSelectedIcon(final String selectedIcon) {
-        this.selectedIcon = selectedIcon;
+    public void setIcon(final String selectedIcon) {
+        this.icon = selectedIcon;
     }
 
     public String getName() {

@@ -1,4 +1,4 @@
-import defaults from "../config/globalStyles";
+import defaults from "../../config/globalStyles";
 
 const styles = {
   ...defaults,

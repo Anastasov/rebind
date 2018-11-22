@@ -5,16 +5,13 @@ import { connect } from "react-redux";
 import { reduxForm, Form, Field } from "redux-form";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import Email from "@material-ui/icons/Email";
-import Visibility from "@material-ui/icons/Visibility";
-import VisibilityOff from "@material-ui/icons/VisibilityOff";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import IconButton from "@material-ui/core/IconButton";
 import Button from "@material-ui/core/Button";
 import TextField from "../form/TextField";
-import { withStyles } from "@material-ui/core/styles";
-import withMobileDialog from "@material-ui/core/withMobileDialog";
+import responsiveComponent from "../../meta-components/responsiveComponent";
 import { authInfoSelector, modalSelector } from "../../reducers/rootReducer";
 import {
   setPasswordVisibilityActionCreator,
@@ -22,39 +19,14 @@ import {
 } from "../../reducers/auth/authActionCreators";
 import isEmailValid from "sane-email-validation";
 import { formatRequiredThing, formatWrongThing } from "../../config/ux";
-import styles from "./AuthModalContainerStyles";
+import horizontal from "./styles/AuthModalContainerHorizontalStyles";
+import vertical from "./styles/AuthModalContainerVerticalStyles";
 import { openSignUpModalActionCreator } from "../../reducers/modal/modalActionCreators";
+import PasswordAdornment from "./PasswordAdornment";
 /* eslint-enable */
-
-const passAdornment = (showPassword, toggleShowPassword) => (
-  <InputAdornment position="end">
-    <IconButton
-      aria-label="Toggle password visibility"
-      onClick={() => toggleShowPassword(!showPassword)}
-    >
-      {showPassword ? <Visibility /> : <VisibilityOff />}
-    </IconButton>
-  </InputAdornment>
-);
-
-const validate = values => {
-  const errors = {};
-  if (!values.email) {
-    errors.email = formatRequiredThing("email");
-  } else if (!isEmailValid(values.email)) {
-    errors.email = formatWrongThing("email");
-  }
-
-  if (!values.password) {
-    errors.password = formatRequiredThing("password");
-  }
-
-  return errors;
-};
 
 const LoginFormComponent = ({
   classes,
-  fullScreen,
   authInfo,
   modal,
   togglePasswordVisibility,
@@ -109,9 +81,11 @@ const LoginFormComponent = ({
           disabled: submitting
         }}
         InputProps={{
-          endAdornment: passAdornment(
-            authInfo.isPasswordVisible,
-            togglePasswordVisibility
+          endAdornment: (
+            <PasswordAdornment
+              showPassword={authInfo.isPasswordVisible}
+              togglePasswordVisibility={togglePasswordVisibility}
+            />
           )
         }}
         component={TextField}
@@ -128,11 +102,6 @@ const LoginFormComponent = ({
         size="large"
         className={classes.button_alternative}
         disabled={submitting}
-        style={
-          fullScreen
-            ? styles.button_alternative_full
-            : styles.button_alternative_normal
-        }
       >
         Sign Up
       </Button>
@@ -160,17 +129,32 @@ LoginFormComponent.propTypes = {
   handleLogin: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired,
   submitting: PropTypes.bool.isRequired,
-  fullScreen: PropTypes.bool.isRequired,
   valid: PropTypes.bool.isRequired
 };
 
+const validate = values => {
+  const errors = {};
+  if (!values.email) {
+    errors.email = formatRequiredThing("email");
+  } else if (!isEmailValid(values.email)) {
+    errors.email = formatWrongThing("email");
+  }
+
+  if (!values.password) {
+    errors.password = formatRequiredThing("password");
+  }
+
+  return errors;
+};
 const LoginForm = reduxForm({
   form: "login",
   validate,
   destroyOnUnmount: false
 })(LoginFormComponent);
-const ResponsiveLoginForm = withMobileDialog()(LoginForm);
-const StyledLoginForm = withStyles(styles)(ResponsiveLoginForm);
+const StyledLoginForm = responsiveComponent(LoginForm, {
+  vertical,
+  horizontal
+});
 const mapStateToContentProps = state => ({
   authInfo: authInfoSelector(state),
   modal: modalSelector(state)

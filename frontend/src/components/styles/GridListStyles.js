@@ -1,5 +1,5 @@
-import defaults from "../config/globalStyles";
-import Rebind from "../config/ReBind";
+import defaults from "../../config/globalStyles";
+import Rebind from "../../config/ReBind";
 
 export const logoPixelSize = 62;
 export const logoPaddingSize = 6;
@@ -13,7 +13,7 @@ const wrapper = {
   display: "flex",
   flexWrap: "wrap",
   justifyContent: "space-around",
-  overflow: "none"
+  overflow: "hidden"
 };
 
 const styles = {
@@ -25,7 +25,7 @@ const styles = {
     ...wrapper,
     overflow: "auto"
   },
-  gridList: {},
+  gridList: { display: "contents" },
   item: {
     ...defaultItem
   },

@@ -2,6 +2,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
+import { withStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import SignUpIcon from "@material-ui/icons/KeyboardArrowRight";
@@ -12,6 +13,9 @@ import {
   mouseOnLoginButtonActionCreator
 } from "../../reducers/auth/authActionCreators";
 import { authInfoSelector } from "../../reducers/rootReducer";
+import responsiveComponent from "../../meta-components/responsiveComponent";
+import vertical from "./styles/HomePageVerticalStyles";
+import horizontal from "./styles/HomePageHorizontalStyles";
 /* eslint-enable */
 
 const stylesForGridMember = index => ({
@@ -280,4 +284,7 @@ HomePageResponsiveUI.propTypes = {
   }).isRequired
 };
 
-export default HomePageResponsiveUI;
+export default responsiveComponent(HomePageResponsiveUI, {
+  vertical,
+  horizontal
+});

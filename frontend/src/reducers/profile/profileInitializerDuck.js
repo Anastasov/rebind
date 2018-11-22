@@ -17,7 +17,7 @@ export const initProfileDataActionCreator = ({
     lastName,
     phone,
     postcode,
-    binds
+    binds: binds.sort((a, b) => a.icon.localeCompare(b.icon))
   }
 });
 

@@ -4,7 +4,6 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import IconButton from "@material-ui/core/IconButton";
 import AddIcon from "@material-ui/icons/AddBox";
-import { withStyles } from "@material-ui/core/styles";
 import styles from "./styles/BindsStyles";
 import { profileInitializerSelector } from "../../reducers/rootReducer";
 import {
@@ -13,6 +12,7 @@ import {
 } from "../../reducers/modal/modalActionCreators";
 import { createMatrix } from "../../util/GridUtil";
 import BindIcon from "./BindIcon";
+import responsiveComponent from "../../meta-components/responsiveComponent";
 /* eslint-enable */
 
 class Binds extends Component {
@@ -53,7 +53,12 @@ class Binds extends Component {
     );
     const buttons = binds
       ? binds.map(bind => (
-          <BindIcon bind={bind} deleteBindAlert={deleteBindAlert} />
+          <BindIcon
+            key={bind.id}
+            bind={bind}
+            editBind={openBindModal}
+            deleteBindAlert={deleteBindAlert}
+          />
         ))
       : [];
     buttons.push(addButton);
@@ -70,7 +75,10 @@ class Binds extends Component {
     );
   }
 }
-const StyledBinds = withStyles(styles)(Binds);
+const StyledBinds = responsiveComponent(Binds, {
+  vertical: styles,
+  horizontal: styles
+});
 
 const mapStateToProps = state => ({
   binds: profileInitializerSelector(state).binds

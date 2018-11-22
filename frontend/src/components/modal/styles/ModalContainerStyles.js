@@ -1,4 +1,4 @@
-import ReBind from "../../config/ReBind";
+import ReBind from "../../../config/ReBind";
 
 const styles = {
   progress: {
@@ -30,6 +30,9 @@ const styles = {
   },
   text: {
     marginTop: "2%"
+  },
+  modal_content: {
+    overflow: "hidden"
   }
 };
 

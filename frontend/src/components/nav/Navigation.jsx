@@ -5,7 +5,6 @@ import { push } from "react-router-redux";
 import ReBind from "../../config/ReBind";
 import PropTypes from "prop-types";
 import { withRouter } from "react-router-dom";
-import { withStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
@@ -22,7 +21,8 @@ import {
 import { signoutUser } from "../../reducers/auth/authActionCreators";
 import { authInfoSelector, navbarSelector } from "../../reducers/rootReducer";
 import ModalContainer from "../modal/ModalContainer";
-import styles from "./NavigationStyles";
+import styles from "./styles/NavigationStyles";
+import responsiveComponent from "../../meta-components/responsiveComponent";
 /* eslint-enable */
 
 class Navigation extends Component {
@@ -135,7 +135,10 @@ class Navigation extends Component {
   }
 }
 
-const StyledNavigation = withStyles(styles)(Navigation);
+const StyledNavigation = responsiveComponent(Navigation, {
+  vertical: styles,
+  horizontal: styles
+});
 
 const mapStateToProps = state => ({
   authInfo: authInfoSelector(state),

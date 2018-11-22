@@ -1,9 +1,10 @@
 /* eslint-disable */
 import React from "react";
 import PropTypes from "prop-types";
-import { withStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
-import styles from "./TextFieldStyles";
+import { removeHigherOrderParams } from "../../util/ObjectUtils";
+import styles from "./styles/TextFieldStyles";
+import responsiveComponent from "../../meta-components/responsiveComponent";
 /* eslint-enable */
 
 const hasValidationError = meta => meta.error && meta.touched;
@@ -40,10 +41,9 @@ const TextFieldComponent = ({
     label={label}
     helperText={visibleHelperText(meta, orError, helperText)}
     {...input}
-    {...rest}
+    {...removeHigherOrderParams(rest)}
   />
 );
-
 TextFieldComponent.propTypes = {
   input: PropTypes.object.isRequired,
   meta: PropTypes.object.isRequired,
@@ -60,4 +60,7 @@ TextFieldComponent.defaultProps = {
   fullWidth: false
 };
 
-export default withStyles(styles)(TextFieldComponent);
+export default responsiveComponent(TextFieldComponent, {
+  vertical: styles,
+  horizontal: styles
+});

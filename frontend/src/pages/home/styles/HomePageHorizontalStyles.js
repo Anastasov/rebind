@@ -33,8 +33,8 @@ const styles = {
   },
   buttons: {
     marginTop: "15vw",
-    textAlign: "right"
-    // marginRight: "1vw"
+    textAlign: "right",
+    overflow: "hidden"
   },
   icon: {
     fontSize: "6vw"
@@ -67,8 +67,7 @@ const styles = {
     width: "100%",
     zIndex: 97,
     background: "rgba(0, 0, 0, 0.8)",
-    display: "block",
-    overflow: "scroll"
+    display: "block"
   },
   logo_font: {
     fontFamily: "'Bungee', cursive"

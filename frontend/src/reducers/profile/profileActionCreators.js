@@ -66,12 +66,8 @@ export const setTab = initializing => ({
   payload: { initializing }
 });
 
-export const setIconOnBindForm = icon => (dispatch, getState) => {
-  const { modal } = getState();
-  if (!modal.showProgressBar) {
-    dispatch(change("bind", "selectedIcon", icon));
-  }
-};
+export const setIconOnBindForm = icon => dispatch =>
+  dispatch(change("bind", "icon", icon));
 
 export const setTabOnBindForm = tab => dispatch =>
   dispatch(change("bind", "tabSelected", tab));
@@ -119,41 +115,51 @@ export const changeProfileDataField = (id, field, value) => (
     });
 };
 
-export const changeBind = (userId, bindId, bind) => (dispatch, getState) => {
-  const isAdd = !bindId;
-  const isDelete = !bind;
-  // const isUpdate = bindId && bind;
-  const changedProps = getObjectProps(bind);
-
+const preLoading = (dispatch, changedProps) => {
   // call api for change -> loading
   dispatch(showProgressBarActionCreator());
   changedProps.forEach(field => {
     dispatch(popErrorActionCreator(field));
     dispatch(pushSubmittingActionCreator(field));
   });
+};
+
+const postLoading = (dispatch, changedProps) => {
+  changedProps.forEach(field => {
+    dispatch(popSubmittingActionCreator(field));
+    dispatch(pushSuccessActionCreator(field));
+    setTimeout(() => dispatch(popSuccessActionCreator(field)), 3000);
+  });
+};
+
+export const changeBind = (userId, bindId, updateBind) => (
+  dispatch,
+  getState
+) => {
+  const isAdd = !bindId;
+  const isDelete = !updateBind;
+  // const isUpdate = bindId && bind;
+  const changedProps = getObjectProps(updateBind);
+  preLoading(dispatch, changedProps);
 
   return UserApi.auth(getState())
-    .changeBind(userId, bindId, bind)
+    .changeBind(userId, bindId, updateBind)
     .then(handleResponse(dispatch))
-    .then(data => {
-      changedProps.forEach(field => {
-        dispatch(popSubmittingActionCreator(field));
-        dispatch(pushSuccessActionCreator(field));
-        setTimeout(() => dispatch(popSuccessActionCreator(field)), 3000);
-        dispatch(setBindDataActionCreator(data));
-      });
-      if (isAdd || isDelete) {
-        dispatch(fetchProfileData(userId));
-        if (isDelete) {
-          dispatch(closeModalActionCreator());
-        }
+    .then(({ bind }) => {
+      postLoading(dispatch, changedProps);
+      if (bind) {
+        dispatch(setBindDataActionCreator(bind));
+      }
+      dispatch(fetchProfileData(userId));
+      if (isDelete) {
+        dispatch(closeModalActionCreator());
       }
     })
     .catch(error => {
       let message = null;
       if (isAdd) {
         message = "Bind couldn't be created";
-      } else if (!bind) {
+      } else if (!updateBind) {
         message = "Bind couldn't be delete";
       }
       if (message) {
