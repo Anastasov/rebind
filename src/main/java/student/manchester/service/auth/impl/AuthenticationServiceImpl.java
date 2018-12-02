@@ -5,13 +5,12 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import student.manchester.annotation.TransactionalService;
-import student.manchester.api.auth.bean.AuthenticatedResponse;
 import student.manchester.configuration.security.wrapper.JWTAuthenticationToken;
 import student.manchester.configuration.security.wrapper.JWTUserDetails;
-import student.manchester.model.auth.bean.UserDTO;
+import student.manchester.model.user.dto.UserDTO;
 import student.manchester.service.auth.AuthenticationService;
-import student.manchester.service.auth.UserService;
-import student.manchester.service.auth.exception.LogicException;
+import student.manchester.service.user.UserService;
+import student.manchester.service.exception.LogicException;
 import student.manchester.util.AuthUtil;
 
 import java.util.Optional;

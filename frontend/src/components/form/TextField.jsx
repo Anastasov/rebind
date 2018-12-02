@@ -9,9 +9,11 @@ import responsiveComponent from "../../meta-components/responsiveComponent";
 
 const hasValidationError = meta => meta.error && meta.touched;
 const showError = (meta, orError) =>
-  !!(orError
-    ? hasValidationError(meta) || orError(meta)
-    : hasValidationError(meta));
+  Boolean(
+    orError
+      ? hasValidationError(meta) || orError(meta)
+      : hasValidationError(meta)
+  );
 
 const visibleHelperText = (meta, orError, helperText) => {
   let helper = null;
@@ -31,6 +33,7 @@ const TextFieldComponent = ({
   helperText,
   orError,
   fullWidth,
+  disableHelper = false,
   ...rest
 }) => (
   <TextField
@@ -38,8 +41,12 @@ const TextFieldComponent = ({
     className={classes.formControl}
     color="inherit"
     error={showError(meta, orError)}
-    label={label}
-    helperText={visibleHelperText(meta, orError, helperText)}
+    label={
+      disableHelper && showError(meta, orError)
+        ? visibleHelperText(meta, orError, helperText)
+        : label
+    }
+    helperText={!disableHelper && visibleHelperText(meta, orError, helperText)}
     {...input}
     {...removeHigherOrderParams(rest)}
   />
@@ -47,6 +54,7 @@ const TextFieldComponent = ({
 TextFieldComponent.propTypes = {
   input: PropTypes.object.isRequired,
   meta: PropTypes.object.isRequired,
+  disableHelper: PropTypes.bool.isRequired,
   fullWidth: PropTypes.bool,
   helperText: PropTypes.object,
   label: PropTypes.string,
@@ -57,7 +65,8 @@ TextFieldComponent.defaultProps = {
   label: "",
   helperText: { text: "" },
   orError: () => false,
-  fullWidth: false
+  fullWidth: false,
+  disableHelper: false
 };
 
 export default responsiveComponent(TextFieldComponent, {

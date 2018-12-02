@@ -1,6 +1,6 @@
 package student.manchester.api.exception;
 
-import student.manchester.service.auth.exception.LogicException;
+import student.manchester.service.exception.LogicException;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

@@ -8,10 +8,10 @@ import styles from "./styles/BotNavigationStyles";
 import responsiveComponent from "../../meta-components/responsiveComponent";
 /* eslint-enable */
 
-const BotNavigation = ({ classes, tabIndex, setNavTabIndex }) => (
+const BotNavigation = ({ classes, tabIndex, onTabChange }) => (
   <BottomNavigation
     value={tabIndex}
-    onChange={(event, value) => setNavTabIndex(value)}
+    onChange={(event, value) => onTabChange(value)}
     showLabels
     className={classes.bot_nav_root}
   >
@@ -28,7 +28,7 @@ const BotNavigation = ({ classes, tabIndex, setNavTabIndex }) => (
 BotNavigation.propTypes = {
   classes: PropTypes.object.isRequired,
   tabIndex: PropTypes.number.isRequired,
-  setNavTabIndex: PropTypes.func.isRequired
+  onTabChange: PropTypes.func.isRequired
 };
 export default responsiveComponent(BotNavigation, {
   vertical: styles,

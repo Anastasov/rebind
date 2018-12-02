@@ -1,7 +1,7 @@
 package student.manchester.dao.user;
 
 import student.manchester.dao.GenericDao;
-import student.manchester.model.auth.User;
+import student.manchester.model.user.User;
 
 import java.util.List;
 

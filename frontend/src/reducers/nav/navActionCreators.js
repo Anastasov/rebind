@@ -1,3 +1,6 @@
+import { push } from "react-router-redux";
+import Tabs from "../../components/nav/BottomNavigationTabs.jsx";
+
 export const SHOW_USER_MENU = "SHOW_USER_MENU";
 export const showUserMenuActionCreator = userMenuDropdownAnchor => ({
   type: SHOW_USER_MENU,
@@ -27,3 +30,13 @@ export const setNavTabIndexActionCreator = tabIndex => ({
   type: SET_NAV_TAB_INDEX,
   payload: { tabIndex }
 });
+
+export const navigate = index => dispatch => {
+  if (index < Tabs.length) {
+    const tab = Tabs[index];
+    if (tab) {
+      dispatch(push(tab.path));
+      dispatch(setNavTabIndexActionCreator(tab.index));
+    }
+  }
+};

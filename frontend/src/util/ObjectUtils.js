@@ -65,3 +65,6 @@ export const removeHigherOrderParams = all => {
   delete props.path;
   return props;
 };
+
+export const endsWith = (string, suffix) =>
+  string.indexOf(suffix, string.length - suffix.length) !== -1;

@@ -1,19 +1,10 @@
 package student.manchester.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import student.manchester.annotation.Auth;
-import student.manchester.api.exception.ApiInputException;
 import student.manchester.configuration.security.wrapper.JWTUserDetails;
-import student.manchester.controller.bean.AuthenticationForm;
-import student.manchester.model.auth.bean.UserDTO;
-import student.manchester.service.auth.AuthenticationService;
-import student.manchester.service.auth.UserService;
-
-import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 /**
  * @author Anastas Anastasov
@@ -34,6 +25,11 @@ public class HomeController {
 
     @RequestMapping(value = "/profile", method = RequestMethod.GET)
     public String profilePage() {
+        return "index";
+    }
+
+    @RequestMapping(value = "/cards", method = RequestMethod.GET)
+    public String cardsPage() {
         return "index";
     }
 

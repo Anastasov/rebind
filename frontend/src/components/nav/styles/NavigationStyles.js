@@ -2,6 +2,9 @@ const styles = {
   root: {
     flexGrow: 1
   },
+  navbar: {
+    backgroundColor: "transparent"
+  },
   logo_font: {
     fontFamily: "'Bungee', cursive",
     flexGrow: 1

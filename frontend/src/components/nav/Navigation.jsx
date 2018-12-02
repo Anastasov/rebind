@@ -59,6 +59,7 @@ class Navigation extends Component {
         <AppBar
           color="secondary"
           position="fixed"
+          className={classes.navbar}
           style={navbar.additionalStyles}
         >
           <Toolbar>

@@ -10,12 +10,12 @@ import responsiveComponent from "../../meta-components/responsiveComponent";
 
 const PasswordAdornMent = ({
   showPassword = false,
-  toggleShowPassword = () => null
+  togglePasswordVisibility = () => null
 }) => (
   <InputAdornment position="end">
     <IconButton
       aria-label="Toggle password visibility"
-      onClick={() => toggleShowPassword(!showPassword)}
+      onClick={() => togglePasswordVisibility(!showPassword)}
     >
       {showPassword ? <Visibility /> : <VisibilityOff />}
     </IconButton>
@@ -24,11 +24,11 @@ const PasswordAdornMent = ({
 
 PasswordAdornMent.propTypes = {
   showPassword: PropTypes.bool,
-  toggleShowPassword: PropTypes.func
+  togglePasswordVisibility: PropTypes.func
 };
 PasswordAdornMent.defaultProps = {
   showPassword: false,
-  toggleShowPassword: () => null
+  togglePasswordVisibility: () => null
 };
 
 export default responsiveComponent(PasswordAdornMent, {

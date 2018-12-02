@@ -2,15 +2,21 @@ package student.manchester.dao;
 
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.proxy.HibernateProxy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import student.manchester.model.user.User;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Path;
+import javax.persistence.criteria.Root;
 
 /**
  * Hibernate implementation of {@link GenericDao}.
@@ -40,6 +46,23 @@ public abstract class GenericDaoHibernate<T, ID extends Serializable>
 
 	protected CriteriaQuery<T> createQuery() {
 		return getCriteriaBuilder().createQuery(entityClass);
+	}
+
+	protected List<T> getList(final CriteriaQuery<T> criteria) {
+		return getSession().createQuery(criteria).list();
+	}
+
+    protected T getOne(final CriteriaQuery<T> criteria) {
+        return getSession().createQuery(criteria).uniqueResult();
+    }
+
+	protected Path<T> getAssociation(final Root<T> table, final String path) {
+		final List<String> paths = Arrays.asList(path.split("\\."));
+		Path association = table;
+		for(final String property : paths) {
+			association = association.get(property);
+		}
+		return association;
 	}
 	
 	@Override

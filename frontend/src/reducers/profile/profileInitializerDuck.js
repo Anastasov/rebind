@@ -27,7 +27,16 @@ export const updateProfileDataActionCreator = payload => ({
   payload
 });
 
-const reducer = (state = {}, action) => {
+const INITIAL_STATE = {
+  username: "",
+  email: "",
+  firstName: "",
+  lastName: "",
+  phone: "",
+  postcode: "",
+  binds: []
+};
+const reducer = (state = INITIAL_STATE, action) => {
   const { type, payload } = action;
   switch (type) {
     case INIT_PROFILE_DATA:

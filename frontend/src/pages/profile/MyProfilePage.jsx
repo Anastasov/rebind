@@ -2,7 +2,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { withStyles } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
@@ -18,6 +17,7 @@ import Binds from "./Binds";
 import DefaultProfilePic from "../../../assets/profile-pic-default.jpg";
 import { createRows } from "../../util/GridUtil";
 import responsiveComponent from "../../meta-components/responsiveComponent";
+import { PROFILE_TAB_PATH } from "../../components/nav/BottomNavigationTabs";
 /* eslint-enable */
 
 class MyProfilePage extends Component {
@@ -93,4 +93,4 @@ const ReduxMyProfilePage = connect(
   mapDispatchToProps
 )(StyledMyProfilePage);
 
-export default ReduxMyProfilePage;
+export default authComponent(ReduxMyProfilePage, PROFILE_TAB_PATH);

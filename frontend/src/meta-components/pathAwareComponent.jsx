@@ -11,7 +11,7 @@ const mapDispatchToProps = {
   setNavTabIndex: setNavTabIndexActionCreator
 };
 
-const pathAwareComponent = (WrappedComponent, path = "") =>
+const pathAwareComponent = (WrappedPathComponent, path = "") =>
   connect(
     mapStateToProps,
     mapDispatchToProps
@@ -29,7 +29,7 @@ const pathAwareComponent = (WrappedComponent, path = "") =>
       }
 
       render() {
-        return <WrappedComponent path={path} {...this.props} />;
+        return <WrappedPathComponent path={path} {...this.props} />;
       }
     }
   );

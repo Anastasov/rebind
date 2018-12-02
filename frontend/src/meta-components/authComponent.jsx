@@ -13,7 +13,7 @@ const mapDispatchToProps = dispatch => ({
   redirectToLoginPage: redirectPath =>
     dispatch(openLoginModalActionCreator(redirectPath))
 });
-const authComponent = (WrappedComponent, path = "") =>
+const authComponent = (WrappedAuthComponent, path = "") =>
   withCookies(
     connect(
       mapStateToProps,
@@ -36,7 +36,7 @@ const authComponent = (WrappedComponent, path = "") =>
         render() {
           const { authInfo } = this.props;
           return authInfo && authInfo.jwToken ? (
-            <WrappedComponent authInfo={authInfo} {...this.props} />
+            <WrappedAuthComponent authInfo={authInfo} {...this.props} />
           ) : null;
         }
       }

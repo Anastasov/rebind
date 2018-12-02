@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import {
   Form,
+  Field,
   reset,
   reduxForm,
   formValueSelector,
@@ -159,29 +160,36 @@ class BindFormComponent extends Component {
       </React.Fragment>
     );
 
-    let icon;
-    if (formValues.icon) {
-      icon = <Icon name={formValues.icon} />;
-    } else if (showIconError) {
-      selectTab(0);
-      icon = createRows(
-        [
-          <WarningIcon className={classes.icon_warning} />,
-          <Typography variant="caption" gutterBottom align="center">
-            Please select an icon from the list.
-          </Typography>
-        ],
-        { spacing: 0 }
-      );
-    } else {
-      icon = <Icon empty />;
-    }
+    const IconWrapper = ({ iconName, showError }) => {
+      if (iconName) {
+        return <Icon name={iconName} />;
+      }
+      if (showError) {
+        selectTab(0);
+        return createRows(
+          [
+            <WarningIcon className={classes.icon_warning} />,
+            <Typography variant="caption" gutterBottom align="center">
+              Please select an icon from the list.
+            </Typography>
+          ],
+          { spacing: 0 }
+        );
+      }
+      return <Icon empty />;
+    };
 
     const rightPanel = (
       <div className={classes.form}>
         {createStyledRows(
           [
-            icon,
+            <Field
+              form="bind"
+              name="icon"
+              iconName={formValues.icon}
+              showError={showIconError}
+              component={IconWrapper}
+            />,
             <AutoSubmittingField
               form="bind"
               name="name"
@@ -193,7 +201,7 @@ class BindFormComponent extends Component {
               disabled={profile.submitting.name}
               submitting={profile.submitting.name}
               success={profile.success.name}
-              errors={touchedOrLast("name") ? errors.name : ""}
+              error={touchedOrLast("name") ? errors.name : ""}
               initialValue={initialValues.name}
               synchChangeWithServer={this.synchChangeWithServer}
               disableLoader

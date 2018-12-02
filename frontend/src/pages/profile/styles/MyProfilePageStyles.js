@@ -16,9 +16,7 @@ const styles = {
     backgroundSize: "100% 100%"
   },
   content: {
-    flex: "1 1 auto",
-    marginTop: "3%",
-    marginBot: "5%"
+    flex: "1 1 auto"
   },
   progress: { color: "#eeeeee" },
   progressText: { color: "#eeeeee", marginTop: "40%" },

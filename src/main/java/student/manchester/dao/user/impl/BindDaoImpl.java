@@ -3,7 +3,7 @@ package student.manchester.dao.user.impl;
 import org.springframework.stereotype.Repository;
 import student.manchester.dao.GenericDaoHibernate;
 import student.manchester.dao.user.BindDao;
-import student.manchester.model.auth.Bind;
+import student.manchester.model.bind.Bind;
 
 /**
  * @author Anastas Anastasov

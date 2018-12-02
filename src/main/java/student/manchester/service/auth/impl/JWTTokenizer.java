@@ -7,9 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import student.manchester.configuration.security.exception.RejectedTokenException;
 import student.manchester.configuration.security.exception.TokenSecretNotConfiguredException;
-import student.manchester.model.auth.bean.RoleDTO;
-import student.manchester.model.auth.bean.UserDTO;
-import student.manchester.service.auth.UserService;
+import student.manchester.model.auth.dto.RoleDTO;
+import student.manchester.model.user.dto.UserDTO;
+import student.manchester.service.user.UserService;
 import student.manchester.util.TimeUtil;
 
 import java.util.Map;

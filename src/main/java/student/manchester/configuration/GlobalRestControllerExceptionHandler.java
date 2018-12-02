@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import student.manchester.api.bean.RebindResponse;
 import student.manchester.api.exception.ApiInputException;
-import student.manchester.service.auth.exception.LogicException;
+import student.manchester.service.exception.LogicException;
 
 /**
  * @author Anastas Anastasov
@@ -56,7 +56,7 @@ class GlobalRestControllerExceptionHandler {
         return status;
     }
 
-    //    /* Configure auto generating token on each successful response */
+    //    /* Configure auto generating token on each successful bean */
     //    @Pointcut("* student.manchester.api.*(..)")
     //    public void invoke() {
     //    }

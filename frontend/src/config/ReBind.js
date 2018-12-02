@@ -51,9 +51,9 @@ const THEME = {
     mobileStepper: 1000,
     appBar: 1100,
     drawer: 1200,
-    snackbar: 1300,
-    tooltip: 1400,
-    modal: 1500
+    tooltip: 1300,
+    modal: 1400,
+    snackbar: 1500
   }
 };
 const ReBind = {

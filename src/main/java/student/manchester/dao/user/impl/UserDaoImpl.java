@@ -3,7 +3,7 @@ package student.manchester.dao.user.impl;
 import org.springframework.stereotype.Repository;
 import student.manchester.dao.GenericDaoHibernate;
 import student.manchester.dao.user.UserDao;
-import student.manchester.model.auth.User;
+import student.manchester.model.user.User;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -49,10 +49,6 @@ public class UserDaoImpl extends GenericDaoHibernate<User, Long> implements User
                 .where(builder.like(table.get("username"), prefix + "%"))
                 .orderBy(builder.desc(table.get("username")));
         return getList(criteria);
-    }
-
-    private List<User> getList(final CriteriaQuery<User> criteria) {
-        return getSession().createQuery(criteria).list();
     }
 
     private User getUser(final CriteriaQuery<User> criteria) {

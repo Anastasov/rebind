@@ -16,7 +16,7 @@ import SkypeIcon from "../../assets/icons/skype-logo.png";
 import TumblrIcon from "../../assets/icons/tumblr-logo.png";
 import ViberIcon from "../../assets/icons/viber-logo.png";
 import VimeoIcon from "../../assets/icons/vimeo-logo.png";
-import WhatsAppIcon from "../../assets/icons/whatsapp-rectangular-logo.png";
+import WhatsAppIcon from "../../assets/icons/whatsapp-logo.png";
 import MicrosoftIcon from "../../assets/icons/microsoft-account-logo.png";
 import YoutubeIcon from "../../assets/icons/youtube-logo.png";
 import styles from "./styles/IconStyles";
@@ -48,6 +48,11 @@ const Icon = ({ className, classes, empty, alt = "", name = "", ...rest }) => (
     alt={alt}
     src={empty ? EmptyIcon : Icons[name].img}
     className={className || (empty ? classes.icon_empty : classes.icon)}
+    imgProps={{
+      style: {
+        borderRadius: "10px"
+      }
+    }}
     {...removeHigherOrderParams(rest)}
   />
 );

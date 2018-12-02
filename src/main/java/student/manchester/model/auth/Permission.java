@@ -1,5 +1,6 @@
 package student.manchester.model.auth;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -17,7 +18,7 @@ import javax.persistence.UniqueConstraint;
 
 @Entity
 @Table(name = "REBIND_PERMISSION", uniqueConstraints={@UniqueConstraint(columnNames={"name"})})
-public class Permission {
+public class Permission implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -27,7 +28,7 @@ public class Permission {
 	@Column(name="name")
 	private String name;
 
-	@ManyToMany(fetch = FetchType.EAGER)
+	@ManyToMany
 	@JoinTable(name = "ROLES_PERMISSIONS",
 			inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"),
 			joinColumns = @JoinColumn(name = "permission_id", referencedColumnName = "id"))

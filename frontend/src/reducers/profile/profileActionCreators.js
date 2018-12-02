@@ -61,9 +61,9 @@ export const setInitializing = initializing => ({
 });
 
 export const SET_TAB = "SET_TAB";
-export const setTab = initializing => ({
+export const setTab = tabSelected => ({
   type: SET_TAB,
-  payload: { initializing }
+  payload: { tabSelected }
 });
 
 export const setIconOnBindForm = icon => dispatch =>

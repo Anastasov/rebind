@@ -9,20 +9,11 @@ import { createMuiTheme } from "@material-ui/core/styles";
 import ReBind from "./config/ReBind";
 import PageTemplate from "./components/nav/PageTemplate";
 import ModalContainer from "./components/modal/ModalContainer";
-import { HOME_PAGE_PATH } from "./components/nav/Paths";
-import {
-  ACCOUNT_TAB_PATH,
-  CONTACTS_TAB_PATH
-} from "./components/nav/BottomNavigationTabs";
-import pathAwareComponent from "./meta-components/pathAwareComponent";
-import authComponent from "./meta-components/authComponent";
 import "typeface-roboto";
 import "typeface-bungee";
 import "typeface-montserrat";
+import "./config/styles/slick-carousel.css";
 /* eslint-enable */
-
-const publicPaths = [HOME_PAGE_PATH];
-const authPaths = [ACCOUNT_TAB_PATH, CONTACTS_TAB_PATH];
 
 const App = () => (
   <Provider store={configuredStore}>
@@ -31,23 +22,7 @@ const App = () => (
       <ModalContainer />
       <Router history={history}>
         <Switch>
-          {publicPaths.map(path => (
-            <Route
-              key={path}
-              path={path}
-              component={pathAwareComponent(PageTemplate, path)}
-            />
-          ))}
-          {authPaths.map(path => (
-            <Route
-              key={path}
-              path={path}
-              component={pathAwareComponent(
-                authComponent(PageTemplate, path),
-                path
-              )}
-            />
-          ))}
+          <Route key={"/"} path={"/"} component={PageTemplate} />
         </Switch>
       </Router>
     </MuiThemeProvider>

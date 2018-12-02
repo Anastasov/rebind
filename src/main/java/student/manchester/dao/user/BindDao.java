@@ -1,7 +1,7 @@
 package student.manchester.dao.user;
 
 import student.manchester.dao.GenericDao;
-import student.manchester.model.auth.Bind;
+import student.manchester.model.bind.Bind;
 
 /**
  * @author Anastas Anastasov

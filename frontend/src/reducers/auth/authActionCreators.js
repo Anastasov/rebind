@@ -1,4 +1,3 @@
-import { push } from "react-router-redux";
 import { setCookie } from "redux-cookie";
 import jwtDecode from "jwt-decode";
 import UserApi from "../../api/user-api";
@@ -12,6 +11,11 @@ import COOKIES from "../../config/COOKIES";
 import { showSnackBarActionCreator } from "../snackbar/snackbarActionCreators";
 import { promiseToReturn } from "../../util/PromiseUtils";
 import { handleResponse as handle } from "../../util/ResponseUtils";
+import { navigate } from "../nav/navActionCreators";
+import {
+  HOME_TAB_INDEX,
+  PROFILE_TAB_INDEX
+} from "../../components/nav/BottomNavigationTabs.jsx";
 
 export const SET_USERNAME_INPUT = "SET_USERNAME_INPUT";
 export const setUsernameActionCreator = username => ({
@@ -113,7 +117,7 @@ const showSuccessAndCloseModal = (dispatch, redirect, message) => data => {
   dispatch(setUserDataActionCreator({ id: data.id }));
   dispatch(closeModalActionCreator());
   if (!redirect) {
-    dispatch(push("/profile"));
+    dispatch(navigate(PROFILE_TAB_INDEX));
   }
 
   return promiseToReturn(data);
@@ -129,21 +133,18 @@ export const handleRegisterActionCreator = user => (dispatch, getState) => {
     .finally(() => dispatch(hideProgressBarActionCreator()));
 };
 
-export const handleLoginActionCreator = (user, redirect) => (
-  dispatch,
-  getState
-) => {
+export const handleLoginActionCreator = user => (dispatch, getState) => {
   dispatch(hideHeaderErrorActionCreator());
   dispatch(showProgressBarActionCreator());
   return UserApi.auth(getState())
     .login(user)
     .then(handleResponse(dispatch, "credentials are incorrect"))
-    .then(showSuccessAndCloseModal(dispatch, redirect, "Login successful"))
+    .then(showSuccessAndCloseModal(dispatch, null, "Login successful"))
     .finally(() => dispatch(hideProgressBarActionCreator()));
 };
 
 export const signoutUser = () => dispatch => {
   dispatch(setCookie(COOKIES.TOKEN, ""));
   dispatch(logoutUser());
-  dispatch(push("/home"));
+  dispatch(navigate(HOME_TAB_INDEX));
 };
