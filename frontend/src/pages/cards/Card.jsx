@@ -129,15 +129,14 @@ const CardComponent = ({
                           <Switch
                             color="primary"
                             checked={!initialValues.user.emailField.hidden}
-                            onChange={event => {
-                              if (!getErrors(form)) {
-                                toggleSwitch(
-                                  initialValues.id,
-                                  "emailField",
-                                  event.target.checked
-                                );
-                              }
-                            }}
+                            onChange={event =>
+                              !getErrors(form).cardname &&
+                              toggleSwitch(
+                                initialValues.id,
+                                "emailField",
+                                event.target.checked
+                              )
+                            }
                             value="name_checked"
                             disabled={
                               initialValues.id !== 0 &&
@@ -161,15 +160,14 @@ const CardComponent = ({
                           <Switch
                             color="primary"
                             checked={!initialValues.user.firstNameField.hidden}
-                            onChange={event => {
-                              if (!getErrors(form)) {
-                                toggleSwitch(
-                                  initialValues.id,
-                                  "firstNameField",
-                                  event.target.checked
-                                );
-                              }
-                            }}
+                            onChange={event =>
+                              !getErrors(form).cardname &&
+                              toggleSwitch(
+                                initialValues.id,
+                                "firstNameField",
+                                event.target.checked
+                              )
+                            }
                             value="name_checked"
                             disabled={
                               initialValues.id !== 0 &&
@@ -193,15 +191,14 @@ const CardComponent = ({
                           <Switch
                             color="primary"
                             checked={!initialValues.user.lastNameField.hidden}
-                            onChange={event => {
-                              if (!getErrors(form)) {
-                                toggleSwitch(
-                                  initialValues.id,
-                                  "lastNameField",
-                                  event.target.checked
-                                );
-                              }
-                            }}
+                            onChange={event =>
+                              !getErrors(form).cardname &&
+                              toggleSwitch(
+                                initialValues.id,
+                                "lastNameField",
+                                event.target.checked
+                              )
+                            }
                             value="name_checked"
                             disabled={
                               initialValues.id !== 0 &&
@@ -225,15 +222,14 @@ const CardComponent = ({
                           <Switch
                             color="primary"
                             checked={!initialValues.user.phoneField.hidden}
-                            onChange={event => {
-                              if (!getErrors(form)) {
-                                toggleSwitch(
-                                  initialValues.id,
-                                  "phoneField",
-                                  event.target.checked
-                                );
-                              }
-                            }}
+                            onChange={event =>
+                              !getErrors(form).cardname &&
+                              toggleSwitch(
+                                initialValues.id,
+                                "phoneField",
+                                event.target.checked
+                              )
+                            }
                             disabled={
                               initialValues.id !== 0 &&
                               Boolean(getErrors(form).cardname)
@@ -257,15 +253,14 @@ const CardComponent = ({
                           <Switch
                             color="primary"
                             checked={!initialValues.user.postcodeField.hidden}
-                            onChange={event => {
-                              if (!getErrors(form)) {
-                                toggleSwitch(
-                                  initialValues.id,
-                                  "postcodeField",
-                                  event.target.checked
-                                );
-                              }
-                            }}
+                            onChange={event =>
+                              !getErrors(form).cardname &&
+                              toggleSwitch(
+                                initialValues.id,
+                                "postcodeField",
+                                event.target.checked
+                              )
+                            }
                             disabled={
                               initialValues.id !== 0 &&
                               Boolean(getErrors(form).cardname)
