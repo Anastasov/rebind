@@ -39,8 +39,7 @@ class PageTemplate extends Component {
     setNavTabIndex(getTabIndexForPath(path));
   }
 
-  getPathFromParams = params =>
-    params.get("pathname").toString() || defaultTab.path;
+  getPathFromParams = params => params.get("pathname") || defaultTab.path;
 
   render() {
     const {
@@ -59,7 +58,6 @@ class PageTemplate extends Component {
     const isAuthenticated = Boolean(authInfo.jwToken);
     const showBottomNavigation =
       isAuthenticated && showBottomNavigationForPath(path);
-
     const body = getPageBodyForPath(path);
     const onTabChange = indexOfTab => {
       if (indexOfTab < Tabs.length) {
