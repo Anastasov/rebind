@@ -1,16 +1,17 @@
-package student.manchester.configuration;
+package student.manchester.configuration.test;
 
-import student.manchester.configuration.constants.HibernateDialect;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.AvailableSettings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
+import org.springframework.context.annotation.Profile;
 import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import student.manchester.configuration.constants.HibernateDialect;
 
 import javax.sql.DataSource;
 import java.io.IOException;
@@ -24,15 +25,17 @@ import java.util.Properties;
 @Configuration
 @EnableTransactionManagement
 @DependsOn({"dataSource", "flyway"})
-public class HibernateConfiguration {
+@Profile("test")
+public class TestHibernateConfiguration {
 
-    private static final String DIALECT = HibernateDialect.PostgresSQL9.dialect;
+    private static final String DIALECT = HibernateDialect.H2.dialect;
     private static final String ENTITIES_BASE_PACKAGE = "student.manchester.model";
 
     @Autowired
     private DataSource dataSource;
 
     @Bean
+    @DependsOn("sessionFactory")
     public PlatformTransactionManager hibernateTransactionManager() throws IOException {
         HibernateTransactionManager manager = new HibernateTransactionManager();
         manager.setSessionFactory(sessionFactory());

@@ -11,6 +11,5 @@ import java.util.List;
  */
 public interface CardDao extends GenericDao<Card, Long> {
 
-
     List<Card> getCards(Long userId);
 }

@@ -131,8 +131,9 @@ public class UserServiceImpl implements UserService {
                     user.getBinds().stream()
                         .filter(bind -> bind.getId().equals(bindId))
                         .findFirst();
-            user.getBinds().remove(deletedBind
-                    .orElseThrow(() -> new RuntimeException("Bind doesn't exist")));
+            final Bind bind = deletedBind
+                    .orElseThrow(() -> new RuntimeException("Bind doesn't exist"));
+            user.getBinds().remove(bind);
         } catch(final Exception ex) {
             deletedSuccessfully = false;
         }
@@ -156,11 +157,19 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ProtectedBind createProtectedBind(final Bind bind) {
+        validateBind(bind);
         final ProtectedBind protectedBind = new ProtectedBind();
         protectedBind.setBind(bind);
         protectedBind.setBindCheck(Boolean.TRUE);
         protectedBindDao.save(protectedBind);
         return protectedBind;
+    }
+
+    private void validateBind(final Bind bind) {
+        if(bind == null) {
+            throw new LogicException(
+                    "A ProtectedBind is created to match a pair in Bind.Bind cannot be null.");
+        }
     }
 
     private UserDTO checkCredentialsMatch(final String email, final String password) {

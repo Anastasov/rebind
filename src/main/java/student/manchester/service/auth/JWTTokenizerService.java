@@ -1,4 +1,4 @@
-package student.manchester.service.auth.impl;
+package student.manchester.service.auth;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -20,12 +20,13 @@ import java.util.Optional;
  * on 10/19/2018.
  */
 @Component
-public class JWTTokenizer {
+public class JWTTokenizerService {
+
+    public static final String AUTH_DURATION_VAR_NAME = "AUTH_DURATION";
+    public static final String JWT_SECRET_VAR_NAME = "UI_DESERIALIZAER";
 
     @Autowired
     private UserService userService;
-
-    public static final String JWT_SECRET_VAR_NAME = "UI_DESERIALIZAER";
 
     public Long getIdFromToken(final String token) {
         UserDTO userDTO = new UserDTO();
@@ -55,7 +56,7 @@ public class JWTTokenizer {
                         + "Please login again.");
             }
         } catch (final Exception ex) {
-            throw new RejectedTokenException("The token :" + token + " couldn't be verified.", ex);
+            throw new RejectedTokenException("The token: " + token + " couldn't be verified.", ex);
         }
 
         return userDTO;
@@ -97,7 +98,7 @@ public class JWTTokenizer {
     }
 
     public String getTokenExpirationTime() {
-        final Optional<String> authDuration = Optional.of(System.getenv("AUTH_DURATION"));
+        final Optional<String> authDuration = Optional.of(System.getenv(AUTH_DURATION_VAR_NAME));
         return  authDuration.orElse("0s");
     }
 }

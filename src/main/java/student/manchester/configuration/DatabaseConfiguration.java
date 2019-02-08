@@ -60,10 +60,10 @@ public class DatabaseConfiguration {
     }
 
     private String getDbUrl(final URI dbUri) {
-        return "jdbc:postgresql://" + dbUri.getHost() + ':' + dbUri.getPort() + dbUri.getPath() + shouldRequireSQL();
+        return "jdbc:postgresql://" + dbUri.getHost() + ':' + dbUri.getPort() + dbUri.getPath() + shouldRequireSSL();
     }
 
-    private String shouldRequireSQL() {
+    private String shouldRequireSSL() {
         return Boolean.valueOf(System.getenv(IS_DEV_ENVIRONMENT)) ? "" : "?sslmode=require";
     }
 

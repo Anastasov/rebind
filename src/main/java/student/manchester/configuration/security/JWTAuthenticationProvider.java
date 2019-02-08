@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 import student.manchester.configuration.security.wrapper.JWTAuthenticationToken;
 import student.manchester.configuration.security.wrapper.JWTUserDetails;
 import student.manchester.model.user.dto.UserDTO;
-import student.manchester.service.auth.impl.JWTTokenizer;
+import student.manchester.service.auth.JWTTokenizerService;
 
 import java.util.List;
 
@@ -24,7 +24,7 @@ import java.util.List;
 public class JWTAuthenticationProvider extends AbstractUserDetailsAuthenticationProvider {
 
     @Autowired
-    private JWTTokenizer validator;
+    private JWTTokenizerService validator;
 
     @Override
     protected void additionalAuthenticationChecks(final UserDetails userDetails,

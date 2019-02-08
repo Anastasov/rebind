@@ -1,4 +1,4 @@
-package student.manchester.api.bean;
+package student.manchester.api.common.bean;
 
 import java.io.Serializable;
 import java.util.LinkedHashMap;

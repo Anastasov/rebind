@@ -9,6 +9,7 @@ import student.manchester.configuration.security.wrapper.JWTAuthenticationToken;
 import student.manchester.configuration.security.wrapper.JWTUserDetails;
 import student.manchester.model.user.dto.UserDTO;
 import student.manchester.service.auth.AuthenticationService;
+import student.manchester.service.auth.JWTTokenizerService;
 import student.manchester.service.user.UserService;
 import student.manchester.service.exception.LogicException;
 import student.manchester.util.AuthUtil;
@@ -23,7 +24,7 @@ import java.util.Optional;
 public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Autowired
-    private JWTTokenizer jwtTokenizer;
+    private JWTTokenizerService jwtTokenizer;
 
     @Autowired
     private UserService userService;

@@ -23,6 +23,7 @@ public enum HibernateDialect {
     SAP_DB("org.hibernate.dialect.SAPDBDialect"),
     Informix("org.hibernate.dialect.InformixDialect"),
     HypersonicSQL("org.hibernate.dialect.HSQLDialect"),
+    H2("org.hibernate.dialect.H2Dialect"),
     Ingres("org.hibernate.dialect.IngresDialect"),
     Progress("org.hibernate.dialect.ProgressDialect"),
     Mckoi_SQL("org.hibernate.dialect.MckoiDialect"),

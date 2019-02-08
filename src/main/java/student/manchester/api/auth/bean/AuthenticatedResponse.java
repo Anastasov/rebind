@@ -1,6 +1,6 @@
 package student.manchester.api.auth.bean;
 
-import student.manchester.api.bean.RebindResponse;
+import student.manchester.api.common.bean.RebindResponse;
 
 /**
  * @author Anastas Anastasov

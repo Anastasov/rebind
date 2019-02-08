@@ -77,8 +77,8 @@ public class UserApi {
 
     @RequestMapping(value = "/{id}/bind", method = RequestMethod.POST, produces = APPLICATION_JSON_VALUE, consumes=APPLICATION_JSON_VALUE)
     public ResponseEntity<BindResponse> createBind(final @Auth JWTUserDetails user,
-                                                      final @PathVariable("id") Long id,
-                                                      final @RequestBody BindUpdateRequest input) {
+                                                   final @PathVariable("id") Long id,
+                                                   final @RequestBody BindUpdateRequest input) {
         final BindResponse response = new BindResponse();
         response.setBind(userService.createBind(id, input));
         return new ResponseEntity<>(response, HttpStatus.OK);
@@ -120,7 +120,6 @@ public class UserApi {
         } else {
             field = "";
         }
-
         return field;
     }
 }
