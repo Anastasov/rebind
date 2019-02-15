@@ -2,9 +2,9 @@ package student.manchester.service.user.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import student.manchester.annotation.TransactionalService;
-import student.manchester.api.auth.bean.BindUpdateRequest;
-import student.manchester.api.auth.bean.UserUpdateRequest;
-import student.manchester.api.exception.ApiInputException;
+import student.manchester.api.user.bean.BindUpdateRequest;
+import student.manchester.api.user.bean.UserUpdateRequest;
+import student.manchester.api.common.exception.ApiInputException;
 import student.manchester.dao.auth.RoleDao;
 import student.manchester.dao.user.BindDao;
 import student.manchester.dao.user.ProtectedBindDao;
@@ -13,7 +13,6 @@ import student.manchester.dao.user.UserDao;
 import student.manchester.model.bind.Bind;
 import student.manchester.model.auth.Roles;
 import student.manchester.model.bind.ProtectedBind;
-import student.manchester.model.card.dto.CardDTO;
 import student.manchester.model.user.ProtectedUser;
 import student.manchester.model.user.User;
 import student.manchester.model.bind.dto.BindDTO;
@@ -23,11 +22,9 @@ import student.manchester.service.user.UserService;
 import student.manchester.service.exception.LogicException;
 
 import javax.mail.internet.InternetAddress;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 /**
  * @author Anastas Anastasov

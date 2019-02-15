@@ -6,12 +6,12 @@ package student.manchester.model.auth;
  *
  * Here is the chain of events:
  *
- * Unauthenthicated -------> UNCONFIRMED_USER --------> CONFIRMED_USER --------> USER
+ * Unauthenthicated -------> UNCONFIRMED_USER ----------> CONFIRMED_USER --------> USER
  *                      (needs to validate e-mail)  (needs to set up username)
  */
 public enum Roles {
-    ADMIN,
     UNCONFIRMED_USER,
     CONFIRMED_USER,
-    USER
+    USER,
+    ADMIN
 }

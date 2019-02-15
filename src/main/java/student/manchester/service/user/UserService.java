@@ -1,15 +1,12 @@
 package student.manchester.service.user;
 
-import student.manchester.api.auth.bean.BindUpdateRequest;
-import student.manchester.api.auth.bean.UserUpdateRequest;
+import student.manchester.api.user.bean.BindUpdateRequest;
+import student.manchester.api.user.bean.UserUpdateRequest;
 import student.manchester.model.bind.Bind;
 import student.manchester.model.bind.ProtectedBind;
 import student.manchester.model.bind.dto.BindDTO;
-import student.manchester.model.card.dto.CardDTO;
 import student.manchester.model.user.ProtectedUser;
 import student.manchester.model.user.dto.UserDTO;
-
-import java.util.List;
 
 /**
  * @author Anastas Anastasov

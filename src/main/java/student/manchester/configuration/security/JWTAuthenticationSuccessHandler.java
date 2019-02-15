@@ -22,7 +22,8 @@ public class JWTAuthenticationSuccessHandler implements AuthenticationSuccessHan
                                         final Authentication authentication)
             throws IOException, ServletException {
         // redirect to home page or just return requested resource
-        if("/login".equals(request.getRequestURL()) || "/signUp".equals(request.getRequestURL())) {
+        if("/login".equals(request.getRequestURL().toString())
+                || "/signUp".equals(request.getRequestURL().toString())) {
             response.sendRedirect("/api/user/profile");
         }
     }

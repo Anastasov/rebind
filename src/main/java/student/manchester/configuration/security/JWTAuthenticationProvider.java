@@ -11,6 +11,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import student.manchester.configuration.security.wrapper.JWTAuthenticationToken;
 import student.manchester.configuration.security.wrapper.JWTUserDetails;
+import student.manchester.model.auth.Roles;
+import student.manchester.model.auth.dto.RoleDTO;
 import student.manchester.model.user.dto.UserDTO;
 import student.manchester.service.auth.JWTTokenizerService;
 

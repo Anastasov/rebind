@@ -1,6 +1,6 @@
 package student.manchester.api.user.bean;
 
-import student.manchester.api.auth.bean.AuthenticatedResponse;
+import student.manchester.api.common.bean.AuthenticatedResponse;
 import student.manchester.model.card.dto.CardDTO;
 
 import java.util.ArrayList;

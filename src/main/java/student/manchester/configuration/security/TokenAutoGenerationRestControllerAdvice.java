@@ -10,9 +10,8 @@ import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
-import student.manchester.api.auth.bean.AuthenticatedResponse;
+import student.manchester.api.common.bean.AuthenticatedResponse;
 import student.manchester.service.auth.AuthenticationService;
-import sun.reflect.generics.reflectiveObjects.ParameterizedTypeImpl;
 
 import java.util.Optional;
 

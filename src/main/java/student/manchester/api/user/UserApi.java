@@ -9,12 +9,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import student.manchester.annotation.Auth;
-import student.manchester.api.auth.bean.AuthenticatedResponse;
+import student.manchester.api.common.bean.AuthenticatedResponse;
 import student.manchester.api.user.bean.BindResponse;
-import student.manchester.api.auth.bean.BindUpdateRequest;
+import student.manchester.api.user.bean.BindUpdateRequest;
 import student.manchester.api.user.bean.ProfileResponse;
-import student.manchester.api.auth.bean.UserUpdateRequest;
-import student.manchester.api.exception.ApiInputException;
+import student.manchester.api.user.bean.UserUpdateRequest;
+import student.manchester.api.common.exception.ApiInputException;
 import student.manchester.api.user.bean.UserCardsResponse;
 import student.manchester.configuration.security.wrapper.JWTUserDetails;
 import student.manchester.model.card.dto.CardDTO;
@@ -51,7 +51,7 @@ public class UserApi {
 
     @RequestMapping(value = "/{id}/cards", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<UserCardsResponse> getCards(final @Auth JWTUserDetails user,
-                                                     final @PathVariable("id") Long id) {
+                                                      final @PathVariable("id") Long id) {
         final List<CardDTO> userCards = cardService.getCards(id);
         final UserCardsResponse response = new UserCardsResponse();
         response.setCards(userCards);

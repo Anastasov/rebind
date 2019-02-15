@@ -9,17 +9,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import student.manchester.annotation.Auth;
-import student.manchester.api.auth.bean.AuthenticatedResponse;
-import student.manchester.api.auth.bean.UserUpdateRequest;
+import student.manchester.api.common.bean.AuthenticatedResponse;
 import student.manchester.api.card.bean.CardCreateRequest;
 import student.manchester.api.card.bean.CardResponse;
 import student.manchester.api.card.bean.CardUpdateRequest;
-import student.manchester.api.exception.ApiInputException;
+import student.manchester.api.common.exception.ApiInputException;
 import student.manchester.configuration.security.wrapper.JWTUserDetails;
 import student.manchester.model.card.dto.CardDTO;
 import student.manchester.service.card.CardService;
-
-import java.util.Optional;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 

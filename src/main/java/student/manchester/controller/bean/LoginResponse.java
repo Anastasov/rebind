@@ -1,6 +1,6 @@
 package student.manchester.controller.bean;
 
-import student.manchester.api.auth.bean.AuthenticatedResponse;
+import student.manchester.api.common.bean.AuthenticatedResponse;
 
 /**
  * @author Anastas Anastasov
