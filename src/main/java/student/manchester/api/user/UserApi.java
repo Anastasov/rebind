@@ -1,8 +1,10 @@
 package student.manchester.api.user;
 
+import org.apache.shiro.authz.AuthorizationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,14 +19,18 @@ import student.manchester.api.user.bean.UserUpdateRequest;
 import student.manchester.api.common.exception.ApiInputException;
 import student.manchester.api.user.bean.UserCardsResponse;
 import student.manchester.configuration.security.wrapper.JWTUserDetails;
+import student.manchester.model.auth.Role;
+import student.manchester.model.auth.Roles;
 import student.manchester.model.card.dto.CardDTO;
 import student.manchester.model.user.dto.UserDTO;
 import student.manchester.service.card.CardService;
 import student.manchester.service.user.UserService;
+import student.manchester.util.AuthUtil;
 
 import java.util.List;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+import static student.manchester.util.AuthUtil.checkAuthorizedUser;
 
 /**
  * @author Anastas Anastasov
@@ -43,6 +49,7 @@ public class UserApi {
     @RequestMapping(value = "/{id}/profile", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<ProfileResponse> getProfileData(final @Auth JWTUserDetails user,
                                                           final @PathVariable("id") Long id) {
+        checkAuthorizedUser(user, id);
         final UserDTO userData = userService.findById(id);
         final ProfileResponse response = new ProfileResponse();
         response.setUser(userData);
@@ -52,6 +59,7 @@ public class UserApi {
     @RequestMapping(value = "/{id}/cards", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<UserCardsResponse> getCards(final @Auth JWTUserDetails user,
                                                       final @PathVariable("id") Long id) {
+        checkAuthorizedUser(user, id);
         final List<CardDTO> userCards = cardService.getCards(id);
         final UserCardsResponse response = new UserCardsResponse();
         response.setCards(userCards);
@@ -62,6 +70,7 @@ public class UserApi {
     public ResponseEntity<ProfileResponse> updateProfileData(final @Auth JWTUserDetails user,
                                                              final @PathVariable("id") Long id,
                                                              final @RequestBody UserUpdateRequest input) {
+        checkAuthorizedUser(user, id);
         final ProfileResponse response = new ProfileResponse();
         try {
             final UserDTO userData = userService.updateUser(id, input);
@@ -79,6 +88,7 @@ public class UserApi {
     public ResponseEntity<BindResponse> createBind(final @Auth JWTUserDetails user,
                                                    final @PathVariable("id") Long id,
                                                    final @RequestBody BindUpdateRequest input) {
+        checkAuthorizedUser(user, id);
         final BindResponse response = new BindResponse();
         response.setBind(userService.createBind(id, input));
         return new ResponseEntity<>(response, HttpStatus.OK);
@@ -89,6 +99,7 @@ public class UserApi {
                                                    final @PathVariable("id") Long id,
                                                    final @PathVariable("bindId") Long bindId,
                                                    final @RequestBody BindUpdateRequest input) {
+        checkAuthorizedUser(user, id);
         final BindResponse response = new BindResponse();
         response.setBind(userService.updateBind(id, bindId, input));
         return new ResponseEntity<>(response, HttpStatus.OK);
@@ -98,7 +109,7 @@ public class UserApi {
     public ResponseEntity<AuthenticatedResponse> deleteBind(final @Auth JWTUserDetails user,
                                                       final @PathVariable("id") Long id,
                                                       final @PathVariable("bindId") Long bindId) {
-
+        checkAuthorizedUser(user, id);
         userService.deleteBind(id, bindId);
         return new ResponseEntity<>(new AuthenticatedResponse(), HttpStatus.OK);
     }

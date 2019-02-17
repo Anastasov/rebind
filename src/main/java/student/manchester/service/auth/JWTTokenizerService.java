@@ -78,6 +78,16 @@ public class JWTTokenizerService {
         return roleDTO;
     }
 
+    /**
+     * Generates a JWT token for a user with the server configured secret.
+     * User is required to have:
+     *      * id
+     *      * email
+     *      * role
+     *
+     * @param user
+     * @return
+     */
     public String generate(final UserDTO user) {
         final Claims authInfo = Jwts.claims()
                 .setSubject(user.getEmail());

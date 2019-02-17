@@ -102,15 +102,17 @@ public class CardServiceImpl implements CardService {
     }
 
     @Override
-    public boolean deleteCard(final Long id) {
+    public Optional<CardDTO> deleteCard(final Long id) {
         boolean deletedSuccessfully = true;
+        CardDTO cardDTO = null;
         try {
             final Card card = getRequiredCard(id);
             cardDao.delete(card);
+            cardDTO = new CardDTO(card);
         } catch(final Exception ex) {
-            deletedSuccessfully = false;
+            cardDTO = null;
         }
-        return deletedSuccessfully;
+        return Optional.ofNullable(cardDTO);
     }
 
     @Override

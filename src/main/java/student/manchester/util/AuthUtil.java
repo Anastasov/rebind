@@ -1,11 +1,14 @@
 package student.manchester.util;
 
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.AntPathMatcher;
 import student.manchester.configuration.security.wrapper.JWTUserDetails;
+import student.manchester.model.auth.Roles;
 
-import java.security.Principal;
+import java.util.Collection;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -29,11 +32,27 @@ public final class AuthUtil {
                 .reduce(Boolean.FALSE,  Boolean::logicalOr);
     }
 
+    public static boolean hasAdminAuthority(final Collection<GrantedAuthority> authorities) {
+        return authorities.stream()
+                .filter(authority -> Roles.ADMIN.toString().equals(authority.getAuthority()))
+                .count() > 0;
+    }
+
+    public static void throwUnauthorizedAccessException() {
+        throw new AccessDeniedException("You do not have authorization to access this data.");
+    }
+
     public static Optional<JWTUserDetails> getCurrentUser() {
         final Optional<Authentication> authentication = Optional
                 .ofNullable(SecurityContextHolder.getContext().getAuthentication());
         return Optional.ofNullable(authentication.isPresent() ?
                         (JWTUserDetails) authentication.get().getPrincipal() :
                         null);
+    }
+
+    public static void checkAuthorizedUser(final JWTUserDetails user, final Long inspectedUser) {
+        if(!user.getId().equals(inspectedUser) && !AuthUtil.hasAdminAuthority(user.getGrantedAuthorities())) {
+            AuthUtil.throwUnauthorizedAccessException();
+        }
     }
 }

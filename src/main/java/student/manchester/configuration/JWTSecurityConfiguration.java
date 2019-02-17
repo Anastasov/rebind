@@ -44,6 +44,13 @@ public class JWTSecurityConfiguration extends WebSecurityConfigurerAdapter {
             "/error"
     };
 
+    public static final String[] AUTHENTICATED_ENDPOINTS = {
+            "/api/**",
+            "/cards",
+            "/profile",
+            "/contacts"
+    };
+
     public static final String[] ADMIN_ENDPOINTS = {
             "/swagger*/**",
             "/v2**",
@@ -70,7 +77,7 @@ public class JWTSecurityConfiguration extends WebSecurityConfigurerAdapter {
           .authorizeRequests()
                 .antMatchers(PUBLIC_ENDPOINTS)
                     .permitAll()
-                .antMatchers("/api/**")
+                .antMatchers(AUTHENTICATED_ENDPOINTS)
                     .authenticated()
                 .antMatchers(ADMIN_ENDPOINTS)
                     .hasAuthority(Roles.ADMIN.toString()).and()

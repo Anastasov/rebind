@@ -3,6 +3,7 @@ package student.manchester.api.card;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,7 +19,10 @@ import student.manchester.configuration.security.wrapper.JWTUserDetails;
 import student.manchester.model.card.dto.CardDTO;
 import student.manchester.service.card.CardService;
 
+import java.util.Optional;
+
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+import static student.manchester.util.AuthUtil.checkAuthorizedUser;
 
 /**
  * @author Anastas Anastasov
@@ -35,6 +39,7 @@ public class CardApi {
     public ResponseEntity<CardResponse> getCardData(final @Auth JWTUserDetails user,
                                                     final @PathVariable("id") Long id) {
         final CardDTO cardData = cardService.findById(id);
+        checkAuthorizedUser(user, cardData.getUser().getId());
         final CardResponse response = new CardResponse();
         response.setCard(cardData);
         return new ResponseEntity<>(response, HttpStatus.OK);
@@ -44,6 +49,7 @@ public class CardApi {
     public ResponseEntity<CardResponse> createCard(final @Auth JWTUserDetails user,
                                                    final @RequestBody CardCreateRequest input) {
         final CardResponse response = new CardResponse();
+        checkAuthorizedUser(user, input.getUserId());
         try {
             final CardDTO card = cardService.createCard(input.getUserId(), input);
             response.setCard(card);
@@ -63,7 +69,10 @@ public class CardApi {
         final CardResponse response = new CardResponse();
         try {
             final CardDTO card = cardService.updateCard(id, input);
+            checkAuthorizedUser(user, card.getUser().getId());
             response.setCard(card);
+        } catch(final AccessDeniedException accessDeniedEx) {
+            throw accessDeniedEx;
         } catch(final Exception exception) {
             final String changedDatum = getUpdatedField(input);
             throw new ApiInputException.Builder()
@@ -77,7 +86,8 @@ public class CardApi {
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE, produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<AuthenticatedResponse> deleteCard(final @Auth JWTUserDetails user,
                                                             final @PathVariable("id") Long id) {
-        cardService.deleteCard(id);
+        final Optional<CardDTO> deletedCard = cardService.deleteCard(id);
+        deletedCard.ifPresent(card -> checkAuthorizedUser(user, card.getUser().getId()));
         return new ResponseEntity<>(new AuthenticatedResponse(), HttpStatus.OK);
     }
 

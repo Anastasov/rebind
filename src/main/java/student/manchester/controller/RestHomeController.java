@@ -16,6 +16,7 @@ import student.manchester.service.auth.AuthenticationService;
 import student.manchester.service.user.UserService;
 import student.manchester.service.exception.LogicException;
 
+import javax.validation.Valid;
 import java.util.Optional;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -35,7 +36,7 @@ public class RestHomeController {
 
     /* ----------------------- NO AUTHORIZATION REQUIRED ----------------------- */
     @RequestMapping(value = "/signUp", method = RequestMethod.POST, consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity signUp(@RequestBody final AuthenticationForm authenticationForm) {
+    public ResponseEntity signUp(@RequestBody @Valid final AuthenticationForm authenticationForm) {
         final UserDTO userData = userService
                 .createUser(authenticationForm.getUsername(), authenticationForm.getPassword());
         final Optional<String> token = authenticationService.generateTokenForUser(userData.getId());
@@ -47,7 +48,7 @@ public class RestHomeController {
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.POST, consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity login(@RequestBody final AuthenticationForm authenticationForm) {
+    public ResponseEntity login(@RequestBody @Valid final AuthenticationForm authenticationForm) {
         final UserDTO userData = userService
                 .getUserByCredentials(authenticationForm.getUsername(), authenticationForm.getPassword());
         validateUserExists(userData);

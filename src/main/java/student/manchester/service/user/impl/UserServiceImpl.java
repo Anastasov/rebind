@@ -54,8 +54,6 @@ public class UserServiceImpl implements UserService {
         return new UserDTO(entity);
     }
 
-
-
     @Override
     public UserDTO getUserByCredentials(final String email, final String password) {
         final UserDTO user = checkCredentialsMatch(email, password);
@@ -285,7 +283,7 @@ public class UserServiceImpl implements UserService {
                 new InternetAddress(email).validate();
             } catch (final Exception ex) {
                 throw new ApiInputException.Builder()
-                        .addError("email", "Invalid email")
+                        .addError("email", "Invalid email.")
                         .build();
             }
 

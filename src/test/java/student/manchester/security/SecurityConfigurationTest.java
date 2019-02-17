@@ -16,6 +16,7 @@ import student.manchester.model.auth.dto.RoleDTO;
 import student.manchester.model.user.dto.UserDTO;
 import student.manchester.service.auth.JWTTokenizerService;
 import student.manchester.service.user.UserService;
+import student.manchester.util.SecurityUtil;
 
 import java.util.function.Consumer;
 import java.util.stream.Stream;
@@ -40,19 +41,7 @@ import static student.manchester.configuration.security.JWTAuthenticationTokenFi
  * @author Anastas Anastasov
  * on 2/9/2019.
  */
-@RunWith(SpringRunner.class)
-@Import(JWTSecurityConfiguration.class)
-@WebMvcTest
-public class SecurityConfigurationTest {
-
-    @MockBean
-    private UserService userService;
-
-    @Autowired
-    private MockMvc mockMvc;
-
-    @Autowired
-    private JWTTokenizerService tokenizer;
+public class SecurityConfigurationTest extends AbstractSecurityTest{
 
     // Referring to specific end-points
     private static final String[] ADMIN_ENDPOINTS = {
@@ -83,16 +72,16 @@ public class SecurityConfigurationTest {
         // Assure no user except for admin can access them.
         Stream.of(ADMIN_ENDPOINTS)
                 .forEach(adminEndpoint ->
-                        getRoles().exclude(Roles.ADMIN).stream()
-                            .map(this::roleToNewUser)
+                        SecurityUtil.getRoles().exclude(Roles.ADMIN).stream()
+                            .map(SecurityUtil::roleToNewUser)
                             .forEach(expectForURL(adminEndpoint, HttpStatus.FORBIDDEN.value()))
                 );
 
         // Assure admin can access it.
         Stream.of(ADMIN_ENDPOINTS)
                 .forEach(adminEndpoint ->
-                        getRoles(Roles.ADMIN).stream()
-                                .map(this::roleToNewUser)
+                        SecurityUtil.getRoles(Roles.ADMIN).stream()
+                                .map(SecurityUtil::roleToNewUser)
                                 .forEach(expectIsOkForURL(adminEndpoint))
                 );
     }
@@ -103,14 +92,17 @@ public class SecurityConfigurationTest {
      */
     @Test
     public void accessApi() throws Exception {
-        final String apiUrl = "/api/user/1/profile";
-        when(userService.findById(anyLong())).thenReturn(new UserDTO());
+        final Long id = 5L;
+        final String apiUrl = "/api/user/" + id + "/profile";
+        final UserDTO user = new UserDTO();
+        user.setId(id);
+        when(userService.findById(anyLong())).thenReturn(user);
         // Unauthorized for Unauthenticated call
         mockMvc.perform(get(apiUrl))
                .andExpect(status().isUnauthorized());
         // Accessible to all other roles
-        getAllRoles()
-              .map(this::roleToNewUser)
+        SecurityUtil.getAllRoles()
+              .map(SecurityUtil::roleToNewUser)
               .forEach(expectIsOkForURL(apiUrl));
     }
 
@@ -130,8 +122,8 @@ public class SecurityConfigurationTest {
         try {
             mockMvc.perform(get(entryPoint.url))
                    .andExpect(status().is(entryPoint.expectedResponseStatusCode));
-            getAllRoles()
-                  .map(this::roleToNewUser)
+            SecurityUtil.getAllRoles()
+                  .map(SecurityUtil::roleToNewUser)
                   .forEach(expectForURL(entryPoint.url, entryPoint.expectedResponseStatusCode));
         } catch (final Exception checkedEx) {
             throw new RuntimeException(checkedEx);
@@ -139,13 +131,13 @@ public class SecurityConfigurationTest {
     }
 
     private Consumer<UserDTO> expectIsOkForURL(final String url) {
-        return expectForURL(url, HttpStatus.OK.value());
+        return this.expectForURL(url, HttpStatus.OK.value());
     }
 
     private Consumer<UserDTO> expectForURL(final String apiUrl, final int status) {
         return user -> {
             try {
-                when(userService.findById(anyLong())).thenReturn(user);
+                when(userService.findById(user.getId())).thenReturn(user);
                 if(!isJsonResponse(apiUrl)) {
                     mockMvc.perform(requestAt(get(apiUrl)).forUser(user))
                             .andExpect(status().is(status));
@@ -160,36 +152,9 @@ public class SecurityConfigurationTest {
         };
     }
 
+
     private boolean isJsonResponse(final String apiUrl) {
         return ADMIN_ENDPOINTS[1].equals(apiUrl) || ADMIN_ENDPOINTS[2].equals(apiUrl);
-    }
-
-    private Request requestAt(final MockHttpServletRequestBuilder builder) {
-        return new Request(builder);
-    }
-
-    private UserDTO roleToNewUser(final Roles role) {
-        final UserDTO user = new UserDTO();
-        user.setId(5L);
-        user.setEmail("test@email.com");
-        user.setPassword("test-password");
-        final RoleDTO roleDTO = new RoleDTO();
-        roleDTO.setName(role.name());
-        user.setRole(roleDTO);
-        return user;
-    }
-
-    private class Request {
-        private final MockHttpServletRequestBuilder request;
-        private Request(final MockHttpServletRequestBuilder request) {
-            this.request = request;
-        }
-        private MockHttpServletRequestBuilder forUser(final UserDTO user) {
-            final String token = tokenizer.generate(user);
-            final String tokenValue = TOKEN_PREFIX + TOKEN_SEPARATOR + token;
-            this.request.header(TOKEN_HEADER, tokenValue);
-            return request;
-        }
     }
 
     private class PublicEntryPoint {
@@ -206,35 +171,5 @@ public class SecurityConfigurationTest {
             }
             this.url = url;
         }
-    }
-
-    private class RolesStreamBuilder {
-        private Stream<Roles> roles;
-        private RolesStreamBuilder() {
-            this.roles = Stream.of(Roles.values());
-        }
-
-        private RolesStreamBuilder(final Roles... ofRoles) {
-            this.roles = Stream.of(ofRoles);
-        }
-        private RolesStreamBuilder exclude(final Roles excludedRole) {
-            roles = roles.filter(role -> !role.equals(excludedRole));
-            return this;
-        }
-        private Stream<Roles> stream() { return roles; }
-
-    }
-
-    private Stream<Roles> getAllRoles() {
-        return getRoles().stream();
-    }
-
-
-    private RolesStreamBuilder getRoles() {
-        return new RolesStreamBuilder();
-    }
-
-    private RolesStreamBuilder getRoles(final Roles... roles) {
-        return new RolesStreamBuilder(roles);
     }
 }

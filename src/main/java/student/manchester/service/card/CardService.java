@@ -6,6 +6,7 @@ import student.manchester.model.card.dto.CardDTO;
 import student.manchester.model.user.dto.UserDTO;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author Anastas Anastasov
@@ -19,7 +20,7 @@ public interface CardService {
 
     CardDTO createCard(Long userId, CardCreateRequest input);
 
-    boolean deleteCard(Long id);
+    Optional<CardDTO> deleteCard(Long id);
 
     List<CardDTO> getCards(Long userId);
 }

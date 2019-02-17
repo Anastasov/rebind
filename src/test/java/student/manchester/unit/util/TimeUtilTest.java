@@ -100,7 +100,7 @@ public class TimeUtilTest {
         calendar.set(Calendar.DAY_OF_YEAR, 365);
         assertExpectedNextDateIsReturned(calendar, after, addAfter);
 
-        calendar.set(Calendar.MONTH, 1);
+        calendar.set(Calendar.MONTH, Calendar.JANUARY);
         calendar.set(Calendar.DAY_OF_MONTH, 29);
         assertExpectedNextDateIsReturned(calendar, after, addAfter);
 

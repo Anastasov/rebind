@@ -1,12 +1,16 @@
 package student.manchester.controller.bean;
 
+import javax.validation.constraints.NotBlank;
 /**
  * @author Anastas Anastasov
  * on 10/18/2018.
  */
 public class AuthenticationForm {
 
+    @NotBlank
     private String username;
+
+    @NotBlank
     private String password;
 
     public String getUsername() {
