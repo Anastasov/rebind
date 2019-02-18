@@ -34,6 +34,14 @@ public class RoleDTO {
         }
     }
 
+    public RoleDTO(final RoleDTO copy) {
+        if(copy != null) {
+            this.id = copy.getId();
+            this.name = copy.getName();
+            this.permissions.addAll(copy.getPermissions());
+        }
+    }
+
     public Long getId() {
         return id;
     }

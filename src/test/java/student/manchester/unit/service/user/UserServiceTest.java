@@ -21,6 +21,7 @@ import student.manchester.model.user.User;
 import student.manchester.model.user.dto.UserDTO;
 import student.manchester.service.exception.LogicException;
 import student.manchester.service.user.UserService;
+import student.manchester.service.user.UserValidator;
 import student.manchester.service.user.impl.UserServiceImpl;
 
 import java.util.Arrays;
@@ -68,6 +69,9 @@ public class UserServiceTest {
     @Mock
     private ProtectedBindDao protectedBindDao;
 
+    @Mock
+    private UserValidator validator;
+
     @InjectMocks
     private UserService userService = new UserServiceImpl();
 
@@ -75,8 +79,6 @@ public class UserServiceTest {
     public void createUserTest() {
         when(userDao.findByUsernameStarting(any()))
                 .thenReturn(Collections.emptyList());
-        when(userDao.existsUserWithEmail(any()))
-                .thenReturn(false);
         when(userDao.save(any())).thenReturn(1L);
         when(roleDao.getRoleByName(any())).thenReturn(new Role());
         final UserDTO userDTO = userService.createUser(EMAIL, PASSWORD);

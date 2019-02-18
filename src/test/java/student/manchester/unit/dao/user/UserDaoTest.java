@@ -105,6 +105,7 @@ public class UserDaoTest extends H2DBTest {
         final User user = new User();
         user.setPassword("password");
         user.setEmail("test@test.com");
+        user.setUsername("test");
         return user;
     }
 

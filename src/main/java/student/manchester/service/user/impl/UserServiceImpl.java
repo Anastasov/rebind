@@ -20,11 +20,11 @@ import student.manchester.model.auth.dto.RoleDTO;
 import student.manchester.model.user.dto.UserDTO;
 import student.manchester.service.user.UserService;
 import student.manchester.service.exception.LogicException;
+import student.manchester.service.user.UserValidator;
 
-import javax.mail.internet.InternetAddress;
 import java.util.List;
 import java.util.Optional;
-import java.util.regex.Pattern;
+import java.util.function.Consumer;
 
 /**
  * @author Anastas Anastasov
@@ -47,6 +47,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private ProtectedBindDao protectedBindDao;
+
+    @Autowired
+    private UserValidator validator;
 
     @Override
     public UserDTO findById(final Long userId) {
@@ -87,12 +90,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDTO updateUser(final Long id, final UserUpdateRequest input) {
         final User entity = getRequiredUser(id);
-        Optional.ofNullable(input.getUsername()).ifPresent(entity::setUsername);
-        Optional.ofNullable(input.getFirstName()).ifPresent(entity::setFirstName);
-        Optional.ofNullable(input.getLastName()).ifPresent(entity::setLastName);
-        Optional.ofNullable(input.getEmail()).ifPresent(entity::setEmail);
-        Optional.ofNullable(input.getPhone()).ifPresent(entity::setPhone);
-        Optional.ofNullable(input.getPostcode()).ifPresent(entity::setPostcode);
+        Optional.ofNullable(input.getUsername()).ifPresent(validateAndSetUsername(entity));
+        Optional.ofNullable(input.getFirstName()).ifPresent(validateAndSetFirstName(entity));
+        Optional.ofNullable(input.getLastName()).ifPresent(validateAndSetLastName(entity));
+        Optional.ofNullable(input.getEmail()).ifPresent(validateAndSetEmail(entity));
+        Optional.ofNullable(input.getPhone()).ifPresent(validateAndSetPhone(entity));
+        Optional.ofNullable(input.getPostcode()).ifPresent(validateAndSetPostcode(entity));
         return new UserDTO(entity);
     }
 
@@ -160,6 +163,11 @@ public class UserServiceImpl implements UserService {
         return protectedBind;
     }
 
+    @Override
+    public boolean existsUserWithEmail(final String email) {
+        return userDao.existsUserWithEmail(email);
+    }
+
     private void validateBind(final Bind bind) {
         if(bind == null) {
             throw new LogicException(
@@ -213,21 +221,10 @@ public class UserServiceImpl implements UserService {
 
     private void validateNewUser(final UserDTO user) {
         try {
-            Validator.isValid(user);
-            isEmailUnique(user.getEmail());
+            validator.validateNewUser(user);
         } catch (ApiInputException ex) {
             throw new ApiInputException.Builder(ex)
                     .setMessage("Sign Up was unsuccessful.")
-                    .build();
-        }
-    }
-
-    private void isEmailUnique(final String email) {
-        if(userDao.existsUserWithEmail(email)) {
-            final String message = "User with e-mail '" + email + "' already exists.";
-            throw new ApiInputException.Builder()
-                    .setMessage("Register failed.")
-                    .addError("email", message)
                     .build();
         }
     }
@@ -240,53 +237,45 @@ public class UserServiceImpl implements UserService {
         return user;
     }
 
-    private static class Validator {
-        /**
-         *  ^                 # start-of-string
-         *  (?=.*[0-9])       # a digit must occur at least once
-         *  (?=.*[a-z])       # a lower case letter must occur at least once
-         *  (?=.*[A-Z])       # an upper case letter must occur at least once
-         *  (?=\S+$)          # no whitespace allowed in the entire string
-         *  .{8,}             # anything, at least eight places though
-         *  $                 # end-of-string
-         */
-        private static final String PASSWORD_HINT =
-                new StringBuilder("At least 8 symbols.")
-                    .append("Has to include a ")
-                    .append("digit, ")
-                    .append("lower case letter, ")
-                    .append("upper case letter, and a ")
-                    .append("White-space not allowed.")
-                    .toString();
+    private Consumer<String> validateAndSetUsername(final User user) {
+        return username -> {
+            validator.validateUsername(username);
+            user.setUsername(username);
+        };
+    }
 
-        private static final Pattern pattern =
-                Pattern.compile("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\\S+$).{8,}$");
+    private Consumer<String> validateAndSetEmail(final User user) {
+        return email -> {
+            validator.validateEmail(email);
+            user.setEmail(email);
+        };
+    }
 
-        private static void isValid(final UserDTO user) {
-            final String email = user.getEmail() == null ? "" : user.getEmail();
-            isValidEmail(email);
-            isValidPassword(user.getPassword() == null ? "" : user.getPassword());
-        }
+    private Consumer<String> validateAndSetFirstName(final User user) {
+        return firstName -> {
+            validator.validateName(firstName, "firstName");
+            user.setFirstName(firstName);
+        };
+    }
 
+    private Consumer<String> validateAndSetLastName(final User user) {
+        return lastName -> {
+            validator.validateName(lastName, "lastName");
+            user.setLastName(lastName);
+        };
+    }
 
+    private Consumer<String> validateAndSetPhone(final User user) {
+        return phone -> {
+            validator.validatePhone(phone);
+            user.setPhone(phone);
+        };
+    }
 
-        private static void isValidPassword(final String password) {
-            if(!pattern.matcher(password).find()) {
-                throw new ApiInputException.Builder()
-                        .addError("password", PASSWORD_HINT)
-                        .build();
-            }
-        }
-
-        private static void isValidEmail(final String email) {
-            try {
-                new InternetAddress(email).validate();
-            } catch (final Exception ex) {
-                throw new ApiInputException.Builder()
-                        .addError("email", "Invalid email.")
-                        .build();
-            }
-
-        }
+    private Consumer<String> validateAndSetPostcode(final User user) {
+        return postcode -> {
+            validator.validatePostcode(postcode);
+            user.setPostcode(postcode);
+        };
     }
 }

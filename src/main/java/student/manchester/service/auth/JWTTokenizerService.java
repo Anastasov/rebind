@@ -15,6 +15,9 @@ import student.manchester.util.TimeUtil;
 import java.util.Map;
 import java.util.Optional;
 
+import static student.manchester.configuration.security.JWTAuthenticationTokenFilter.TOKEN_PREFIX;
+import static student.manchester.configuration.security.JWTAuthenticationTokenFilter.TOKEN_SEPARATOR;
+
 /**
  * @author Anastas Anastasov
  * on 10/19/2018.
@@ -78,6 +81,15 @@ public class JWTTokenizerService {
         return roleDTO;
     }
 
+    public String generate(final UserDTO user) {
+        return generate(user, false);
+    }
+
+    public String generate(final UserDTO user, final boolean addBearer) {
+        final String prefix = addBearer ? TOKEN_PREFIX + TOKEN_SEPARATOR : "";
+        return prefix + generateToken(user);
+    }
+
     /**
      * Generates a JWT token for a user with the server configured secret.
      * User is required to have:
@@ -88,7 +100,7 @@ public class JWTTokenizerService {
      * @param user
      * @return
      */
-    public String generate(final UserDTO user) {
+    private String generateToken(final UserDTO user) {
         final Claims authInfo = Jwts.claims()
                 .setSubject(user.getEmail());
         authInfo.setId(String.valueOf(user.getId()));

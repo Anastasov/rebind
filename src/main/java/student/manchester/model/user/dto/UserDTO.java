@@ -1,5 +1,7 @@
 package student.manchester.model.user.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import student.manchester.model.auth.Roles;
 import student.manchester.model.auth.dto.RoleDTO;
 import student.manchester.model.bind.dto.BindDTO;
 import student.manchester.model.card.dto.CardDTO;
@@ -20,6 +22,7 @@ public class UserDTO {
 
     private String username;
 
+    @JsonIgnore
     private String password;
 
     private String email;
@@ -61,6 +64,22 @@ public class UserDTO {
                         .map(BindDTO::new)
                         .collect(Collectors.toSet());
             }
+        }
+    }
+
+    public UserDTO(final UserDTO copy) {
+        if(copy != null) {
+            this.id = copy.getId();
+            this.username = copy.getUsername();
+            this.password = copy.getPassword();
+            this.email = copy.getEmail();
+            this.role = new RoleDTO(copy.getRole());
+            this.lastAuthLogout = copy.getLastAuthLogout();
+            this.firstName = copy.getFirstName();
+            this.lastName = copy.getLastName();
+            this.phone = copy.getPhone();
+            this.postcode = copy.getPostcode();
+            this.binds.addAll(copy.getBinds());
         }
     }
 
@@ -150,5 +169,95 @@ public class UserDTO {
 
     public void setBinds(final Set<BindDTO> binds) {
         this.binds = binds;
+    }
+
+    public static class Builder {
+        private Long id;
+        private String username;
+        private String password;
+        private String email;
+        private Roles role;
+        private Date lastAuthLogout;
+        private String firstName;
+        private String lastName;
+        private String phone;
+        private String postcode;
+        private Set<BindDTO> binds = new HashSet<>();
+        public Builder() {
+
+        }
+
+        public Builder setId(final Long id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder setUsername(final String username) {
+            this.username = username;
+            return this;
+        }
+
+        public Builder setPassword(final String password) {
+            this.password = password;
+            return this;
+        }
+
+        public Builder setEmail(final String email) {
+            this.email = email;
+            return this;
+        }
+
+        public Builder setRole(final Roles role) {
+            this.role = role;
+            return this;
+        }
+
+        public Builder setLastAuthLogout(final Date lastAuthLogout) {
+            this.lastAuthLogout = lastAuthLogout;
+            return this;
+        }
+
+        public Builder setFirstName(final String firstName) {
+            this.firstName = firstName;
+            return this;
+        }
+
+        public Builder setLastName(final String lastName) {
+            this.lastName = lastName;
+            return this;
+        }
+
+        public Builder setPhone(final String phone) {
+            this.phone = phone;
+            return this;
+        }
+
+        public Builder setPostcode(final String postcode) {
+            this.postcode = postcode;
+            return this;
+        }
+
+        public Builder setBinds(final Set<BindDTO> binds) {
+            this.binds = binds;
+            return this;
+        }
+
+        public UserDTO build() {
+            final UserDTO userDTO = new UserDTO();
+            userDTO.setId(this.id);
+            userDTO.setEmail(this.email);
+            final RoleDTO roleDTO = new RoleDTO();
+            roleDTO.setName(this.role.toString());
+            userDTO.setRole(roleDTO);
+            userDTO.setPassword(this.password);
+            userDTO.setFirstName(this.firstName);
+            userDTO.setLastName(this.lastName);
+            userDTO.setPhone(this.phone);
+            userDTO.setPostcode(this.postcode);
+            userDTO.setUsername(this.username);
+            userDTO.setLastAuthLogout(this.lastAuthLogout);
+            userDTO.setBinds(this.binds);
+            return userDTO;
+        }
     }
 }

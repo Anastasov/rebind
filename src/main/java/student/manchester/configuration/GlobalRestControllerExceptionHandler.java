@@ -1,5 +1,6 @@
 package student.manchester.configuration;
 
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
@@ -56,6 +57,9 @@ class GlobalRestControllerExceptionHandler {
                     .getBindingResult().getAllErrors()
                     .forEach(addErrorToResponse(response));
             response.setMessage(INVALID_INPUT_EXCEPTION_MESSAGE);
+            status = HttpStatus.OK;
+        } else if(ex instanceof ConstraintViolationException) {
+            response.setMessage(((ConstraintViolationException) ex).getConstraintName());
             status = HttpStatus.OK;
         } else if (ex instanceof AuthenticationException) {
             response.setMessage(AUTHENTICATION_EXCEPTION_MESSAGE);

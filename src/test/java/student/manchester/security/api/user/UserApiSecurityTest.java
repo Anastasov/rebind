@@ -24,7 +24,7 @@ import static org.mockito.Mockito.when;
 
 /**
  * This class is concerned with testing api-specific security setting.
- * In this case the business rule is: UserApi can be accessed only by:
+ * In this case the business rule is: UserApiTest can be accessed only by:
  *      * Currently logged user (for himself) or
  *      * User Having with {@link Roles#ADMIN} role.
  *

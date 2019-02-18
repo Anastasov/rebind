@@ -1,10 +1,8 @@
 package student.manchester.api.user;
 
-import org.apache.shiro.authz.AuthorizationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,7 +25,9 @@ import student.manchester.service.card.CardService;
 import student.manchester.service.user.UserService;
 import student.manchester.util.AuthUtil;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static student.manchester.util.AuthUtil.checkAuthorizedUser;
@@ -46,6 +46,8 @@ public class UserApi {
     @Autowired
     private CardService cardService;
 
+
+    /* ------------------------------ PROFILE_DATA ------------------------------ */
     @RequestMapping(value = "/{id}/profile", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<ProfileResponse> getProfileData(final @Auth JWTUserDetails user,
                                                           final @PathVariable("id") Long id) {
@@ -53,16 +55,6 @@ public class UserApi {
         final UserDTO userData = userService.findById(id);
         final ProfileResponse response = new ProfileResponse();
         response.setUser(userData);
-        return new ResponseEntity<>(response, HttpStatus.OK);
-    }
-
-    @RequestMapping(value = "/{id}/cards", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<UserCardsResponse> getCards(final @Auth JWTUserDetails user,
-                                                      final @PathVariable("id") Long id) {
-        checkAuthorizedUser(user, id);
-        final List<CardDTO> userCards = cardService.getCards(id);
-        final UserCardsResponse response = new UserCardsResponse();
-        response.setCards(userCards);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
@@ -76,13 +68,16 @@ public class UserApi {
             final UserDTO userData = userService.updateUser(id, input);
             response.setUser(userData);
         } catch(final Exception exception) {
-            final String changedDatum = getUpdatedField(input);
-            throw new ApiInputException.Builder()
-                    .addError(changedDatum, "Update failed.")
-                    .build();
+            final ApiInputException.Builder exceptionBuilder = new ApiInputException.Builder();
+            getUpdatedFields(input)
+                    .forEach(changedDatum ->
+                            exceptionBuilder.addError(changedDatum, "Update failed."));
+            throw exceptionBuilder.build();
         }
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+
+    /* ---------------------------------- BIND ---------------------------------- */
 
     @RequestMapping(value = "/{id}/bind", method = RequestMethod.POST, produces = APPLICATION_JSON_VALUE, consumes=APPLICATION_JSON_VALUE)
     public ResponseEntity<BindResponse> createBind(final @Auth JWTUserDetails user,
@@ -114,23 +109,39 @@ public class UserApi {
         return new ResponseEntity<>(new AuthenticatedResponse(), HttpStatus.OK);
     }
 
-    private String getUpdatedField(final UserUpdateRequest input) {
-        final String field;
-        if(input.getEmail() != null) {
-            field = "email";
-        } else if(input.getFirstName() != null) {
-            field = "firstName";
-        } else if(input.getLastName() != null) {
-            field = "lastName";
-        } else if(input.getPhone() != null) {
-            field = "phone";
-        } else if(input.getPostcode() != null) {
-            field = "postcode";
-        } else if(input.getUsername() != null) {
-            field = "username";
-        } else {
-            field = "";
+    /* ---------------------------------- CARD ---------------------------------- */
+
+    @RequestMapping(value = "/{id}/cards", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
+    public ResponseEntity<UserCardsResponse> getCards(final @Auth JWTUserDetails user,
+                                                      final @PathVariable("id") Long id) {
+        checkAuthorizedUser(user, id);
+        final List<CardDTO> userCards = cardService.getCards(id);
+        final UserCardsResponse response = new UserCardsResponse();
+        response.setCards(userCards);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    private List<String> getUpdatedFields(final UserUpdateRequest input) {
+        final List<String> fields = new ArrayList<>();
+
+        if(Optional.ofNullable(input.getEmail()).isPresent()) {
+            fields.add("email");
         }
-        return field;
+        if(Optional.ofNullable(input.getFirstName()).isPresent()) {
+            fields.add("firstName");
+        }
+        if(Optional.ofNullable(input.getLastName()).isPresent()) {
+            fields.add("lastName");
+        }
+        if(Optional.ofNullable(input.getPhone()).isPresent()) {
+            fields.add("phone");
+        }
+        if(Optional.ofNullable(input.getPostcode()).isPresent()) {
+            fields.add("postcode");
+        }
+        if(Optional.ofNullable(input.getUsername()).isPresent()) {
+            fields.add("username");
+        }
+        return fields;
     }
 }
