@@ -68,8 +68,8 @@ public class UserApiTest extends IntegrationTest {
                 .setPhone("+44450312310")
                 .setPostcode("WC2H 7LT")
                 .build();
-        signUp(distractor);
         final ProfileResponse response = signUp(user);
+        signUp(distractor);
         token = response.getToken();
         bind = new BindDTO.Builder()
                 .setIcon("FACEBOOK_ICON")
