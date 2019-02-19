@@ -8,6 +8,6 @@ IF EXIST %root% call "C:\Program Files\nodejs\npm" run prod
 IF EXIST %root% cd %root%
 IF EXIST %root% git add .
 IF EXIST %root% git commit -m "%commitMessage"
-IF EXIST %root% git push -u origin-2 master
+IF EXIST %root% git push origin-2 master
 IF NOT EXIST %root% echo Please, configure absolute root directory in .bat pause
 

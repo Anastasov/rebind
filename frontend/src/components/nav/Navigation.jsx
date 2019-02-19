@@ -77,7 +77,7 @@ class Navigation extends Component {
               className={classes.logo_font}
               onClick={openHomePage}
             >
-              {ReBind.PRESENTABLE_NAME}
+              {`${ReBind.PRESENTABLE_NAME}DD`}
             </Typography>
             {authInfo &&
               authInfo.jwToken && (
