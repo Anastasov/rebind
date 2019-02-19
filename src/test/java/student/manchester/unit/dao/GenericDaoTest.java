@@ -37,7 +37,7 @@ public class GenericDaoTest extends H2DBTest {
     public void deleteEntity() {
         final Role role = getAcceptableRole();
         assertExceptionIsNotThrown(() -> roleDao.save(role));
-        assertExceptionIsNotThrown(() -> {roleDao.delete(role); return null;});
+        assertExceptionIsNotThrown(() -> roleDao.delete(role));
     }
 
     /* ---------------------------- GET ENTITY ----------------------------- */

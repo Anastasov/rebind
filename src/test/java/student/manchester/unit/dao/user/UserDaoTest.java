@@ -170,7 +170,28 @@ public class UserDaoTest extends H2DBTest {
                 isNotEmpty(allPrefixedUsers) && allPrefixedUsers.size() == 2);
     }
 
-    private void attomicSave(final User user) {
-        userDao.save(user);
+    /* ------------------- EXISTS USER WITH EMAIL -------------------- */
+    @Test
+    public void existsUserWithEmailTest() {
+        final User user = getAcceptableUser();
+        assertFalse("User exists in database, before it is inserted.",
+                userDao.existsUserWithEmail(user.getEmail()));
+        assertExceptionIsNotThrown(() -> userDao.save(user));
+        assertTrue("User exists in database, but was not found.",
+                userDao.existsUserWithEmail(user.getEmail()));
+
+    }
+
+    /* ------------------- EXISTS USER WITH USERNAME -------------------- */
+    @Test
+    public void existsUserWithUsernameTest() {
+        final User user = getAcceptableUser();
+        user.setUsername("hailstan@periphery.com");
+        assertFalse("User exists in database, before it is inserted.",
+                userDao.existsUserWithUsername(user.getUsername()));
+        assertExceptionIsNotThrown(() -> userDao.save(user));
+        assertTrue("User exists in database, but was not found.",
+                userDao.existsUserWithUsername(user.getUsername()));
+
     }
 }

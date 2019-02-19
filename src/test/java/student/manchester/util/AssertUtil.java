@@ -3,7 +3,6 @@ package student.manchester.util;
 import org.springframework.core.task.SimpleAsyncTaskExecutor;
 
 import java.util.Collection;
-import java.util.concurrent.Callable;
 
 import static org.junit.Assert.fail;
 
@@ -20,22 +19,22 @@ public final class AssertUtil {
         // private ctor
     }
 
-    public static void assertExceptionIsThrown(final Callable when) {
+    public static void assertExceptionIsThrown(final Runnable when) {
         assertExceptionIsThrown(when, DEFAULT_ERROR_MESSAGE);
     }
 
-    public static void assertExceptionIsThrown(final Callable when, final String errorMessage) {
+    public static void assertExceptionIsThrown(final Runnable when, final String errorMessage) {
         assertExceptionIsThrown(when, errorMessage, null);
     }
 
-    public static void assertExceptionIsThrown(final Callable when, final Class<? extends Throwable> expectedException) {
+    public static void assertExceptionIsThrown(final Runnable when, final Class<? extends Throwable> expectedException) {
         assertExceptionIsThrown(when, DEFAULT_ERROR_MESSAGE, expectedException);
     }
 
-    public static void assertExceptionIsThrown(final Callable when, final String errorMessage,
+    public static void assertExceptionIsThrown(final Runnable when, final String errorMessage,
                                         final Class<? extends Throwable> expectedException) {
         try {
-            when.call();
+            when.run();
             fail(errorMessage);
         } catch (final Exception exception) {
             if(expectedException != null && !expectedException.equals(exception.getClass())) {
@@ -45,7 +44,7 @@ public final class AssertUtil {
         }
     }
 
-    public static void assertExceptionIsNotThrown(final Callable when) {
+    public static void assertExceptionIsNotThrown(final Runnable when) {
         try {
             execute(when);
         } catch (final Exception exception) {
@@ -74,7 +73,7 @@ public final class AssertUtil {
         return firstThing == null && secondThing == null;
     }
 
-    private static void execute(final Callable when) throws Exception {
-        when.call();
+    private static void execute(final Runnable when) throws Exception {
+        when.run();
     }
 }

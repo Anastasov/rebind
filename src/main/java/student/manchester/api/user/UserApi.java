@@ -68,7 +68,8 @@ public class UserApi {
             final UserDTO userData = userService.updateUser(id, input);
             response.setUser(userData);
         } catch(final Exception exception) {
-            final ApiInputException.Builder exceptionBuilder = new ApiInputException.Builder();
+            final ApiInputException.Builder exceptionBuilder = new ApiInputException.Builder()
+                    .setMessage("Updating profile data failed.");
             getUpdatedFields(input)
                     .forEach(changedDatum ->
                             exceptionBuilder.addError(changedDatum, "Update failed."));

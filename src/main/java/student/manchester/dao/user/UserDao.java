@@ -16,4 +16,6 @@ public interface UserDao extends GenericDao<User, Long> {
     User findBy(String email, String password);
 
     List<User> findByUsernameStarting(String prefix);
+
+    boolean existsUserWithUsername(String username);
 }

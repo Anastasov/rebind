@@ -5,7 +5,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import student.manchester.api.common.exception.ApiInputException;
 import student.manchester.model.user.dto.UserDTO;
-import student.manchester.service.user.UserService;
 
 import javax.mail.internet.InternetAddress;
 import java.util.Optional;
@@ -36,8 +35,18 @@ public class UserValidator {
                     .append("White-space not allowed.")
                     .toString();
 
-    private static final Pattern pattern =
+    private static final Pattern PASSWORD_PATTERN =
             Pattern.compile("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\\S+$).{8,}$");
+
+    private static final Pattern PHONE_PATTERN =
+            Pattern.compile("^[0\\+][0-9]{9,13}$");
+    private static final Pattern UK_GOV_POSTCODE_PATTERN = Pattern.compile(
+    "([Gg][Ii][Rr] 0[Aa]{2})"
+            + "|((([A-Za-z][0-9]{1,2})"
+            + "|(([A-Za-z][A-Ha-hJ-Yj-y][0-9]{1,2})"
+            + "|(([A-Za-z][0-9][A-Za-z])"
+            + "|([A-Za-z][A-Ha-hJ-Yj-y][0-9][A-Za-z]?))))"
+            + "\\s?[0-9][A-Za-z]{2})");
 
     @Autowired
     private UserService userService;
@@ -58,7 +67,9 @@ public class UserValidator {
 
     public void validatePostcode(final String postcode) {
         final String value = Optional.ofNullable(postcode).orElse("");
-        if(value.length() > 10) {
+        if(StringUtils.isEmpty(value)
+                || value.length() > 10
+                || !UK_GOV_POSTCODE_PATTERN.matcher(value).matches()) {
             throw new ApiInputException.Builder()
                     .addError("postcode", "Invalid Postcode. Should be less than 10 symbols.")
                     .build();
@@ -67,16 +78,26 @@ public class UserValidator {
 
     public void validatePhone(final String phone) {
         final String value = Optional.ofNullable(phone).orElse("");
-        if(value.length() > 14) {
+        if(StringUtils.isEmpty(value)
+                || value.length() > 14
+                || !PHONE_PATTERN.matcher(value).matches()) {
             throw new ApiInputException.Builder()
                     .addError("phone", "Invalid Phone. Should be less than 14 symbols.")
                     .build();
         }
     }
 
+    public void validateFirstName(final String name) {
+        validateName(name, "firstName");
+    }
+
+    public void validateLastName(final String name) {
+        validateName(name, "lastName");
+    }
+
     public void validateName(final String name, final String field) {
         final String value = Optional.ofNullable(name).orElse("");
-        if(value.length() > 60) {
+        if(StringUtils.isEmpty(value) || value.length() > 60) {
             throw new ApiInputException.Builder()
                     .addError(field, "Invalid First name. Should be less than 60 symbols.")
                     .build();
@@ -90,11 +111,12 @@ public class UserValidator {
                     .addError("username", "Invalid username.")
                     .build();
         }
+        validateUsernameUnique(value);
     }
 
     public void validatePassword(final String password) {
         final String value = Optional.ofNullable(password).orElse("");
-        if(!pattern.matcher(value).find()) {
+        if(!PASSWORD_PATTERN.matcher(value).matches()) {
             throw new ApiInputException.Builder()
                     .addError("password", PASSWORD_HINT)
                     .build();
@@ -119,6 +141,16 @@ public class UserValidator {
             throw new ApiInputException.Builder()
                     .setMessage("Register failed.")
                     .addError("email", message)
+                    .build();
+        }
+    }
+
+    private void validateUsernameUnique(final String username) {
+        if(userService.existsUserWithUsername(username)) {
+            final String message = "User with username '" + username + "' already exists.";
+            throw new ApiInputException.Builder()
+                    .setMessage("Register failed.")
+                    .addError("username", message)
                     .build();
         }
     }

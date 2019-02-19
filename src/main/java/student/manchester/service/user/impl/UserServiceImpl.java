@@ -18,6 +18,7 @@ import student.manchester.model.user.User;
 import student.manchester.model.bind.dto.BindDTO;
 import student.manchester.model.auth.dto.RoleDTO;
 import student.manchester.model.user.dto.UserDTO;
+import student.manchester.service.bind.BindValidator;
 import student.manchester.service.user.UserService;
 import student.manchester.service.exception.LogicException;
 import student.manchester.service.user.UserValidator;
@@ -50,6 +51,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserValidator validator;
+
+    @Autowired
+    private BindValidator bindValidator;
 
     @Override
     public UserDTO findById(final Long userId) {
@@ -90,12 +94,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDTO updateUser(final Long id, final UserUpdateRequest input) {
         final User entity = getRequiredUser(id);
-        Optional.ofNullable(input.getUsername()).ifPresent(validateAndSetUsername(entity));
-        Optional.ofNullable(input.getFirstName()).ifPresent(validateAndSetFirstName(entity));
-        Optional.ofNullable(input.getLastName()).ifPresent(validateAndSetLastName(entity));
-        Optional.ofNullable(input.getEmail()).ifPresent(validateAndSetEmail(entity));
-        Optional.ofNullable(input.getPhone()).ifPresent(validateAndSetPhone(entity));
-        Optional.ofNullable(input.getPostcode()).ifPresent(validateAndSetPostcode(entity));
+        userUpdateRequestToEntity(input, entity);
         return new UserDTO(entity);
     }
 
@@ -103,9 +102,7 @@ public class UserServiceImpl implements UserService {
     public BindDTO createBind(final Long userId, final BindUpdateRequest input) {
         final User user = getRequiredUser(userId);
         final Bind bind = new Bind();
-        Optional.ofNullable(input.getIcon()).ifPresent(bind::setIcon);
-        Optional.ofNullable(input.getName()).ifPresent(bind::setName);
-        Optional.ofNullable(input.getUrl()).ifPresent(bind::setUrl);
+        bindUpdateRequestToEntity(input, bind);
         bind.setUser(user);
         bindDao.save(bind);
         return new BindDTO(bind);
@@ -114,9 +111,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public BindDTO updateBind(final Long userId, final Long bindId, final BindUpdateRequest input) {
         final Bind bind = getRequiredBind(bindId);
-        Optional.ofNullable(input.getIcon()).ifPresent(bind::setIcon);
-        Optional.ofNullable(input.getName()).ifPresent(bind::setName);
-        Optional.ofNullable(input.getUrl()).ifPresent(bind::setUrl);
+        bindUpdateRequestToEntity(input, bind);
         return new BindDTO(bind);
     }
 
@@ -130,7 +125,7 @@ public class UserServiceImpl implements UserService {
                         .filter(bind -> bind.getId().equals(bindId))
                         .findFirst();
             final Bind bind = deletedBind
-                    .orElseThrow(() -> new RuntimeException("Bind doesn't exist"));
+                    .orElseThrow(() -> new LogicException("Bind doesn't exist"));
             user.getBinds().remove(bind);
         } catch(final Exception ex) {
             deletedSuccessfully = false;
@@ -166,6 +161,26 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean existsUserWithEmail(final String email) {
         return userDao.existsUserWithEmail(email);
+    }
+
+    @Override
+    public boolean existsUserWithUsername(final String username) {
+        return userDao.existsUserWithUsername(username);
+    }
+
+    private void userUpdateRequestToEntity(final UserUpdateRequest input, final User entity) {
+        Optional.ofNullable(input.getUsername()).ifPresent(validateAndSetUsername(entity));
+        Optional.ofNullable(input.getFirstName()).ifPresent(validateAndSetFirstName(entity));
+        Optional.ofNullable(input.getLastName()).ifPresent(validateAndSetLastName(entity));
+        Optional.ofNullable(input.getEmail()).ifPresent(validateAndSetEmail(entity));
+        Optional.ofNullable(input.getPhone()).ifPresent(validateAndSetPhone(entity));
+        Optional.ofNullable(input.getPostcode()).ifPresent(validateAndSetPostcode(entity));
+    }
+
+    private void bindUpdateRequestToEntity(final BindUpdateRequest input, final Bind bind) {
+        Optional.ofNullable(input.getIcon()).ifPresent(validateAndSetBindIcon(bind));
+        Optional.ofNullable(input.getName()).ifPresent(validateAndSetBindName(bind));
+        Optional.ofNullable(input.getUrl()).ifPresent(validateAndSetBindUrl(bind));
     }
 
     private void validateBind(final Bind bind) {
@@ -253,14 +268,14 @@ public class UserServiceImpl implements UserService {
 
     private Consumer<String> validateAndSetFirstName(final User user) {
         return firstName -> {
-            validator.validateName(firstName, "firstName");
+            validator.validateFirstName(firstName);
             user.setFirstName(firstName);
         };
     }
 
     private Consumer<String> validateAndSetLastName(final User user) {
         return lastName -> {
-            validator.validateName(lastName, "lastName");
+            validator.validateLastName(lastName);
             user.setLastName(lastName);
         };
     }
@@ -276,6 +291,27 @@ public class UserServiceImpl implements UserService {
         return postcode -> {
             validator.validatePostcode(postcode);
             user.setPostcode(postcode);
+        };
+    }
+
+    private Consumer<String> validateAndSetBindName(final Bind bind) {
+        return name -> {
+            bindValidator.validateName(name);
+            bind.setName(name);
+        };
+    }
+
+    private Consumer<String> validateAndSetBindUrl(final Bind bind) {
+        return url -> {
+            bindValidator.validateUrl(url);
+            bind.setUrl(url);
+        };
+    }
+
+    private Consumer<String> validateAndSetBindIcon(final Bind bind) {
+        return icon -> {
+            bindValidator.validateIcon(icon);
+            bind.setIcon(icon);
         };
     }
 }

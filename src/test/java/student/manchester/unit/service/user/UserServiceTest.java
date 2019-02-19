@@ -19,6 +19,7 @@ import student.manchester.model.bind.dto.BindDTO;
 import student.manchester.model.user.ProtectedUser;
 import student.manchester.model.user.User;
 import student.manchester.model.user.dto.UserDTO;
+import student.manchester.service.bind.BindValidator;
 import student.manchester.service.exception.LogicException;
 import student.manchester.service.user.UserService;
 import student.manchester.service.user.UserValidator;
@@ -71,6 +72,9 @@ public class UserServiceTest {
 
     @Mock
     private UserValidator validator;
+
+    @Mock
+    private BindValidator bindValidator;
 
     @InjectMocks
     private UserService userService = new UserServiceImpl();

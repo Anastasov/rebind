@@ -28,6 +28,16 @@ public class UserDaoImpl extends GenericDaoHibernate<User, Long> implements User
     }
 
     @Override
+    public boolean existsUserWithUsername(final String username) {
+        final CriteriaBuilder builder = getCriteriaBuilder();
+        final CriteriaQuery<User> criteria = createQuery();
+        final Root<User> table = criteria.from(User.class);
+        criteria.select(table)
+                .where(builder.equal(table.get("username"), username));
+        return !getList(criteria).isEmpty();
+    }
+
+    @Override
     public User findBy(final String email, final String password) {
         final CriteriaBuilder builder = getCriteriaBuilder();
         final CriteriaQuery<User> criteria = createQuery();

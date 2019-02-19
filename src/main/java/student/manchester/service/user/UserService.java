@@ -35,4 +35,6 @@ public interface UserService {
     ProtectedBind createProtectedBind(Bind bind);
 
     boolean existsUserWithEmail(String email);
+
+    boolean existsUserWithUsername(String username);
 }
