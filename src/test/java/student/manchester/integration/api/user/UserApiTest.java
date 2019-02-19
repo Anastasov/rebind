@@ -69,7 +69,6 @@ public class UserApiTest extends IntegrationTest {
                 .setPostcode("WC2H 7LT")
                 .build();
         final ProfileResponse response = signUp(user);
-        // github test
         signUp(distractor);
         token = response.getToken();
         bind = new BindDTO.Builder()
